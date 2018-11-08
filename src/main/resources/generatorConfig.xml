@@ -42,13 +42,17 @@
         </javaClientGenerator>
 
         <!-- 要生成哪些表 -->
-        <table tableName="meeting" domainObjectName="Meeting"
+        <!--<table tableName="meeting" domainObjectName="Meeting"
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
-               selectByExampleQueryId="false"></table>
+               selectByExampleQueryId="false"></table>-->
        <!-- <table tableName="meeting_moreinfo" domainObjectName="MeetingMoreInfo"
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false"></table>-->
+        <table tableName="systemlog" domainObjectName="SystemLog"
+               enableCountByExample="false" enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false"
+               selectByExampleQueryId="false"></table>
     </context>
 </generatorConfiguration>

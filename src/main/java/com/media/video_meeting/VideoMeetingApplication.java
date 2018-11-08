@@ -1,5 +1,6 @@
 package com.media.video_meeting;
 
+import com.media.video_meeting.log.LogAop;
 import com.media.video_meeting.page.PageAop;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
@@ -22,5 +23,10 @@ public class VideoMeetingApplication {
 	@Bean
 	public PageAop getPageHelper(){
 		return new PageAop();
+	}
+
+	@Bean
+	public LogAop getLogAop(){
+		return new LogAop();
 	}
 }

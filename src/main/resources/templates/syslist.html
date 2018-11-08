@@ -27,12 +27,20 @@
     <div class="content-box">
         <!-- End .content-box-header -->
         <div class="content-box-content">
-            <h2>会议列表</h2>
+            <h2>系统日志</h2>
             <!-- 搜索 -->
             <form th:action="${#request.getContextPath() + '/meeting/search'}" method="get">
-                <input
-                        class="text-input small-input" type="text"
-                        name="keyword" placeholder="请输入会议名称或者号码" th:value="${keyword}"/>
+                日志类型：
+                <select name="typeVal">
+                    <option option="1">登录</option>
+                    <option option="2">注销</option>
+                    <option option="3">添加</option>
+                    <option option="4">修改</option>
+                    <option option="5">删除</option>
+                </select>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                操作时间：
+                <input class="text-input" name="mintime"/> - <input class="text-input" name="maxtime"/>
                 <button type="submit" class="mybutton">搜索</button>
             </form>
 
@@ -44,38 +52,47 @@
                 <table>
                     <thead>
                     <tr>
-                        <th><input class="check-all" type="checkbox" />全选</th>
-                        <th>会议名称/号码</th>
-                        <th>状态</th>
-                        <th>开始时间</th>
-                        <th>时长</th>
-                        <th>会议类型</th>
+                        <th><input class="check-all" type="checkbox"/>全选</th>
+                        <th>操作类型</th>
+                        <th>操作人</th>
+                        <th>操作时间</th>
+                        <th>备注</th>
+                        <th>结果</th>
+                        <th>异常</th>
                     </tr>
                     </thead>
 
                     <tbody>
-                    <tr th:each="meeting : ${meetings}">
-                        <td><input type="checkbox" th:value="${meeting.id}"/></td>
-                        <td th:text="${meeting.name} + '/' + ${meeting.number}">Lorem ipsum dolor</td>
-                        <td th:text="${meeting.hystate}"><a href="#" title="title">Sit amet</a></td>
-                        <td th:text="${#dates.format(meeting.createtime, 'yyyy-MM-dd HH:mm:ss')}">Consectetur adipiscing</td>
-                        <td th:text="${meeting.isfoerver == 1 ? '永久会议' : meeting.timeStr}">Donec tortor diam</td>
-                        <td>
-                            <!-- Icons --> <a href="#" title="Edit"><img
+                    <tr th:each="syslog : ${systemLogList}">
+                        <td><input type="checkbox" th:value="${syslog.id}"/></td>
+                        <td th:switch="${syslog.type}">
+                            <span th:case="1">登录</span>
+                            <span th:case="2">注销</span>
+                            <span th:case="3">增加</span>
+                            <span th:case="4">修改</span>
+                            <span th:case="5">删除</span>
+                        </td>
+                        <td th:text="${syslog.user}">Lorem ipsum dolor</td>
+                        <td th:text="${#dates.format(syslog.time, 'yyyy-MM-dd HH:mm:ss')}"><a href="#" title="title">Sit amet</a></td>
+                        <td th:text="${syslog.info}">Consectetur adipiscing</td>
+                        <td th:utext="${syslog.flag == 1 ? '<font color=green>成功</font>' : '<font color=red>失败</font>'}">Donec tortor diam</td>
+                        <td th:text="${syslog.exception != null ? syslog.exception : '无'}">Consectetur adipiscing</td>
+                        <!--<td>
+                            &lt;!&ndash; Icons &ndash;&gt; <a href="#" title="Edit"><img
                                 src="resources/images/icons/pencil.png" alt="Edit" /></a> <a
                                 href="#" title="Delete"><img
                                 src="resources/images/icons/cross.png" alt="Delete" /></a> <a
                                 href="#" title="Edit Meta"><img
                                 src="resources/images/icons/hammer_screwdriver.png"
                                 alt="Edit Meta" /></a>
-                        </td>
+                        </td>-->
                     </tr>
                     </tbody>
 
                     <!-- 脚部 -->
                     <tfoot>
                     <tr>
-                        <td colspan="6">
+                        <td colspan="7">
                             <!-- 分页导航 -->
                             <div class="pagination" th:replace="page :: fenye">
                             </div> <!-- End .pagination -->
