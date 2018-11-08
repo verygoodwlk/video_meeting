@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <base th:href="${#request.getContextPath() + '/'}"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Insert title here</title>
+    <!-- Invalid Stylesheet. This makes stuff look pretty. Remove it if you want the CSS completely valid -->
+    <!-- Reset Stylesheet -->
+    <link rel="stylesheet" href="resources/css/reset.css" type="text/css"
+          media="screen"/>
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="resources/css/style.css" type="text/css"
+          media="screen"/>
+    <link rel="stylesheet" href="resources/css/invalid.css" type="text/css"
+          media="screen"/>
+
+    <!--                       Javascripts                       -->
+    <!-- jQuery -->
+    <script type="text/javascript"
+            src="resources/scripts/jquery-1.3.2.min.js"></script>
+    <!-- jQuery Configuration -->
+    <script type="text/javascript"
+            src="resources/scripts/simpla.jquery.configuration.js"></script>
+
+    <script>
+        /**
+         * 下一步
+         */
+        function next() {
+            $("#gaoji_id").click();
+        }
+    </script>
+
+</head>
+<body>
+<div id="main-content">
+
+    <!-- End .clear -->
+    <div class="content-box">
+        <!-- Start Content Box -->
+        <div class="content-box-header">
+            <h3>新建会议</h3>
+            <ul class="content-box-tabs">
+                <li><a href="#tab1" class="default-tab">基本配置</a></li>
+                <!-- href must be unique and match the id of target div -->
+                <li><a id="gaoji_id" href="#tab2">高级配置</a></li>
+            </ul>
+            <div class="clear"></div>
+        </div>
+        <!-- End .content-box-header -->
+        <form th:action="${#request.getContextPath() + '/meeting/add'}" method="post">
+            <div class="content-box-content">
+                <div class="tab-content default-tab" id="tab1">
+                    <fieldset>
+                        <table>
+                            <tr style="background-color:#fff;">
+                                <td><label>会议名称</label></td>
+                                <td><input
+                                        class="text-input" type="text"
+                                        name="name"/></td>
+                                <td><label>会议号码</label></td>
+                                <td><input
+                                        class="text-input" type="text"
+                                        name="number"/></td>
+                            </tr>
+                            <tr style="background-color:#fff;">
+                                <td><label>密码</label></td>
+                                <td><input
+                                        class="text-input" type="password"
+                                        name="password"/></td>
+                                <td><label>确认密码</label></td>
+                                <td><input
+                                        class="text-input" type="password"
+                                        name="againpassword"/></td>
+                            </tr>
+                            <tr style="background-color:#fff;">
+                                <td><label>会议时长</label></td>
+                                <td colspan="3"><select name="time1"
+                                >
+                                    <option value="1">Option 1</option>
+                                    <option value="2">Option 2</option>
+                                    <option value="3">Option 3</option>
+                                    <option value="4">Option 4</option>
+                                </select> 小时
+                                    <select name="time2">
+                                        <option value="1">Option 1</option>
+                                        <option value="2">Option 2</option>
+                                        <option value="3">Option 3</option>
+                                        <option value="4">Option 4</option>
+                                    </select> 分钟
+                                    <input type="checkbox"
+                                           name="isfoerver" value="1"/> 永久会议
+                                </td>
+                            </tr>
+                            <tr style="background-color:#fff;">
+                                <td><label>码率</label></td>
+                                <td><select name="ml">
+                                    <option value="1">Option 1</option>
+                                    <option value="2">Option 2</option>
+                                    <option value="3">Option 3</option>
+                                    <option value="4">Option 4</option>
+                                </select></td>
+                                <td><label>会议类型</label></td>
+                                <td><select name="type">
+                                    <option value="1">Option 1</option>
+                                    <option value="2">Option 2</option>
+                                    <option value="3">Option 3</option>
+                                    <option value="4">Option 4</option>
+                                </select>
+                                </td>
+                            </tr>
+                            <tr style="background-color:#fff;">
+                                <td><label>开会方式</label></td>
+                                <td><select name="fs">
+                                    <option value="1">Option 1</option>
+                                    <option value="2">Option 2</option>
+                                    <option value="3">Option 3</option>
+                                    <option value="4">Option 4</option>
+                                </select></td>
+                                <td><label>三级级联口</label></td>
+                                <td><select name="lk">
+                                    <option value="1">Option 1</option>
+                                    <option value="2">Option 2</option>
+                                    <option value="3">Option 3</option>
+                                    <option value="4">Option 4</option>
+                                </select></td>
+                            </tr>
+                            <tr style="background-color:#fff;">
+                                <td><label>备注</label></td>
+                                <td colspan="3">
+                                    <textarea cols="10" rows="5" name="info"></textarea>
+                                </td>
+
+                            </tr>
+                            <tr style="background-color:#fff;">
+                                <td colspan="4">
+                                    <input class="mybutton" type="button" onclick="next();" value="下一步"/>
+                                    <input class="mybutton" type="submit" value="保存"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                    <div class="clear"></div>
+                    <!-- End .clear -->
+                </div>
+                <!-- End #tab1 -->
+                <div class="tab-content" id="tab2">
+                    <fieldset>
+                        <table>
+                            <tr style="background-color:#fff;">
+                                <td><label>多画面数</label></td>
+                                <td><input
+                                        class="text-input" type="text"
+                                        name="mpic" th:value="${default.mpic}"/></td>
+                                <td><label>主动呼叫终端</label></td>
+                                <td><input
+                                        class="text-input" type="radio"
+                                        name="zdhjzd" value="1"
+                                        th:checked="${default.zdhjzd == 1 || default.zdhjzd == null}"/>是
+                                    <input
+                                            class="text-input" type="radio"
+                                            name="zdhjzd" value="0" th:checked="${default.zdhjzd == 0}"/>否
+                                </td>
+                            </tr>
+                            <tr style="background-color:#fff;">
+                                <td><label>WEB 监控画面数</label></td>
+                                <td><select name="webpic">
+                                    <option value="1" th:selected="${default.webpic == 1 }">Option 1</option>
+                                    <option value="2" th:selected="${default.webpic == 2 }">Option 2</option>
+                                    <option value="3" th:selected="${default.webpic == 3 }">Option 3</option>
+                                    <option value="4" th:selected="${default.webpic == 4 }">Option 4</option>
+                                </select></td>
+                                <td><label>终端上端参加混音</label></td>
+                                <td><input
+                                        class="text-input" type="radio"
+                                        name="zdsdcjhy" value="1"
+                                        th:checked="${default.zdsdcjhy == 1 || default.zdsdcjhy == null }"/>是
+                                    <input
+                                            class="text-input" type="radio"
+                                            name="zdsdcjhy" value="0" th:checked="${default.zdsdcjhy == 0 }"/>否
+                                </td>
+                            </tr>
+                            <tr style="background-color:#fff;">
+                                <td><label>多画面显示模式</label></td>
+                                <td>
+                                    <input
+                                            class="text-input" type="radio"
+                                            name="mpicmode" value="1"
+                                            th:checked="${default.mpicmode == 1 || default.mpicmode == null }"/>指定
+                                    <input
+                                            class="text-input" type="radio"
+                                            name="mpicmode" value="0" th:checked="${default.mpicmode == 0 }"/>自动
+                                </td>
+                                <td><label>辅视频码率</label></td>
+                                <td><select name="fspml">
+                                    <option value="1" th:selected="${default.fspml == 1 }">Option 1</option>
+                                    <option value="2" th:selected="${default.fspml == 2 }">Option 2</option>
+                                    <option value="3" th:selected="${default.fspml == 3 }">Option 3</option>
+                                    <option value="4" th:selected="${default.fspml == 4 }">Option 4</option>
+                                </select>
+                                </td>
+                            </tr>
+                            <tr style="background-color:#fff;">
+                                <td><label>组播方式</label></td>
+                                <td><select name="grouptype">
+                                    <option value="1" th:selected="${default.grouptype == 1 }">Option 1</option>
+                                    <option value="2" th:selected="${default.grouptype == 2 }">Option 2</option>
+                                    <option value="3" th:selected="${default.grouptype == 3 }">Option 3</option>
+                                    <option value="4" th:selected="${default.grouptype == 4 }">Option 4</option>
+                                </select></td>
+                                <td><label>辅视频类型</label></td>
+                                <td><select name="fsplx">
+                                    <option value="1" th:selected="${default.fsplx == 1 }">Option 1</option>
+                                    <option value="2" th:selected="${default.fsplx == 2 }">Option 2</option>
+                                    <option value="3" th:selected="${default.fsplx == 3 }">Option 3</option>
+                                    <option value="4" th:selected="${default.fsplx == 4 }">Option 4</option>
+                                </select>
+                                </td>
+                            </tr>
+                            <tr style="background-color:#fff;">
+                                <td><label>组播IP地址</label></td>
+                                <td><input
+                                        class="text-input" type="text"
+                                        name="gourpip" th:value="${default.gourpip}"/></td>
+                                <td><label>辅视频能力</label></td>
+                                <td><select name="fspnl">
+                                    <option value="1" th:selected="${default.fspnl == 1 }">Option 1</option>
+                                    <option value="2" th:selected="${default.fspnl == 2 }">Option 2</option>
+                                    <option value="3" th:selected="${default.fspnl == 3 }">Option 3</option>
+                                    <option value="4" th:selected="${default.fspnl == 4 }">Option 4</option>
+                                </select></td>
+                            </tr>
+                            <tr style="background-color:#fff;">
+                                <td><label>组播端口</label></td>
+                                <td>音频：<input
+                                        class="text-input" type="text"
+                                        name="groupportyp" style="width: 30px"
+                                        th:value="${default.groupportyp}"/><br/><br/>
+                                    主视频：<input
+                                            class="text-input" type="text"
+                                            name="groupportzsp" style="width: 30px" th:value="${default.groupportzsp}"/><br/><br/>
+                                    辅视频：<input
+                                            class="text-input" type="text"
+                                            name="groupportfsp" style="width: 30px" th:value="${default.groupportfsp}"/><br/><br/>
+                                </td>
+                                <td><label>广播源自看</label></td>
+                                <td><input
+                                        class="text-input" type="radio"
+                                        name="gbyzk" value="1"
+                                        th:checked="${default.gbyzk == 1 || default.gbyzk == null }"/>是
+                                    <input
+                                            class="text-input" type="radio"
+                                            name="gbyzk" value="0" th:checked="${default.gbyzk == 0 }"/>否
+                                </td>
+                            </tr>
+
+                            <tr style="background-color:#fff;">
+                                <td><label>视频能力</label></td>
+                                <td><select name="spnl">
+                                    <option value="1" th:selected="${default.spnl == 1 }">Option 1</option>
+                                    <option value="2" th:selected="${default.spnl == 2 }">Option 2</option>
+                                    <option value="3" th:selected="${default.spnl == 3 }">Option 3</option>
+                                    <option value="4" th:selected="${default.spnl == 4 }">Option 4</option>
+                                </select></td>
+                                <td><label>是否启用IP自动降速</label></td>
+                                <td><input
+                                        class="text-input" type="radio"
+                                        name="isopenipzdjs" value="1"
+                                        th:checked="${default.isopenipzdjs == 1 || default.isopenipzdjs == null }"/>是
+                                    <input
+                                            class="text-input" type="radio"
+                                            name="isopenipzdjs" value="0" th:checked="${default.isopenipzdjs == 0 }"/>否
+                                </td>
+                            </tr>
+
+                            <tr style="background-color:#fff;">
+                                <td><label>音频能力</label></td>
+                                <td><select name="ypnl">
+                                    <option value="1" th:selected="${default.ypnl == 1 }">Option 1</option>
+                                    <option value="2" th:selected="${default.ypnl == 2 }">Option 2</option>
+                                    <option value="3" th:selected="${default.ypnl == 3 }">Option 3</option>
+                                    <option value="4" th:selected="${default.ypnl == 4 }">Option 4</option>
+                                </select></td>
+                                <td><label>音频加密算法</label></td>
+                                <td><select name="ypjmsf">
+                                    <option value="1" th:selected="${default.ypjmsf == 1 }">Option 1</option>
+                                    <option value="2" th:selected="${default.ypjmsf == 2 }">Option 2</option>
+                                    <option value="3" th:selected="${default.ypjmsf == 3 }">Option 3</option>
+                                    <option value="4" th:selected="${default.ypjmsf == 4 }">Option 4</option>
+                                </select></td>
+                            </tr>
+
+                            <tr style="background-color:#fff;">
+                                <td><label>会议存储</label></td>
+                                <td><select name="hycc">
+                                    <option value="1" th:selected="${default.hycc == 1 }">Option 1</option>
+                                    <option value="2" th:selected="${default.hycc == 2 }">Option 2</option>
+                                    <option value="3" th:selected="${default.hycc == 3 }">Option 3</option>
+                                    <option value="4" th:selected="${default.hycc == 4 }">Option 4</option>
+                                </select></td>
+                                <td><label>主视频加密算法</label></td>
+                                <td><select name="zspjmsf">
+                                    <option value="1" th:selected="${default.zspjmsf == 1 }">Option 1</option>
+                                    <option value="2" th:selected="${default.zspjmsf == 2 }">Option 2</option>
+                                    <option value="3" th:selected="${default.zspjmsf == 3 }">Option 3</option>
+                                    <option value="4" th:selected="${default.zspjmsf == 4 }">Option 4</option>
+                                </select></td>
+                            </tr>
+
+                            <tr style="background-color:#fff;">
+                                <td><label>辅视频加密算法</label></td>
+                                <td><select name="fspjmsf">
+                                    <option value="1" th:selected="${default.fspjmsf == 1 }">Option 1</option>
+                                    <option value="2" th:selected="${default.fspjmsf == 2 }">Option 2</option>
+                                    <option value="3" th:selected="${default.fspjmsf == 3 }">Option 3</option>
+                                    <option value="4" th:selected="${default.fspjmsf == 4 }">Option 4</option>
+                                </select></td>
+                            </tr>
+
+                            <tr style="background-color:#fff;">
+                                <td colspan="4">
+                                    <input class="mybutton" type="submit" value="保存"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                    <div class="clear"></div>
+                    <!-- End .clear -->
+                </div>
+                <!-- End #tab2 -->
+            </div>
+        </form>
+        <!-- End .content-box-content -->
+    </div>
+
+    <div id="footer">
+        <small> <!-- Remove this notice or replace it with whatever you want -->
+            &#169; Copyright 2010 Your Company | Powered by <a href="#">admin
+                templates</a> | <a href="#">Top</a>
+        </small>
+        <a href="http://www.mycodes.net/" target="_blank">www.mycodes.net</a>
+    </div>
+    <!-- End #footer -->
+</div>
+<!-- End #main-content -->
+</body>
+</html>

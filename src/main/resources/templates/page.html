@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!-- 分页导航 -->
+<div th:fragment="fenye" class="pagination" th:if="${page.pageSum > 1}" th:inline="text">
+		<span th:if="${page.page == 1}">
+			<a title="First Page">&laquo; First</a>
+			<a title="Previous Page">&laquo; Previous</a>
+		</span>
+        <span th:unless="${page.page == 1}">
+			<a th:href="${page.url + '&page=1'}" title="First Page">&laquo; First</a>
+			<a th:href="${page.url + '&page=' + (page.page - 1)}" title="Previous Page">&laquo; Previous</a>
+		</span>
+
+		<span th:each="index : ${page.indexs}">
+			<span th:if="${page.page == index}">
+				<a class="number current" th:title="${index}" th:text="${index}">1</a>
+			</span>
+			<span th:unless="${page.page == index}">
+				<a th:href="${page.url + '&page=' + index}" class="number" th:title="${index}" th:text="${index}">1</a>
+			</span>
+		</span>
+
+		<span th:unless="${page.page == page.pageSum}">
+			<a th:href="${page.url + '&page=' + (page.page + 1)}" title="Next Page">Next &raquo;</a>
+			<a th:href="${page.url + '&page=' + page.pageSum}" title="Last Page">Last &raquo;</a>
+		</span>
+        <span th:if="${page.page == page.pageSum}">
+			<a title="Next Page">Next &raquo;</a>
+			<a title="Last Page">Last &raquo;</a>
+		</span>
+
+        <span>
+			<a><span>当前第[[${page.page}]]页/共[[${page.pageSum}]]页</span></a>
+		</span>
+</div>
+</body>
+</html>
