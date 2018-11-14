@@ -1,6 +1,7 @@
 package com.media.video_meeting.service.impl;
 
 import com.media.video_meeting.dao.SystemLogMapper;
+import com.media.video_meeting.entity.SearchLog;
 import com.media.video_meeting.entity.SystemLog;
 import com.media.video_meeting.service.ISystemLogService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,17 @@ public class SystemLogServiceImpl implements ISystemLogService {
     }
 
     @Override
+    public int deleteLogs(Integer[] ids) {
+        if(ids != null) {
+            for (Integer id : ids) {
+                systemLogMapper.deleteByPrimaryKey(id);
+            }
+            return 1;
+        }
+        return 0;
+    }
+
+    @Override
     public int clearLog() {
         return systemLogMapper.clearLog();
     }
@@ -38,5 +50,10 @@ public class SystemLogServiceImpl implements ISystemLogService {
     @Override
     public List<SystemLog> queryAll() {
         return systemLogMapper.queryAll();
+    }
+
+    @Override
+    public List<SystemLog> searchLog(SearchLog searchLog) {
+        return systemLogMapper.searchLog(searchLog);
     }
 }

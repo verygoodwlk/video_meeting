@@ -1,6 +1,8 @@
 package com.media.video_meeting.service;
 
+import com.media.video_meeting.entity.SearchLog;
 import com.media.video_meeting.entity.SystemLog;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -15,7 +17,11 @@ public interface ISystemLogService {
 
     int deleteLog(Integer id);
 
+    int deleteLogs(Integer[] ids);
+
     int clearLog();
 
     List<SystemLog> queryAll();
+
+    List<SystemLog> searchLog(@Param("searchLog") SearchLog searchLog);
 }

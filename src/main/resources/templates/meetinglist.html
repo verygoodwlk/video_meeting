@@ -21,6 +21,26 @@
     <!-- jQuery Configuration -->
     <script type="text/javascript"
             src="resources/scripts/simpla.jquery.configuration.js"></script>
+
+    <script th:inline="javascript">
+        //删除会议
+        function deletemeeting(){
+            //批量删除
+            var length = $("input[type='checkbox'][name='mid']:checked").length;
+            if(length <= 0){
+                alert("请至少选择一条会议记录");
+                return;
+            }
+
+
+            if(confirm("确定要删除指定的会议信息吗？")){
+                var out_trade_no = [[${#request.getContextPath()}]];
+                $("#formid").attr("action", out_trade_no + "/meeting/deleteMeeting");
+                //提交表单
+                $("#formid").submit();
+            }
+        }
+    </script>
 </head>
 <body>
 <div id="main-content">
@@ -41,6 +61,7 @@
             <br/>
 
             <div class="tab-content default-tab" id="tab1">
+                <form id="formid" method="post">
                 <table>
                     <thead>
                     <tr>
@@ -55,20 +76,21 @@
 
                     <tbody>
                     <tr th:each="meeting : ${meetings}">
-                        <td><input type="checkbox" th:value="${meeting.id}"/></td>
+                        <td><input type="checkbox" name="mid" th:value="${meeting.id}"/></td>
                         <td th:text="${meeting.name} + '/' + ${meeting.number}">Lorem ipsum dolor</td>
                         <td th:text="${meeting.hystate}"><a href="#" title="title">Sit amet</a></td>
                         <td th:text="${#dates.format(meeting.createtime, 'yyyy-MM-dd HH:mm:ss')}">Consectetur adipiscing</td>
                         <td th:text="${meeting.isfoerver == 1 ? '永久会议' : meeting.timeStr}">Donec tortor diam</td>
-                        <td>
-                            <!-- Icons --> <a href="#" title="Edit"><img
+                        <td th:text="${meeting.type}">Donec tortor diam</td>
+                        <!--<td>
+                            &lt;!&ndash; Icons &ndash;&gt; <a href="#" title="Edit"><img
                                 src="resources/images/icons/pencil.png" alt="Edit" /></a> <a
                                 href="#" title="Delete"><img
                                 src="resources/images/icons/cross.png" alt="Delete" /></a> <a
                                 href="#" title="Edit Meta"><img
                                 src="resources/images/icons/hammer_screwdriver.png"
                                 alt="Edit Meta" /></a>
-                        </td>
+                        </td>-->
                     </tr>
                     </tbody>
 
@@ -76,6 +98,9 @@
                     <tfoot>
                     <tr>
                         <td colspan="6">
+                            <div class="bulk-actions align-left">
+                                <a class="mybutton" href="javascript:deletemeeting();">删除会议</a>
+                            </div>
                             <!-- 分页导航 -->
                             <div class="pagination" th:replace="page :: fenye">
                             </div> <!-- End .pagination -->
@@ -84,6 +109,9 @@
                     </tr>
                     </tfoot>
                 </table>
+                </form>
+
+
             </div>
         </div>
         <!-- End .content-box-content -->

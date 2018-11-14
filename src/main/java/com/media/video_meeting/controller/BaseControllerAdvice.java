@@ -18,6 +18,7 @@ public class BaseControllerAdvice {
     @ExceptionHandler(Exception.class)
     public String exceptionHandler(Exception e){
         LogUtil.error(logger, "controller运行出现异常", e);
+
         return "error";
     }
 

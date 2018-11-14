@@ -1,10 +1,10 @@
 spring:
   datasource:
-    url: jdbc:sqlite:C:\Users\ken\Desktop\admin_hy\Meeting.db
+    url: jdbc:sqlite:C:/Users/ken/Desktop/admin_hy/Meeting.db
     username:
     password:
     driver-class-name: org.sqlite.JDBC
-    type: com.mchange.v2.c3p0.ComboPooledDataSource
+#    type: com.mchange.v2.c3p0.ComboPooledDataSource
 mybatis:
   mapper-locations: classpath:com/media/video_meeting/dao/mapper/*.xml
   type-aliases-package: com.media.video_meeting.entity

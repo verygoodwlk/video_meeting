@@ -65,4 +65,16 @@ public class MeetingServiceImpl implements IMeetingService {
         }
         return meetingMapper.queryAll();
     }
+
+    @Override
+    @Transactional
+    public int deleteMeetings(Integer[] mid){
+        if(mid != null){
+            for (Integer integer : mid) {
+                meetingMapper.deleteByPrimaryKey(integer);
+                meetingMoreInfoMapper.deleteByMid(integer);
+            }
+        }
+        return 1;
+    }
 }

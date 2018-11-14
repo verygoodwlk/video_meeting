@@ -52,4 +52,6 @@ public interface MeetingMoreInfoMapper {
     int updateByPrimaryKey(MeetingMoreInfo record);
 
     MeetingMoreInfo selectDefaultMeetingMoreInfo();
+
+    int deleteByMid(Integer mid);
 }

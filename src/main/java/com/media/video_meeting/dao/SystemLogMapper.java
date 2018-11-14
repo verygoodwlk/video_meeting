@@ -1,6 +1,8 @@
 package com.media.video_meeting.dao;
 
+import com.media.video_meeting.entity.SearchLog;
 import com.media.video_meeting.entity.SystemLog;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -56,4 +58,6 @@ public interface SystemLogMapper {
     int clearLog();
 
     List<SystemLog> queryAll();
+
+    List<SystemLog> searchLog(@Param("searchLog") SearchLog searchLog);
 }

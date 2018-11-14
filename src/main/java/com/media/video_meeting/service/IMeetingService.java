@@ -21,4 +21,6 @@ public interface IMeetingService {
     List<Meeting> getAllMeeting();
 
     List<Meeting> getMeetingSearch(String keyword);
+
+    int deleteMeetings(Integer[] mid);
 }

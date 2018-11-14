@@ -66,9 +66,9 @@
             <ul id="main-nav">
                 <li><a class="nav-top-item"> 会议管理 </a>
                     <ul>
-                        <li><a onclick="itemclick(this);" name="/meeting/list" class="current">会议列表</a></li>
-                        <li><a onclick="itemclick(this);" name="/meeting/toadd" >新建会议</a></li>
-                        <li><a onclick="itemclick(this);" name="/meeting/tomeetingconfig" >会议参数设置管理</a></li>
+                        <li><a onclick="itemclick(this);" th:name="${#request.getContextPath() + '/meeting/list'}" name="/meeting/list" class="current">会议列表</a></li>
+                        <li><a onclick="itemclick(this);" th:name="${#request.getContextPath() + '/meeting/toadd'}" name="/meeting/toadd" >新建会议</a></li>
+                        <li><a onclick="itemclick(this);" th:name="${#request.getContextPath() + '/meeting/tomeetingconfig'}" name="/meeting/tomeetingconfig" >会议参数设置管理</a></li>
                     </ul>
                 </li>
                 <li><a class="nav-top-item"> 日志管理 </a>
@@ -81,7 +81,7 @@
     </div>
     <div style="margin: 0 0 0 230px;">
         <!-- End #sidebar -->
-        <iframe id="homeframe" name="homeframe" src="/meeting/list"
+        <iframe id="homeframe" name="homeframe" th:src="${#request.getContextPath() + '/meeting/list'}" src="/meeting/list"
                 width="100%" scrolling="auto"  />
     </div>
 </div>

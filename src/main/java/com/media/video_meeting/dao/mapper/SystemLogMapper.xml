@@ -157,5 +157,22 @@
      from systemlog order by time desc
   </select>
 
+  <select id="searchLog" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/>
+      from systemlog
+      <where>
+        <if test="searchLog.typeVal != 0">
+          and type = #{searchLog.typeVal}
+        </if>
+        <if test="searchLog.mtime != null">
+          and time >= #{searchLog.mtime}
+        </if>
+        <if test="searchLog.matime != null">
+          <![CDATA[and time <= #{searchLog.matime}]]>
+        </if>
+      </where>
+      order by time desc
+  </select>
+
 
 </mapper>
