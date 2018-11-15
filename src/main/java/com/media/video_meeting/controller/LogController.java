@@ -2,8 +2,6 @@ package com.media.video_meeting.controller;
 
 import com.media.video_meeting.entity.SearchLog;
 import com.media.video_meeting.entity.SystemLog;
-import com.media.video_meeting.log.LogType;
-import com.media.video_meeting.log.SysLog;
 import com.media.video_meeting.page.Page;
 import com.media.video_meeting.page.PageHelper;
 import com.media.video_meeting.service.ISystemLogService;
@@ -57,7 +55,7 @@ public class LogController {
         return "syslist";
     }
 
-    @SysLog(value = LogType.DELETE, info = "批量删除日志记录")
+//    @SysLog(value = LogType.DELETE, info = "批量删除日志记录")
     @RequestMapping("/deleteLog")
     public String deleteLog(Integer[] logid, Integer clear){
        if (clear == 1){

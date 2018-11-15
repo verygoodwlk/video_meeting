@@ -17,19 +17,25 @@
     <!--                       Javascripts                       -->
     <!-- jQuery -->
     <script type="text/javascript"
-            src="resources/scripts/jquery-1.3.2.min.js"></script>
+            src="resources/scripts/jquery-2.1.0.min.js"></script>
     <!-- jQuery Configuration -->
     <script type="text/javascript"
             src="resources/scripts/simpla.jquery.configuration.js"></script>
 
+    <!-- 表单验证 -->
+    <link rel="stylesheet" href="resources/widget/easyform/js/easyform/easyform.css">
+    <script src="resources/widget/easyform/js/easyform/easyform.js"></script>
+
     <script>
-        /**
-         * 下一步
-         */
-        function next(){
-            $("#gaoji_id").click();
-        }
+
+        //初始化表单验证
+        $(function (){
+            $("#formid").easyform();
+        });
+
+
     </script>
+
 
 </head>
 <body>
@@ -48,183 +54,165 @@
             <div class="clear"></div>
         </div>
         <!-- End .content-box-header -->
-        <form th:action="${#request.getContextPath() + '/meeting/setdefault'}" method="post">
+        <form id="formid" th:action="${#request.getContextPath() + '/meeting/setdefault'}" method="post">
         <div class="content-box-content">
             <div class="tab-content default-tab" id="tab2">
-                    <fieldset>
-                        <table>
-                            <input name="id" type="hidden" th:value="${default.id}"/>
-                            <tr style="background-color:#fff;">
-                                <td><label>多画面数</label></td>
-                                <td><input
-                                        class="text-input" type="text"
-                                        name="mpic" th:value="${default.mpic}"/></td>
-                                <td><label>主动呼叫终端</label></td>
-                                <td><input
-                                            class="text-input" type="radio"
-                                            name="zdhjzd" value="1" th:checked="${default.zdhjzd == 1 || default.zdhjzd == null}"/>是
-                                    <input
-                                            class="text-input" type="radio"
-                                            name="zdhjzd" value="0" th:checked="${default.zdhjzd == 0}"/>否
-                                </td>
-                            </tr>
-                            <tr style="background-color:#fff;">
-                                <td><label>WEB 监控画面数</label></td>
-                                <td><select name="webpic">
-                                    <option value="1" th:selected="${default.webpic == 1 }">Option 1</option>
-                                    <option value="2" th:selected="${default.webpic == 2 }">Option 2</option>
-                                    <option value="3" th:selected="${default.webpic == 3 }">Option 3</option>
-                                    <option value="4" th:selected="${default.webpic == 4 }">Option 4</option>
+                <fieldset>
+                    <table>
+                        <input name="id" type="hidden" th:value="${default.id}"/>
+                        <tr style="background-color:#fff;">
+                            <td><label>多画面数</label></td>
+                            <td>
+                                <select name="mpic">
+                                    <option value="0" th:selected="${default.mpic == 0 }">2画面</option>
+                                    <option value="1" th:selected="${default.mpic == 1 }">4画面</option>
                                 </select></td>
-                                <td><label>终端上端参加混音</label></td>
-                                <td><input
+                            <td><label>主动呼叫终端</label></td>
+                            <td><input
+                                    class="text-input" type="radio"
+                                    name="zdhjzd" value="1"
+                                    th:checked="${default.zdhjzd == 1 || default.zdhjzd == null}"/>是
+                                <input
                                         class="text-input" type="radio"
-                                        name="zdsdcjhy" value="1" th:checked="${default.zdsdcjhy == 1 || default.zdsdcjhy == null }"/>是
-                                    <input
-                                            class="text-input" type="radio"
-                                            name="zdsdcjhy" value="0" th:checked="${default.zdsdcjhy == 0 }"/>否
-                                </td>
-                            </tr>
-                            <tr style="background-color:#fff;">
-                                <td><label>多画面显示模式</label></td>
-                                <td>
-                                    <input
-                                            class="text-input" type="radio"
-                                            name="mpicmode" value="1" th:checked="${default.mpicmode == 1 || default.mpicmode == null }"/>指定
-                                    <input
-                                            class="text-input" type="radio"
-                                            name="mpicmode" value="0" th:checked="${default.mpicmode == 0 }"/>自动
-                                </td>
-                                <td><label>辅视频码率</label></td>
-                                <td><select name="fspml">
-                                    <option value="1" th:selected="${default.fspml == 1 }">Option 1</option>
-                                    <option value="2" th:selected="${default.fspml == 2 }">Option 2</option>
-                                    <option value="3" th:selected="${default.fspml == 3 }">Option 3</option>
-                                    <option value="4" th:selected="${default.fspml == 4 }">Option 4</option>
-                                </select>
-                                </td>
-                            </tr>
-                            <tr style="background-color:#fff;">
-                                <td><label>组播方式</label></td>
-                                <td><select name="grouptype">
-                                    <option value="1" th:selected="${default.grouptype == 1 }">Option 1</option>
-                                    <option value="2" th:selected="${default.grouptype == 2 }">Option 2</option>
-                                    <option value="3" th:selected="${default.grouptype == 3 }">Option 3</option>
-                                    <option value="4" th:selected="${default.grouptype == 4 }">Option 4</option>
-                                </select></td>
-                                <td><label>辅视频类型</label></td>
-                                <td><select name="fsplx">
-                                    <option value="1" th:selected="${default.fsplx == 1 }">Option 1</option>
-                                    <option value="2" th:selected="${default.fsplx == 2 }">Option 2</option>
-                                    <option value="3" th:selected="${default.fsplx == 3 }">Option 3</option>
-                                    <option value="4" th:selected="${default.fsplx == 4 }">Option 4</option>
-                                </select>
-                                </td>
-                            </tr>
-                            <tr style="background-color:#fff;">
-                                <td><label>组播IP地址</label></td>
-                                <td><input
-                                        class="text-input" type="text"
-                                        name="gourpip" th:value="${default.gourpip}"/></td>
-                                <td><label>辅视频能力</label></td>
-                                <td><select name="fspnl">
-                                    <option value="1" th:selected="${default.fspnl == 1 }">Option 1</option>
-                                    <option value="2" th:selected="${default.fspnl == 2 }">Option 2</option>
-                                    <option value="3" th:selected="${default.fspnl == 3 }">Option 3</option>
-                                    <option value="4" th:selected="${default.fspnl == 4 }">Option 4</option>
-                                </select></td>
-                            </tr>
-                            <tr style="background-color:#fff;">
-                                <td><label>组播端口</label></td>
-                                <td>音频：<input
-                                        class="text-input" type="text"
-                                        name="groupportyp" style="width: 30px" th:value="${default.groupportyp}"/><br/><br/>
-                                    主视频：<input
-                                            class="text-input" type="text"
-                                            name="groupportzsp" style="width: 30px" th:value="${default.groupportzsp}"/><br/><br/>
-                                    辅视频：<input
-                                            class="text-input" type="text"
-                                            name="groupportfsp" style="width: 30px" th:value="${default.groupportfsp}"/><br/><br/>
-                                </td>
-                                <td><label>广播源自看</label></td>
-                                <td><input
+                                        name="zdhjzd" value="0" th:checked="${default.zdhjzd == 0}"/>否
+                            </td>
+                        </tr>
+                        <tr style="background-color:#fff;">
+                            <td><label>WEB 监控画面数</label></td>
+                            <td><select name="webpic">
+                                <option value="0" th:selected="${default.webpic == 0 }">不支持</option>
+                                <option value="1" th:selected="${default.webpic == 1 }">支持</option>
+                            </select></td>
+                            <td><label>终端上端参加混音</label></td>
+                            <td><input
+                                    class="text-input" type="radio"
+                                    name="zdsdcjhy" value="1"
+                                    th:checked="${default.zdsdcjhy == 1 || default.zdsdcjhy == null }"/>是
+                                <input
                                         class="text-input" type="radio"
-                                        name="gbyzk" value="1" th:checked="${default.gbyzk == 1 || default.gbyzk == null }"/>是
-                                    <input
-                                            class="text-input" type="radio"
-                                            name="gbyzk" value="0" th:checked="${default.gbyzk == 0 }"/>否
-                                </td>
-                            </tr>
-
-                            <tr style="background-color:#fff;">
-                                <td><label>视频能力</label></td>
-                                <td><select name="spnl">
-                                    <option value="1" th:selected="${default.spnl == 1 }">Option 1</option>
-                                    <option value="2" th:selected="${default.spnl == 2 }">Option 2</option>
-                                    <option value="3" th:selected="${default.spnl == 3 }">Option 3</option>
-                                    <option value="4" th:selected="${default.spnl == 4 }">Option 4</option>
-                                </select></td>
-                                <td><label>是否启用IP自动降速</label></td>
-                                <td><input
+                                        name="zdsdcjhy" value="0" th:checked="${default.zdsdcjhy == 0 }"/>否
+                            </td>
+                        </tr>
+                        <tr style="background-color:#fff;">
+                            <td><label>多画面显示模式</label></td>
+                            <td>
+                                <input
                                         class="text-input" type="radio"
-                                        name="isopenipzdjs" value="1" th:checked="${default.isopenipzdjs == 1 || default.isopenipzdjs == null }"/>是
-                                    <input
-                                            class="text-input" type="radio"
-                                            name="isopenipzdjs" value="0" th:checked="${default.isopenipzdjs == 0 }"/>否
-                                </td>
-                            </tr>
+                                        name="mpicmode" value="1"
+                                        th:checked="${default.mpicmode == 1 || default.mpicmode == null }"/>指定
+                                <input
+                                        class="text-input" type="radio"
+                                        name="mpicmode" value="0" th:checked="${default.mpicmode == 0 }"/>自动
+                            </td>
+                            <td><label>辅视频码率</label></td>
+                            <td><select name="fspml">
+                                <option value="0" th:selected="${default.fspml == 0 }">自动适应</option>
+                            </select>
+                            </td>
+                        </tr>
+                        <tr style="background-color:#fff;">
+                            <td><label>组播方式</label></td>
+                            <td><select name="grouptype">
+                                <option value="0" th:selected="${default.grouptype == 0 }">不支持</option>
+                                <option value="1" th:selected="${default.grouptype == 1 }">支持</option>
+                            </select></td>
+                            <td><label>辅视频类型</label></td>
+                            <td><select name="fsplx">
+                                <option value="0" th:selected="${default.fsplx == 0 }">启用私有协议</option>
+                                <option value="1" th:selected="${default.fsplx == 1 }">不启用私有协议</option>
+                            </select>
+                            </td>
+                        </tr>
+                        <tr style="background-color:#fff;">
+                            <td><label>组播IP地址</label></td>
+                            <td><input
+                                    class="text-input" type="text"
+                                    name="gourpip" value="226.0.0.2" th:value="${default.gourpip}" data-message="组播IP不能为空！"/></td>
+                            <td><label>辅视频能力</label></td>
+                            <td><select name="fspnl">
+                                <option value="0" th:selected="${default.fspnl == 0 }">H264</option>
+                            </select></td>
+                        </tr>
+                        <tr style="background-color:#fff;">
+                            <td><label>组播端口</label></td>
+                            <td>音频：<input
+                                    class="text-input" type="text"
+                                    name="groupportyp" style="width: 30px" value="12781"
+                                    th:value="${default.groupportyp}"/><br/><br/>
+                                主视频：<input
+                                        class="text-input" type="text"
+                                        name="groupportzsp" style="width: 30px" value="12782" th:value="${default.groupportzsp}"/><br/><br/>
+                                辅视频：<input
+                                        class="text-input" type="text"
+                                        name="groupportfsp" style="width: 30px" value="12783" th:value="${default.groupportfsp}"/><br/><br/>
+                            </td>
+                            <td><label>广播源自看</label></td>
+                            <td><input
+                                    class="text-input" type="radio"
+                                    name="gbyzk" value="1"
+                                    th:checked="${default.gbyzk == 1 || default.gbyzk == null }"/>是
+                                <input
+                                        class="text-input" type="radio"
+                                        name="gbyzk" value="0" th:checked="${default.gbyzk == 0 }"/>否
+                            </td>
+                        </tr>
 
-                            <tr style="background-color:#fff;">
-                                <td><label>音频能力</label></td>
-                                <td><select name="ypnl">
-                                    <option value="1" th:selected="${default.ypnl == 1 }">Option 1</option>
-                                    <option value="2" th:selected="${default.ypnl == 2 }">Option 2</option>
-                                    <option value="3" th:selected="${default.ypnl == 3 }">Option 3</option>
-                                    <option value="4" th:selected="${default.ypnl == 4 }">Option 4</option>
-                                </select></td>
-                                <td><label>音频加密算法</label></td>
-                                <td><select name="ypjmsf">
-                                    <option value="1" th:selected="${default.ypjmsf == 1 }">Option 1</option>
-                                    <option value="2" th:selected="${default.ypjmsf == 2 }">Option 2</option>
-                                    <option value="3" th:selected="${default.ypjmsf == 3 }">Option 3</option>
-                                    <option value="4" th:selected="${default.ypjmsf == 4 }">Option 4</option>
-                                </select></td>
-                            </tr>
+                        <tr style="background-color:#fff;">
+                            <td><label>视频能力</label></td>
+                            <td><select name="spnl">
+                                <option value="0" th:selected="${default.spnl == 0 }">H264</option>
+                            </select></td>
+                            <td><label>是否启用IP自动降速</label></td>
+                            <td><input
+                                    class="text-input" type="radio"
+                                    name="isopenipzdjs" value="1"
+                                    th:checked="${default.isopenipzdjs == 1 || default.isopenipzdjs == null }"/>是
+                                <input
+                                        class="text-input" type="radio"
+                                        name="isopenipzdjs" value="0" th:checked="${default.isopenipzdjs == 0 }"/>否
+                            </td>
+                        </tr>
 
-                            <tr style="background-color:#fff;">
-                                <td><label>会议存储</label></td>
-                                <td><select name="hycc">
-                                    <option value="1" th:selected="${default.hycc == 1 }">Option 1</option>
-                                    <option value="2" th:selected="${default.hycc == 2 }">Option 2</option>
-                                    <option value="3" th:selected="${default.hycc == 3 }">Option 3</option>
-                                    <option value="4" th:selected="${default.hycc == 4 }">Option 4</option>
-                                </select></td>
-                                <td><label>主视频加密算法</label></td>
-                                <td><select name="zspjmsf">
-                                    <option value="1" th:selected="${default.zspjmsf == 1 }">Option 1</option>
-                                    <option value="2" th:selected="${default.zspjmsf == 2 }">Option 2</option>
-                                    <option value="3" th:selected="${default.zspjmsf == 3 }">Option 3</option>
-                                    <option value="4" th:selected="${default.zspjmsf == 4 }">Option 4</option>
-                                </select></td>
-                            </tr>
+                        <tr style="background-color:#fff;">
+                            <td><label>音频能力</label></td>
+                            <td><select name="ypnl">
+                                <option value="0" th:selected="${default.ypnl == 0 }">G733</option>
+                            </select></td>
+                            <td><label>音频加密算法</label></td>
+                            <td><select name="ypjmsf">
+                                <option value="0" th:selected="${default.ypjmsf == 0 }">不支持</option>
+                                <option value="1" th:selected="${default.ypjmsf == 1 }">支持</option>
+                            </select></td>
+                        </tr>
 
-                            <tr style="background-color:#fff;">
-                                <td><label>辅视频加密算法</label></td>
-                                <td><select name="fspjmsf">
-                                    <option value="1" th:selected="${default.fspjmsf == 1 }">Option 1</option>
-                                    <option value="2" th:selected="${default.fspjmsf == 2 }">Option 2</option>
-                                    <option value="3" th:selected="${default.fspjmsf == 3 }">Option 3</option>
-                                    <option value="4" th:selected="${default.fspjmsf == 4 }">Option 4</option>
-                                </select></td>
-                            </tr>
+                        <tr style="background-color:#fff;">
+                            <td><label>会议存储</label></td>
+                            <td><select name="hycc">
+                                <option value="0" th:selected="${default.hycc == 0 }">自动存储</option>
+                                <option value="1" th:selected="${default.hycc == 1 }">不存储</option>
+                            </select></td>
+                            <td><label>主视频加密算法</label></td>
+                            <td><select name="zspjmsf">
+                                <option value="0" th:selected="${default.zspjmsf == 0 }">不支持</option>
+                                <option value="1" th:selected="${default.zspjmsf == 1 }">支持</option>
+                            </select></td>
+                        </tr>
 
-                            <tr style="background-color:#fff;">
-                                <td colspan="4" >
-                                    <input class="mybutton" type="submit" value="保存"/>
-                                </td>
-                            </tr>
-                        </table>
-                    </fieldset>
+                        <tr style="background-color:#fff;">
+                            <td><label>辅视频加密算法</label></td>
+                            <td><select name="fspjmsf">
+                                <option value="0" th:selected="${default.fspjmsf == 0 }">不支持</option>
+                                <option value="1" th:selected="${default.fspjmsf == 1 }">支持</option>
+                            </select></td>
+                        </tr>
+
+                        <tr style="background-color:#fff;">
+                            <td colspan="4">
+                                <input class="mybutton" type="submit" value="保存"/>
+                            </td>
+                        </tr>
+                    </table>
+                </fieldset>
                     <div class="clear"></div>
                     <!-- End .clear -->
             </div>

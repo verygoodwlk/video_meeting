@@ -75,13 +75,14 @@
                     </thead>
 
                     <tbody>
-                    <tr th:each="meeting : ${meetings}">
+                    <tr th:switch="${meeting.type}" th:each="meeting : ${meetings}">
                         <td><input type="checkbox" name="mid" th:value="${meeting.id}"/></td>
                         <td th:text="${meeting.name} + '/' + ${meeting.number}">Lorem ipsum dolor</td>
                         <td th:text="${meeting.hystate}"><a href="#" title="title">Sit amet</a></td>
                         <td th:text="${#dates.format(meeting.createtime, 'yyyy-MM-dd HH:mm:ss')}">Consectetur adipiscing</td>
                         <td th:text="${meeting.isfoerver == 1 ? '永久会议' : meeting.timeStr}">Donec tortor diam</td>
-                        <td th:text="${meeting.type}">Donec tortor diam</td>
+                        <td th:case="0" th:text="主麦形式">Donec tortor diam</td>
+                        <td th:case="1" th:text="多方讨论形式">Donec tortor diam</td>
                         <!--<td>
                             &lt;!&ndash; Icons &ndash;&gt; <a href="#" title="Edit"><img
                                 src="resources/images/icons/pencil.png" alt="Edit" /></a> <a

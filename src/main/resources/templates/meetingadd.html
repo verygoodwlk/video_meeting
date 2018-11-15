@@ -17,10 +17,14 @@
     <!--                       Javascripts                       -->
     <!-- jQuery -->
     <script type="text/javascript"
-            src="resources/scripts/jquery-1.3.2.min.js"></script>
+            src="resources/scripts/jquery-2.1.0.min.js"></script>
     <!-- jQuery Configuration -->
     <script type="text/javascript"
             src="resources/scripts/simpla.jquery.configuration.js"></script>
+
+    <!-- 表单验证 -->
+    <link rel="stylesheet" href="resources/widget/easyform/js/easyform/easyform.css">
+    <script src="resources/widget/easyform/js/easyform/easyform.js"></script>
 
     <script>
         /**
@@ -29,6 +33,12 @@
         function next() {
             $("#gaoji_id").click();
         }
+
+        //初始化表单验证
+        $(function (){
+            $("#formid").easyform();
+        });
+
 
     </script>
 
@@ -49,7 +59,7 @@
             <div class="clear"></div>
         </div>
         <!-- End .content-box-header -->
-        <form th:action="${#request.getContextPath() + '/meeting/add'}" method="post">
+        <form id="formid" th:action="${#request.getContextPath() + '/meeting/add'}" method="post">
             <div class="content-box-content">
                 <div class="tab-content default-tab" id="tab1">
                     <fieldset>
@@ -58,39 +68,39 @@
                                 <td><label>会议名称</label></td>
                                 <td><input
                                         class="text-input" type="text"
-                                        name="name" value="视频会议"/></td>
+                                        name="name" value="视频会议" data-easyform="null" data-message="会议名称不能为空！"/></td>
                                 <td><label>会议号码</label></td>
                                 <td><input
-                                        class="text-input" type="text"
-                                        name="number" value=""/></td>
+                                        class="text-input" id="number_id" type="text"
+                                        name="number" th:value="${number}"/></td>
                             </tr>
                             <tr style="background-color:#fff;">
                                 <td><label>密码</label></td>
-                                <td><input
+                                <td><input id="password_id"
                                         class="text-input" type="password"
-                                        name="password" value="888888"/></td>
+                                        name="password" value="888888" data-easyform="length:6 16;" data-message="请输入6到16位的密码！"/></td>
                                 <td><label>确认密码</label></td>
                                 <td><input
                                         class="text-input" type="password"
-                                        name="againpassword" value="888888"/></td>
+                                        name="againpassword" data-easyform="equal:#password_id;" data-message="两次密码输入不匹配" value="888888"/></td>
                             </tr>
                             <tr style="background-color:#fff;">
                                 <td><label>会议时长</label></td>
-                                <td colspan="3"><select name="time1"
-                                >
-                                    <option value="1">Option 1</option>
-                                    <option value="2">Option 2</option>
-                                    <option value="3">Option 3</option>
-                                    <option value="4">Option 4</option>
+                                <td colspan="3"><select name="time1">
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
                                 </select> 小时
                                     <select name="time2">
-                                        <option value="1">Option 1</option>
-                                        <option value="2">Option 2</option>
-                                        <option value="3">Option 3</option>
-                                        <option value="4">Option 4</option>
+                                        <option value="15">15</option>
+                                        <option value="30">30</option>
+                                        <option value="45">45</option>
                                     </select> 分钟
                                     <input type="checkbox"
-                                           name="isfoerver" value="1"/> 永久会议
+                                           name="isfoerver" value="1" alt="false"/> 永久会议
                                 </td>
                             </tr>
                             <tr style="background-color:#fff;">
@@ -103,33 +113,26 @@
                                 </select></td>
                                 <td><label>会议类型</label></td>
                                 <td><select name="type">
-                                    <option value="1">Option 1</option>
-                                    <option value="2">Option 2</option>
-                                    <option value="3">Option 3</option>
-                                    <option value="4">Option 4</option>
+                                    <option value="0">主麦形式</option>
+                                    <option value="1">多方讨论形式</option>
                                 </select>
                                 </td>
                             </tr>
                             <tr style="background-color:#fff;">
                                 <td><label>开会方式</label></td>
                                 <td><select name="fs">
-                                    <option value="1">Option 1</option>
-                                    <option value="2">Option 2</option>
-                                    <option value="3">Option 3</option>
-                                    <option value="4">Option 4</option>
+                                    <option value="0">中途允许加入</option>
+                                    <option value="1">中途不允许加入</option>
                                 </select></td>
                                 <td><label>三级级联口</label></td>
                                 <td><select name="lk">
-                                    <option value="1">Option 1</option>
-                                    <option value="2">Option 2</option>
-                                    <option value="3">Option 3</option>
-                                    <option value="4">Option 4</option>
+                                    <option value="0">只能切换</option>
                                 </select></td>
                             </tr>
                             <tr style="background-color:#fff;">
                                 <td><label>备注</label></td>
                                 <td colspan="3">
-                                    <textarea cols="10" rows="5" name="info"></textarea>
+                                    <textarea cols="10" rows="5" name="info" alt="false"></textarea>
                                 </td>
 
                             </tr>
@@ -138,6 +141,7 @@
                                     <input class="mybutton" type="button" onclick="next();" value="下一步"/>
                                     <input class="mybutton" type="submit" value="保存"/>
                                 </td>
+
                             </tr>
                         </table>
                     </fieldset>
@@ -150,9 +154,11 @@
                         <table>
                             <tr style="background-color:#fff;">
                                 <td><label>多画面数</label></td>
-                                <td><input
-                                        class="text-input" type="text"
-                                        name="mpic" th:value="${default.mpic}"/></td>
+                                <td>
+                                    <select name="mpic">
+                                        <option value="0" th:selected="${default.mpic == 0 }">2画面</option>
+                                        <option value="1" th:selected="${default.mpic == 1 }">4画面</option>
+                                    </select></td>
                                 <td><label>主动呼叫终端</label></td>
                                 <td><input
                                         class="text-input" type="radio"
@@ -166,10 +172,8 @@
                             <tr style="background-color:#fff;">
                                 <td><label>WEB 监控画面数</label></td>
                                 <td><select name="webpic">
-                                    <option value="1" th:selected="${default.webpic == 1 }">Option 1</option>
-                                    <option value="2" th:selected="${default.webpic == 2 }">Option 2</option>
-                                    <option value="3" th:selected="${default.webpic == 3 }">Option 3</option>
-                                    <option value="4" th:selected="${default.webpic == 4 }">Option 4</option>
+                                    <option value="0" th:selected="${default.webpic == 0 }">不支持</option>
+                                    <option value="1" th:selected="${default.webpic == 1 }">支持</option>
                                 </select></td>
                                 <td><label>终端上端参加混音</label></td>
                                 <td><input
@@ -194,27 +198,20 @@
                                 </td>
                                 <td><label>辅视频码率</label></td>
                                 <td><select name="fspml">
-                                    <option value="1" th:selected="${default.fspml == 1 }">Option 1</option>
-                                    <option value="2" th:selected="${default.fspml == 2 }">Option 2</option>
-                                    <option value="3" th:selected="${default.fspml == 3 }">Option 3</option>
-                                    <option value="4" th:selected="${default.fspml == 4 }">Option 4</option>
+                                    <option value="0" th:selected="${default.fspml == 0 }">自动适应</option>
                                 </select>
                                 </td>
                             </tr>
                             <tr style="background-color:#fff;">
                                 <td><label>组播方式</label></td>
                                 <td><select name="grouptype">
-                                    <option value="1" th:selected="${default.grouptype == 1 }">Option 1</option>
-                                    <option value="2" th:selected="${default.grouptype == 2 }">Option 2</option>
-                                    <option value="3" th:selected="${default.grouptype == 3 }">Option 3</option>
-                                    <option value="4" th:selected="${default.grouptype == 4 }">Option 4</option>
+                                    <option value="0" th:selected="${default.grouptype == 0 }">不支持</option>
+                                    <option value="1" th:selected="${default.grouptype == 1 }">支持</option>
                                 </select></td>
                                 <td><label>辅视频类型</label></td>
                                 <td><select name="fsplx">
-                                    <option value="1" th:selected="${default.fsplx == 1 }">Option 1</option>
-                                    <option value="2" th:selected="${default.fsplx == 2 }">Option 2</option>
-                                    <option value="3" th:selected="${default.fsplx == 3 }">Option 3</option>
-                                    <option value="4" th:selected="${default.fsplx == 4 }">Option 4</option>
+                                    <option value="0" th:selected="${default.fsplx == 0 }">启用私有协议</option>
+                                    <option value="1" th:selected="${default.fsplx == 1 }">不启用私有协议</option>
                                 </select>
                                 </td>
                             </tr>
@@ -222,27 +219,24 @@
                                 <td><label>组播IP地址</label></td>
                                 <td><input
                                         class="text-input" type="text"
-                                        name="gourpip" th:value="${default.gourpip}"/></td>
+                                        name="gourpip" value="226.0.0.2" th:value="${default.gourpip}"/></td>
                                 <td><label>辅视频能力</label></td>
                                 <td><select name="fspnl">
-                                    <option value="1" th:selected="${default.fspnl == 1 }">Option 1</option>
-                                    <option value="2" th:selected="${default.fspnl == 2 }">Option 2</option>
-                                    <option value="3" th:selected="${default.fspnl == 3 }">Option 3</option>
-                                    <option value="4" th:selected="${default.fspnl == 4 }">Option 4</option>
+                                    <option value="0" th:selected="${default.fspnl == 0 }">H264</option>
                                 </select></td>
                             </tr>
                             <tr style="background-color:#fff;">
                                 <td><label>组播端口</label></td>
                                 <td>音频：<input
                                         class="text-input" type="text"
-                                        name="groupportyp" style="width: 30px"
+                                        name="groupportyp" style="width: 30px" value="12781"
                                         th:value="${default.groupportyp}"/><br/><br/>
                                     主视频：<input
                                             class="text-input" type="text"
-                                            name="groupportzsp" style="width: 30px" th:value="${default.groupportzsp}"/><br/><br/>
+                                            name="groupportzsp" style="width: 30px" value="12782" th:value="${default.groupportzsp}"/><br/><br/>
                                     辅视频：<input
                                             class="text-input" type="text"
-                                            name="groupportfsp" style="width: 30px" th:value="${default.groupportfsp}"/><br/><br/>
+                                            name="groupportfsp" style="width: 30px" value="12783" th:value="${default.groupportfsp}"/><br/><br/>
                                 </td>
                                 <td><label>广播源自看</label></td>
                                 <td><input
@@ -258,10 +252,7 @@
                             <tr style="background-color:#fff;">
                                 <td><label>视频能力</label></td>
                                 <td><select name="spnl">
-                                    <option value="1" th:selected="${default.spnl == 1 }">Option 1</option>
-                                    <option value="2" th:selected="${default.spnl == 2 }">Option 2</option>
-                                    <option value="3" th:selected="${default.spnl == 3 }">Option 3</option>
-                                    <option value="4" th:selected="${default.spnl == 4 }">Option 4</option>
+                                    <option value="0" th:selected="${default.spnl == 0 }">H264</option>
                                 </select></td>
                                 <td><label>是否启用IP自动降速</label></td>
                                 <td><input
@@ -277,44 +268,33 @@
                             <tr style="background-color:#fff;">
                                 <td><label>音频能力</label></td>
                                 <td><select name="ypnl">
-                                    <option value="1" th:selected="${default.ypnl == 1 }">Option 1</option>
-                                    <option value="2" th:selected="${default.ypnl == 2 }">Option 2</option>
-                                    <option value="3" th:selected="${default.ypnl == 3 }">Option 3</option>
-                                    <option value="4" th:selected="${default.ypnl == 4 }">Option 4</option>
+                                    <option value="0" th:selected="${default.ypnl == 0 }">G733</option>
                                 </select></td>
                                 <td><label>音频加密算法</label></td>
                                 <td><select name="ypjmsf">
-                                    <option value="1" th:selected="${default.ypjmsf == 1 }">Option 1</option>
-                                    <option value="2" th:selected="${default.ypjmsf == 2 }">Option 2</option>
-                                    <option value="3" th:selected="${default.ypjmsf == 3 }">Option 3</option>
-                                    <option value="4" th:selected="${default.ypjmsf == 4 }">Option 4</option>
+                                    <option value="0" th:selected="${default.ypjmsf == 0 }">不支持</option>
+                                    <option value="1" th:selected="${default.ypjmsf == 1 }">支持</option>
                                 </select></td>
                             </tr>
 
                             <tr style="background-color:#fff;">
                                 <td><label>会议存储</label></td>
                                 <td><select name="hycc">
-                                    <option value="1" th:selected="${default.hycc == 1 }">Option 1</option>
-                                    <option value="2" th:selected="${default.hycc == 2 }">Option 2</option>
-                                    <option value="3" th:selected="${default.hycc == 3 }">Option 3</option>
-                                    <option value="4" th:selected="${default.hycc == 4 }">Option 4</option>
+                                    <option value="0" th:selected="${default.hycc == 0 }">自动存储</option>
+                                    <option value="1" th:selected="${default.hycc == 1 }">不存储</option>
                                 </select></td>
                                 <td><label>主视频加密算法</label></td>
                                 <td><select name="zspjmsf">
-                                    <option value="1" th:selected="${default.zspjmsf == 1 }">Option 1</option>
-                                    <option value="2" th:selected="${default.zspjmsf == 2 }">Option 2</option>
-                                    <option value="3" th:selected="${default.zspjmsf == 3 }">Option 3</option>
-                                    <option value="4" th:selected="${default.zspjmsf == 4 }">Option 4</option>
+                                    <option value="0" th:selected="${default.zspjmsf == 0 }">不支持</option>
+                                    <option value="1" th:selected="${default.zspjmsf == 1 }">支持</option>
                                 </select></td>
                             </tr>
 
                             <tr style="background-color:#fff;">
                                 <td><label>辅视频加密算法</label></td>
                                 <td><select name="fspjmsf">
-                                    <option value="1" th:selected="${default.fspjmsf == 1 }">Option 1</option>
-                                    <option value="2" th:selected="${default.fspjmsf == 2 }">Option 2</option>
-                                    <option value="3" th:selected="${default.fspjmsf == 3 }">Option 3</option>
-                                    <option value="4" th:selected="${default.fspjmsf == 4 }">Option 4</option>
+                                    <option value="0" th:selected="${default.fspjmsf == 0 }">不支持</option>
+                                    <option value="1" th:selected="${default.fspjmsf == 1 }">支持</option>
                                 </select></td>
                             </tr>
 

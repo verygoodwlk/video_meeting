@@ -15,6 +15,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -47,6 +49,7 @@ public class MeetingController {
     public String toAdd(Model model){
         MeetingMoreInfo meetingDefault = meetingService.getMeetingDefault();
         model.addAttribute("default" , meetingDefault);
+        model.addAttribute("number", new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()));
         return "meetingadd";
     }
 

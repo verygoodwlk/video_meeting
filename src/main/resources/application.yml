@@ -4,6 +4,8 @@ spring:
     username:
     password:
     driver-class-name: org.sqlite.JDBC
+  thymeleaf:
+    cache: false
 #    type: com.mchange.v2.c3p0.ComboPooledDataSource
 mybatis:
   mapper-locations: classpath:com/media/video_meeting/dao/mapper/*.xml
@@ -14,3 +16,6 @@ logging:
   config: classpath:log4j2.xml
 page:
   size: 5
+#选择系统是window还是linux
+server:
+  os: window
