@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <base th:href="${#request.getContextPath() + '/'}"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Insert title here</title>
+    <!-- Invalid Stylesheet. This makes stuff look pretty. Remove it if you want the CSS completely valid -->
+    <!-- Reset Stylesheet -->
+    <link rel="stylesheet" href="resources/css/reset.css" type="text/css"
+          media="screen" />
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="resources/css/style.css" type="text/css"
+          media="screen" />
+    <link rel="stylesheet" href="resources/css/invalid.css" type="text/css"
+          media="screen" />
+
+    <!--                       Javascripts                       -->
+    <!-- jQuery -->
+    <script type="text/javascript"
+            src="resources/scripts/jquery-1.3.2.min.js"></script>
+    <!-- jQuery Configuration -->
+    <script type="text/javascript"
+            src="resources/scripts/simpla.jquery.configuration.js"></script>
+
+    <script th:inline="javascript">
+    </script>
+</head>
+<body>
+<div id="main-content">
+    <div class="content-box">
+        <!-- End .content-box-header -->
+        <div class="content-box-content">
+            <h2>终端列表</h2>
+            <!-- 搜索 -->
+            <!--<form th:action="${#request.getContextPath() + '/meeting/search'}" method="get">
+                <input
+                        class="text-input small-input" type="text"
+                        name="keyword" placeholder="请输入会议名称或者号码" th:value=""/>
+                <button type="submit" class="mybutton">搜索</button>
+            </form>-->
+
+            <br/>
+            <hr/>
+            <br/>
+
+            <div class="tab-content default-tab" id="tab1">
+                <form id="formid" method="post">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>状态</th>
+                        <th>终端id</th>
+                        <th>产品型号</th>
+                        <th>终端名称</th>
+                        <th>MAC地址</th>
+                        <th>IP地址</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr th:each="clientmsg : ${clientMsgList}">
+                        <td th:utext="${clientmsg.status == 1 ? '<font color=&#34;green&#34;>在线</font>' : '<font color=&#34;red&#34;>离线</font>'}">在线</td>
+                        <td th:text="${clientmsg.userid}">Lorem ipsum dolor</td>
+                        <td th:text="${clientmsg.productsmodel}">Lorem ipsum dolor</td>
+                        <td th:text="${clientmsg.terminalname}">Lorem ipsum dolor</td>
+                        <td th:text="${clientmsg.mac}">Lorem ipsum dolor</td>
+                        <td th:text="${clientmsg.ip}">Lorem ipsum dolor</td>
+                        <!--<td>
+                            &lt;!&ndash; Icons &ndash;&gt; <a href="#" title="Edit"><img
+                                src="resources/images/icons/pencil.png" alt="Edit" /></a> <a
+                                href="#" title="Delete"><img
+                                src="resources/images/icons/cross.png" alt="Delete" /></a> <a
+                                href="#" title="Edit Meta"><img
+                                src="resources/images/icons/hammer_screwdriver.png"
+                                alt="Edit Meta" /></a>
+                        </td>-->
+                    </tr>
+                    </tbody>
+
+                    <!-- 脚部 -->
+                    <tfoot>
+                    <tr>
+                        <td colspan="6">
+                            <div class="bulk-actions align-left">
+                                <a class="mybutton" href="javascript:deletemeeting();">删除会议</a>
+                            </div>
+                            <!-- 分页导航 -->
+                            <div class="pagination" th:replace="page :: fenye">
+                            </div> <!-- End .pagination -->
+                            <div class="clear"></div>
+                        </td>
+                    </tr>
+                    </tfoot>
+                </table>
+                </form>
+
+
+            </div>
+        </div>
+        <!-- End .content-box-content -->
+    </div>
+</div>
+<!-- End #main-content -->
+</body>
+</html>

@@ -1,5 +1,8 @@
 package com.media.video_meeting.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -11,56 +14,65 @@ import java.io.InputStreamReader;
  */
 public class NetworkUtil {
 
-
+    private static final Logger logger = LoggerFactory.getLogger(NetworkUtil.class);
 
     /**
      * @param ip
      * @param time
      * @return
      */
-    public static String ping(String ip, Integer time, String os){
+    public static String ping(String ip, String time, String os){
 
-        if (StringUtil.isNotEmpty(ip)) {
+        try {
+            if (StringUtil.isNotEmpty(ip) || StringUtil.isNotEmpty(time)) {
 
-            String pingStr = "ping ";
+                String pingStr = "ping ";
 
-            if (os.equalsIgnoreCase("linux")){
-                pingStr += " -c " + time + " " + ip;
-            } else if(os.equalsIgnoreCase("window")){
-                pingStr += " -n " + time + " " + ip;
-            }
-
-            Runtime runtime = Runtime.getRuntime();
-            BufferedReader in = null;
-            try {
-                Process exec = runtime.exec(pingStr);
-                in = new BufferedReader(new InputStreamReader(exec.getInputStream()));
-
-                StringBuilder sb = new StringBuilder();
-                String str = null;
-                while((str = in.readLine()) != null){
-                    if(sb.length() > 0){
-                        sb.append("<br/>");
-                    }
-                    sb.append(str);
+                if (os.equalsIgnoreCase("linux")){
+                    pingStr += " -c " + time + " " + ip;
+                } else if(os.equalsIgnoreCase("window")){
+                    pingStr += " -n " + time + " " + ip;
                 }
 
-                System.out.println(sb.toString());
+                Runtime runtime = Runtime.getRuntime();
+                BufferedReader in = null;
+                Process exec = null;
+                try {
+                    exec = runtime.exec(pingStr);
+                    in = new BufferedReader(new InputStreamReader(exec.getInputStream()));
 
-                return sb.toString();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                if(in != null){
-                    try {
-                        in.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    StringBuilder sb = new StringBuilder();
+                    String str = null;
+                    while((str = in.readLine()) != null){
+                        if(sb.length() > 0){
+                            sb.append("<br/>");
+                        }
+                        sb.append(str);
+                    }
+
+                    System.out.println(sb.toString());
+
+                    return sb.toString();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    if(in != null){
+                        try {
+                            in.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    if(exec != null){
+                        exec.destroy();
                     }
                 }
             }
+        } catch (Exception e) {
+            LogUtil.error(logger, "Ping检测异常", e);
         }
 
-        return null;
+        return "参数异常！";
     }
 }

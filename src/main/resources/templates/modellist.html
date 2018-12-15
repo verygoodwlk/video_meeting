@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <base th:href="${#request.getContextPath() + '/'}"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Insert title here</title>
+    <!-- Invalid Stylesheet. This makes stuff look pretty. Remove it if you want the CSS completely valid -->
+    <!-- Reset Stylesheet -->
+    <link rel="stylesheet" href="resources/css/reset.css" type="text/css"
+          media="screen" />
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="resources/css/style.css" type="text/css"
+          media="screen" />
+    <link rel="stylesheet" href="resources/css/invalid.css" type="text/css"
+          media="screen" />
+
+    <!--                       Javascripts                       -->
+    <!-- jQuery -->
+    <script type="text/javascript"
+            src="resources/scripts/jquery-1.3.2.min.js"></script>
+    <!-- jQuery Configuration -->
+    <script type="text/javascript"
+            src="resources/scripts/simpla.jquery.configuration.js"></script>
+
+</head>
+<body>
+<div id="main-content">
+    <div class="content-box">
+        <!-- End .content-box-header -->
+        <div class="content-box-content">
+            <h2>模块管理</h2>
+
+            <br/>
+            <hr/>
+            <br/>
+
+            <div class="tab-content default-tab" id="tab1">
+                <form id="formid" method="post">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th colspan="2">模块名称</th>
+                            <th>状态</th>
+                            <th>版本号</th>
+                        </tr>
+                        </thead>
+
+                        <tbody th:each="model : ${modelList}">
+                            <tr th:each="models,modelsState : ${model.modelS}">
+                                <td style="width: 100px; text-align: center;" th:colspan="${#arrays.length(model.modelS) > 1 ? 1 : 2}" th:if="${modelsState.first}" th:rowspan="${#arrays.length(model.modelS)}" th:text="${model.mname}">主控模块</td>
+                                <td style="width: 50px;" th:if="${#arrays.length(model.modelS) > 1}" th:text="${models.mnumber}">编号</td>
+                                <td th:text="${models.mstate == 1 ? '正常' : '异常'}">状态</td>
+                                <td th:text="${models.mversion}">版本号</td>
+                            </tr>
+                        </tbody>
+
+                        <!--&lt;!&ndash; 脚部 &ndash;&gt;
+                        <tfoot>
+                        <tr>
+                            <td colspan="6">
+                                <div class="bulk-actions align-left">
+                                    <a class="mybutton" href="javascript:deletemeeting();">删除会议</a>
+                                </div>
+                                &lt;!&ndash; 分页导航 &ndash;&gt;
+                                <div class="pagination" th:replace="page :: fenye">
+                                </div> &lt;!&ndash; End .pagination &ndash;&gt;
+                                <div class="clear"></div>
+                            </td>
+                        </tr>
+                        </tfoot>-->
+                    </table>
+                </form>
+
+
+            </div>
+        </div>
+        <!-- End .content-box-content -->
+    </div>
+</div>
+<!-- End #main-content -->
+</body>
+</html>

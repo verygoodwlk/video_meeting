@@ -38,7 +38,7 @@ public class IndexController {
 
     @RequestMapping("/ping")
     @ResponseBody
-    public String ping(String ip, Integer number){
+    public String ping(String ip, String number){
         LogUtil.info(logger, "ping的地址：" + ip + " 次数：" + number);
         String str = NetworkUtil.ping(ip, number, os);
         return str;

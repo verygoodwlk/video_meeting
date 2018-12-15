@@ -1,11 +1,18 @@
 spring:
   datasource:
-    url: jdbc:sqlite:C:/Users/ken/Desktop/admin_hy/Meeting.db
+    url: jdbc:sqlite:${db.path}
     username:
     password:
     driver-class-name: org.sqlite.JDBC
   thymeleaf:
     cache: false
+  #设置当前的参数版本
+  profiles:
+    active: window
+  #设置文件上传大小
+  servlet:
+    multipart:
+      max-file-size: 10MB
 #    type: com.mchange.v2.c3p0.ComboPooledDataSource
 mybatis:
   mapper-locations: classpath:com/media/video_meeting/dao/mapper/*.xml
@@ -16,6 +23,23 @@ logging:
   config: classpath:log4j2.xml
 page:
   size: 5
-#选择系统是window还是linux
+
+#golang服务器注册地址
+golang:
+  serverpath: ws://192.168.1.186:8000/
+
+---
 server:
   os: window
+db:
+  path: C:/Users/ken/Desktop/admin_hy/Meeting.db
+spring:
+  profiles: window
+
+---
+server:
+  os: linux
+db:
+  path: /usr/local/software/Meeting.db
+spring:
+  profiles: linux

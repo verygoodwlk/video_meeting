@@ -38,6 +38,12 @@
             }
 
 
+            if(number < 1 || number > 10){
+                alert("次数必须再1到10的范围！");
+                return;
+            }
+
+
 
             $(btn).html("请稍等...");
             $(btn).attr("disabled", "disabled");
@@ -75,7 +81,7 @@
                             name="ip" placeholder="请输入测试的ip地址"/>
                 </p>
                 <p>
-                    次数：
+                    次数(1~10)：
                 </p>
                 <p>
                     <input

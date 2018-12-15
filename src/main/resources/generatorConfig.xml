@@ -50,7 +50,15 @@
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false"></table>-->
-        <table tableName="systemlog" domainObjectName="SystemLog"
+        <!--<table tableName="model" domainObjectName="Model"
+               enableCountByExample="false" enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false"
+               selectByExampleQueryId="false"></table>
+        <table tableName="model_s" domainObjectName="ModelS"
+               enableCountByExample="false" enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false"
+               selectByExampleQueryId="false"></table>-->
+        <table tableName="client_msg" domainObjectName="ClientMsg"
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false"></table>
