@@ -58,6 +58,11 @@ public class DBController {
      */
     @RequestMapping("/import")
     public String importFile(MultipartFile dbfile) throws Exception {
+
+        if(dbfile.getSize() == 0){
+            return "error";
+        }
+
         InputStream in = null;
         OutputStream out = null;
         try {

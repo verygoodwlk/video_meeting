@@ -24,6 +24,9 @@ public class SocketInitHandler {
     @Autowired
     private IClientService clientService;
 
+    @Autowired
+    private SocketHeartHandler socketHeartHandler;
+
     /**
      * 初始化连接的操作
      * @param webSocketClient
@@ -48,6 +51,5 @@ public class SocketInitHandler {
         sb.append("]}");
         System.out.println("发送的终端列表：" + sb.toString());
         webSocketClient.send(sb.toString());
-
     }
 }

@@ -56,4 +56,6 @@ public interface ClientMsgMapper {
     List<ClientMsg> queryPage();
 
     List<Integer> queryUserIds();
+
+    int updateByGroupId(Integer groupid);
 }

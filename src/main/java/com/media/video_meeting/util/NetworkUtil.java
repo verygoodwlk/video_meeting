@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 
 /**
  * @Author ken
@@ -39,7 +40,7 @@ public class NetworkUtil {
                 Process exec = null;
                 try {
                     exec = runtime.exec(pingStr);
-                    in = new BufferedReader(new InputStreamReader(exec.getInputStream()));
+                    in = new BufferedReader(new InputStreamReader(exec.getInputStream(), Charset.forName("GBK")));
 
                     StringBuilder sb = new StringBuilder();
                     String str = null;

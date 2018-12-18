@@ -29,6 +29,8 @@ public class MyWebSocket extends WebSocketClient {
     private SocketMsgHandler socketMsgHandler;
     @Autowired
     private SocketInitHandler socketInitHandler;
+    @Autowired
+    private SocketHeartHandler socketHeartHandler;
 
     public MyWebSocket(String url) throws URISyntaxException {
         super(new URI(url));
@@ -37,7 +39,12 @@ public class MyWebSocket extends WebSocketClient {
     @Override
     public void onOpen(ServerHandshake serverHandshake) {
         LogUtil.info(logger, "连接状态：" + isOpen());
-        socketInitHandler.init(this);
+        if(isOpen()){
+            //初始化连接操作
+            socketInitHandler.init(this);
+            //心跳操作
+            socketHeartHandler.heart(this);
+        }
     }
 
     @Override
@@ -56,12 +63,14 @@ public class MyWebSocket extends WebSocketClient {
     @Override
     public void onClose(int i, String s, boolean b) {
         LogUtil.info(logger, "关闭一个连接：" + s);
+        socketHeartHandler.stop();
         again();
     }
 
     @Override
     public void onError(Exception e) {
         LogUtil.info(logger, "连接发生异常！！" + e.getMessage());
+        socketHeartHandler.stop();
     }
 
     @PreDestroy

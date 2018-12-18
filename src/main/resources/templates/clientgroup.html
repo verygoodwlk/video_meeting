@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <base th:href="${#request.getContextPath() + '/'}"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Insert title here</title>
+    <!-- Invalid Stylesheet. This makes stuff look pretty. Remove it if you want the CSS completely valid -->
+    <!-- Reset Stylesheet -->
+    <link rel="stylesheet" href="resources/css/reset.css" type="text/css"
+          media="screen"/>
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="resources/css/style.css" type="text/css"
+          media="screen"/>
+    <link rel="stylesheet" href="resources/css/invalid.css" type="text/css"
+          media="screen"/>
+
+    <!--                       Javascripts                       -->
+    <!-- jQuery -->
+    <script type="text/javascript"
+            src="resources/scripts/jquery-2.1.0.min.js"></script>
+    <!-- jQuery Configuration -->
+    <script type="text/javascript"
+            src="resources/scripts/simpla.jquery.configuration.js"></script>
+
+    <!-- dialog弹出框的导入-->
+    <link rel="stylesheet" href="//apps.bdimg.com/libs/jqueryui/1.10.4/css/jquery-ui.min.css"/>
+    <script type="text/javascript" src="resources/widget/dialog/jquery-ui-1.9.2.custom.min.js"></script>
+    <script type="text/javascript" src="resources/js/plugin.js"></script>
+
+
+    <!-- ztree树形结构 -->
+    <link rel="stylesheet" href="resources/widget/zTree/zTreeStyle/zTreeStyle.css"/>
+    <script type="text/javascript" src="resources/widget/zTree/jquery.ztree.all.min.js"></script>
+
+    <script th:inline="javascript">
+        $(function(){
+            $.ajax({
+                url:[[${#request.getContextPath()}]] + "/client/group",
+                success: function(data){
+                    var zTreeNodes = data;
+
+                    var setting = {
+                        data:{
+                            simpleData:{
+                                enable: true,
+                                pIdKey: "pid"
+                            },
+                            key: {
+                                name: "gname"
+                            }
+                        },
+                        edit: {
+                            enable: true,
+                            showRemoveBtn: true,
+                            showRenameBtn: false,
+                            drag:{
+                                isCopy: false,
+                                isMove: true,
+                                prev: false,
+                                next: false,
+                                borderMax: 20,
+                                borderMin: -10
+                            }
+                        },
+                        callback: {
+                            beforeRemove: function (treeId, treeNode){
+                                if(treeNode.id == 1){
+                                    alert("不能移除'默认分组'！");
+                                    return false;
+                                }
+
+                                if(treeNode.id == null){
+                                    alert("不能移除'终端'设备！");
+                                    return false;
+                                }
+
+                                if(confirm("确定移除该分组？（该分组下的终端会移动到默认分组下）")){
+                                    //开始移除
+                                    $.ajax({
+                                        url: [[${#request.getContextPath()}]] + "/client/deletegroup",
+                                        data: {id:treeNode.id},
+                                        success: function(data){
+                                            if(data == true){
+                                                location.reload();
+                                            } else {
+                                                alert("群组删除失败！");
+                                            }
+                                        }
+                                    });
+                                    return true;
+                                }
+
+                                return false;
+                            },
+                            beforeDrag: function(treeId, treeNodes){
+                                if(treeNodes[0].id == 1){
+                                    alert("'默认分组'不能移动！");
+                                    return false;
+                                }
+                                return true;
+                            },
+                            beforeDrop: function(treeId, treeNodes, targetNode, moveType, isCopy){
+
+                                var treeId = treeNodes[0].id == null ? treeNodes[0].userid : treeNodes[0].id;
+                                var targetId = targetNode == null ? -1 : targetNode.id;
+                                var isClient = treeNodes[0].id == null ? true : false;
+
+                                if(targetNode != null && targetId == null && moveType == "inner"){
+                                    alert("不能移动到'终端'设备下！！");
+                                    return false;
+                                }
+
+
+                                // console.log("移动的节点：" + treeNodes[0].gname + " 移动到的节点：" + targetNode.gname + "  关系：" + moveType);
+
+                                //开始移动
+                                $.ajax({
+                                    type: "POST",
+                                    url:[[${#request.getContextPath()}]] + "/client/move",
+                                    data: {id:treeId,  pid: targetId, isClient: isClient}
+                                });
+
+                                return true;
+                            },
+                            onDrop: function(){
+                                location.reload();
+                            }
+                        }
+                    };
+
+                    var ztreeObj = $.fn.zTree.init($("#ztree_div"), setting, zTreeNodes);
+                    ztreeObj.expandAll(true);
+                },
+                dataType:"json"
+            });
+        });
+
+        /**
+         * 弹出框
+         */
+        function add_dialog(){
+            openDialog("dialog_div", "添加群组", 300, 300);
+        }
+    </script>
+
+</head>
+<body>
+<div id="main-content">
+    <div class="content-box">
+        <!-- End .content-box-header -->
+        <div class="content-box-content">
+            <h2>群组管理</h2>
+
+            <br/>
+            <hr/>
+            <br/>
+
+            <button class="mybutton" onclick="add_dialog();">添加分组</button>
+            <!-- 树形结构 -->
+            <div id="ztree_div" class="ztree"></div>
+
+        </div>
+        <!-- End .content-box-content -->
+    </div>
+</div>
+<!-- End #main-content -->
+
+<div id="dialog_div" style="display: none;">
+    <form th:action="${#request.getContextPath() + '/client/addgroup'}" method="post">
+        <fieldset>
+            <p>
+                <label>群组名称</label> <input
+                    class="text-input" type="text"
+                    name="gname" />
+            </p>
+            <p>
+                <button type="submit" class="mybutton">提交</button>
+            </p>
+        </fieldset>
+    </form>
+</div>
+
+</body>
+</html>

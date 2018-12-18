@@ -51,7 +51,7 @@
             $.ajax({
                 url: [[${#request.getContextPath()}]] + '/ws/isconnection',
                 success: function(data){
-                    console.log(data);
+                    // console.log(data);
                     $("#conn").html(data == "true" ? "<font color='green'>连接成功</font>" : "<font color='yellow'>连接断开，正在重连... </font>");
 
                     setTimeout(function () {
@@ -92,7 +92,8 @@
                 </li>
                 <li><a class="nav-top-item"> 终端管理 </a>
                     <ul>
-                        <li><a onclick="itemclick(this);" th:name="${#request.getContextPath() + '/client/list'}" name="/client/list" class="current">终端列表</a></li>
+                        <li><a onclick="itemclick(this);" th:name="${#request.getContextPath() + '/client/list'}" name="/client/list">终端列表</a></li>
+                        <li><a onclick="itemclick(this);" th:name="${#request.getContextPath() + '/topage/clientgroup'}" name="/topage/clientgroup">群组管理</a></li>
                     </ul>
                 </li>
                 <li><a class="nav-top-item"> 系统诊断 </a>

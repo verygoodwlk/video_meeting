@@ -1,5 +1,6 @@
 package com.media.video_meeting.service;
 
+import com.media.video_meeting.entity.ClientGroup;
 import com.media.video_meeting.entity.ClientMsg;
 
 import java.util.List;
@@ -16,5 +17,13 @@ public interface IClientService {
     List<ClientMsg> queryPage();
 
     List<Integer> queryUserIds();
+
+    List<ClientGroup> queryAllGroup();
+
+    int addGroup(ClientGroup group);
+
+    int deleteGroup(Integer id);
+
+    int move(Integer id, Integer pid, boolean isClient);
 
 }

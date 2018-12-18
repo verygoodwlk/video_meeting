@@ -18,6 +18,9 @@ public class SocketMsgHandler {
     @Autowired
     private IClientService clientService;
 
+    @Autowired
+    private SocketHeartHandler socketHeartHandler;
+
     /**
      * 连接好之后需要初始化的操作
      */
@@ -48,6 +51,10 @@ public class SocketMsgHandler {
                 clientMsgOff.setId("offline");
                 clientMsgOff.setStatus(0);
                 clientService.insertOrUpdate(clientMsgOff);
+                break;
+            case "ack":
+                //心跳机制
+                socketHeartHandler.response(msg);
                 break;
              default:
                  break;
