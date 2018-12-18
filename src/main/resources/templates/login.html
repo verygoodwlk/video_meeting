@@ -38,11 +38,11 @@
     <div id="login-content">
         <form th:action="${#request.getContextPath() + '/user/login'}"
               method="post">
-            <div class="notification information png_bg">
+            <div th:if="${error == 1}" class="notification information png_bg">
                 <div>用户名或者密码错误</div>
             </div>
             <p>
-                <label>邮箱</label> <input class="text-input" name="email"
+                <label>邮箱</label> <input class="text-input" name="username"
                                          type="text" />
             </p>
             <div class="clear"></div>

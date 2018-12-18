@@ -22,11 +22,20 @@
     <script type="text/javascript"
             src="resources/scripts/simpla.jquery.configuration.js"></script>
 
+    <!-- dialog弹出框的导入-->
+    <link rel="stylesheet" href="//apps.bdimg.com/libs/jqueryui/1.10.4/css/jquery-ui.min.css"/>
+    <script type="text/javascript" src="resources/widget/dialog/jquery-ui-1.9.2.custom.min.js"></script>
+    <script type="text/javascript" src="resources/js/plugin.js"></script>
+
+    <!-- ztree树形结构 -->
+    <link rel="stylesheet" href="resources/widget/zTree/zTreeStyle/zTreeStyle.css"/>
+    <script type="text/javascript" src="resources/widget/zTree/jquery.ztree.all.min.js"></script>
+
     <!-- 表单验证 -->
     <link rel="stylesheet" href="resources/widget/easyform/js/easyform/easyform.css">
     <script src="resources/widget/easyform/js/easyform/easyform.js"></script>
 
-    <script>
+    <script th:inline="javascript">
         /**
          * 下一步
          */
@@ -38,6 +47,69 @@
         $(function (){
             $("#formid").easyform();
         });
+
+
+        $(function(){
+            $.ajax({
+                url:[[${#request.getContextPath()}]] + "/client/group",
+                success: function(data){
+                    var zTreeNodes = data;
+
+                    var setting = {
+                        data:{
+                            simpleData:{
+                                enable: true,
+                                pIdKey: "pid"
+                            },
+                            key: {
+                                name: "gname"
+                            }
+                        },
+                        check:{
+                            enable: true
+                        }
+                    };
+
+                    var ztreeObj = $.fn.zTree.init($("#ztree_div"), setting, zTreeNodes);
+                    ztreeObj.expandAll(true);
+                },
+                dataType:"json"
+            });
+        });
+
+        /**
+         * 选择开会的终端
+         */
+        function selectClient(){
+            openDialog("dialog_div", "选择终端设备", 300, 400);
+        }
+
+        function select(){
+            var treeObj = $.fn.zTree.getZTreeObj("ztree_div");
+            //获得所有被选择的节点
+            var checkedNodes = treeObj.getCheckedNodes(true);
+
+            var showStr = "";
+            var hiddenStr = "";
+            for(var i = 0; i < checkedNodes.length; i++){
+                if(checkedNodes[i].id == null){
+                    //说明当前是终端
+                    showStr += "<input name='client_start' type='radio' value='" + checkedNodes[i].userid + "'/> " + checkedNodes[i].gname;
+                    hiddenStr += "<input name='client_ids' type='hidden' value='" + checkedNodes[i].userid + "'/>";
+                }
+            }
+
+            if(showStr != "" && hiddenStr != ""){
+                $("#cspan_show").html(showStr);
+                $("#cspan_id").html(hiddenStr);
+            } else {
+                $("#cspan_show").html("未选择终端");
+                $("#cspan_id").html("");
+            }
+
+
+            closeDialog("dialog_div");
+        }
 
 
     </script>
@@ -128,6 +200,20 @@
                                 <td><select name="lk">
                                     <option value="0">只能切换</option>
                                 </select></td>
+                            </tr>
+                            <tr style="background-color:#fff;">
+                                <td><label>开会终端</label></td>
+                                <td colspan="3">
+                                    <button class="mybutton" type="button" onclick="selectClient();">选择开会终端</button>
+                                    <span id="cspan_id"></span>
+                                </td>
+                            </tr>
+                            <tr style="background-color:#fff;">
+                                <td><label>选择发起者</label></td>
+                                <td colspan="3">
+                                    <span id="cspan_show">未选择终端</span>
+                                </td>
+
                             </tr>
                             <tr style="background-color:#fff;">
                                 <td><label>备注</label></td>
@@ -324,5 +410,12 @@
     <!-- End #footer -->
 </div>
 <!-- End #main-content -->
+
+<div id="dialog_div" style="display: none;">
+    <!-- 树形结构 -->
+    <div id="ztree_div" class="ztree"></div>
+    <button class="mybutton" type="button" onclick="select();">确定</button>
+</div>
+
 </body>
 </html>

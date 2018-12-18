@@ -5,6 +5,7 @@ import com.media.video_meeting.dao.MeetingMoreInfoMapper;
 import com.media.video_meeting.entity.Meeting;
 import com.media.video_meeting.entity.MeetingMoreInfo;
 import com.media.video_meeting.service.IMeetingService;
+import com.media.video_meeting.util.MeetingMsgUtil;
 import com.media.video_meeting.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,9 @@ public class MeetingServiceImpl implements IMeetingService {
     @Autowired
     private MeetingMoreInfoMapper meetingMoreInfoMapper;
 
+    @Autowired
+    private MeetingMsgUtil meetingMsgUtil;
+
     //添加会议
     @Override
     @Transactional
@@ -34,6 +38,12 @@ public class MeetingServiceImpl implements IMeetingService {
         //添加会议详细信息
         meetingMoreInfo.setMid(meeting.getId());
         meetingMoreInfoMapper.insertSelective(meetingMoreInfo);
+        //添加会议与终端的关系
+        meetingMapper.insertMeetingClient(meeting.getId(), meeting.getClient_ids(), meeting.getClient_start());
+
+        //发送消息
+        meetingMsgUtil.sendCreateMeeting(meeting);
+
         return 1;
     }
 

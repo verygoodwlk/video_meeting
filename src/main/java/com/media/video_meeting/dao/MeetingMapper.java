@@ -67,4 +67,6 @@ public interface MeetingMapper {
      * @return
      */
     List<Meeting> queryByKeyWord(@Param("keyword") String keyword);
+
+    int insertMeetingClient(@Param("mid") Integer mid, @Param("cids") Integer[] cids, @Param("sid") Integer sid);
 }
