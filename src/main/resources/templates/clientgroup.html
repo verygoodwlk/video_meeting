@@ -33,6 +33,7 @@
     <script type="text/javascript" src="resources/widget/zTree/jquery.ztree.all.min.js"></script>
 
     <script th:inline="javascript">
+        var ztreeObj;
         $(function(){
             $.ajax({
                 url:[[${#request.getContextPath()}]] + "/client/group",
@@ -54,7 +55,7 @@
                             showRemoveBtn: true,
                             showRenameBtn: false,
                             drag:{
-                                isCopy: false,
+                                isCopy: true,
                                 isMove: true,
                                 prev: false,
                                 next: false,
@@ -63,27 +64,52 @@
                             }
                         },
                         callback: {
+                            beforeClick: function(treeId, treeNode, clickFlag){
+                                if(clickFlag == 2){
+                                    // if(treeNode.isClient == 0){
+                                    //     return false;
+                                    // }
+                                    //
+                                    // var selects = ztreeObj.getSelectedNodes();
+                                    // if(selects != null && selects.length > 0 && selects[0].isClient == 0){
+                                    //     return false;
+                                    // }
+
+                                    return false;
+                                }
+                                return true;
+                            },
                             beforeRemove: function (treeId, treeNode){
+                                var isClient = treeNode.isClient == 1 ? true : false;
+                                var id = isClient ? treeNode.userid : treeNode.id;
+                                var gid = -1;
+                                var msg = "确定移除该分组？（该分组下的终端会移动到默认分组下）";
+
                                 if(treeNode.id == 1){
                                     alert("不能移除'默认分组'！");
                                     return false;
                                 }
 
-                                if(treeNode.id == null){
-                                    alert("不能移除'终端'设备！");
-                                    return false;
+                                if(isClient){
+                                    var nodes = ztreeObj.getNodesByParam("userid", treeNode.userid);
+                                    if(nodes.length == 1){
+                                        alert("至少需要保留一个终端设备！");
+                                        return false;
+                                    }
+                                    gid = treeNode.getParentNode().id;
+                                    msg = "确定将该终端设备移出这个群组？";
                                 }
 
-                                if(confirm("确定移除该分组？（该分组下的终端会移动到默认分组下）")){
+                                if(confirm(msg)){
                                     //开始移除
                                     $.ajax({
                                         url: [[${#request.getContextPath()}]] + "/client/deletegroup",
-                                        data: {id:treeNode.id},
+                                        data: {id:id, gid:gid, isClient:isClient},
                                         success: function(data){
                                             if(data == true){
                                                 location.reload();
                                             } else {
-                                                alert("群组删除失败！");
+                                                alert("删除失败！");
                                             }
                                         }
                                     });
@@ -101,9 +127,23 @@
                             },
                             beforeDrop: function(treeId, treeNodes, targetNode, moveType, isCopy){
 
-                                var treeId = treeNodes[0].id == null ? treeNodes[0].userid : treeNodes[0].id;
+                                // var treeId = treeNodes[0].id == null ? treeNodes[0].userid : treeNodes[0].id;
                                 var targetId = targetNode == null ? -1 : targetNode.id;
-                                var isClient = treeNodes[0].id == null ? true : false;
+                                var isClient = treeNodes[0].isClient == 1 ? true : false;
+
+                                var treeIds = new Array();
+                                for(var i = 0; i < treeNodes.length; i++){
+                                    if(isClient){
+                                        //是终端
+                                        treeIds.push(treeNodes[i].userid);
+                                    } else {
+                                        //是群组
+                                        treeIds.push(treeNodes[i].id);
+                                    }
+                                }
+                                //原父节点id
+                                var oldpid = isClient ? treeNodes[0].getParentNode().id : -1;
+
 
                                 if(targetNode != null && targetId == null && moveType == "inner"){
                                     alert("不能移动到'终端'设备下！！");
@@ -111,13 +151,27 @@
                                 }
 
 
-                                // console.log("移动的节点：" + treeNodes[0].gname + " 移动到的节点：" + targetNode.gname + "  关系：" + moveType);
+                                // console.log("移动的节点：" + treeNodes[0].gname + " 移动到的节点：" + targetNode.gname + "  关系：" + moveType + " " + isClient);
+
+                                //确定是否可复制
+                                //复制行为
+                                //查询复制到的父节点下所有的子节点
+                                var nodes = ztreeObj.getNodesByParam("pid", targetNode.id);
+                                for(var x = 0; x < treeNodes.length; x++) {
+                                    for (var i = 0; i < nodes.length; i++) {
+                                        if (nodes[i].userid != null && nodes[i].userid == treeNodes[x].userid) {
+                                            alert("该群组下已经有'" + treeNodes[x].gname + "'这个终端，请勿重复添加！");
+                                            return false;
+                                        }
+                                    }
+                                }
 
                                 //开始移动
                                 $.ajax({
                                     type: "POST",
+                                    traditional: true,
                                     url:[[${#request.getContextPath()}]] + "/client/move",
-                                    data: {id:treeId,  pid: targetId, isClient: isClient}
+                                    data: {ids:treeIds,  pid: targetId, oldpid: oldpid, isClient: isClient, isCopy: isCopy}
                                 });
 
                                 return true;
@@ -128,7 +182,7 @@
                         }
                     };
 
-                    var ztreeObj = $.fn.zTree.init($("#ztree_div"), setting, zTreeNodes);
+                    ztreeObj = $.fn.zTree.init($("#ztree_div"), setting, zTreeNodes);
                     ztreeObj.expandAll(true);
                 },
                 dataType:"json"
@@ -155,7 +209,7 @@
             <hr/>
             <br/>
 
-            <button class="mybutton" onclick="add_dialog();">添加分组</button>
+            <button class="mybutton" onclick="add_dialog();">添加分组</button> <span><font color="red">*按住ctrl+移动进行复制</font></span>
             <!-- 树形结构 -->
             <div id="ztree_div" class="ztree"></div>
 

@@ -132,10 +132,10 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
 
- <!-- <select id="queryAllGroup" resultMap="BaseAllResultMap">
-    select *
-      from client_group g join client_msg m on g.id = m.gid
-  </select>-->
+  <!-- <select id="queryAllGroup" resultMap="BaseAllResultMap">
+     select *
+       from client_group g join client_msg m on g.id = m.gid
+   </select>-->
 
   <select id="queryAllGroup" resultMap="BaseResultMap">
     select *
@@ -143,13 +143,18 @@
   </select>
 
   <select id="queryAllGroupJoinClient" resultMap="BaseAllResultMap">
-    select *
-      from client_group g left join client_msg m on g.id = m.gid
+    select g.*, m.*
+    from client_group g left join client_group_table cg on g.id = cg.gid left join client_msg m on m.userid = cg.cid
   </select>
 
   <delete id="deleteGroup">
     delete from client_group where id = #{id}
   </delete>
+
+  <update id="updateGourp2DefaultByPid">
+    update client_group set pid = -1 where pid = #{pid}
+  </update>
+
 
 
 </mapper>

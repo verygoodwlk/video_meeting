@@ -2,6 +2,7 @@ package com.media.video_meeting.service;
 
 import com.media.video_meeting.entity.ClientGroup;
 import com.media.video_meeting.entity.ClientMsg;
+import com.media.video_meeting.entity.TreeNode;
 
 import java.util.List;
 
@@ -18,12 +19,14 @@ public interface IClientService {
 
     List<Integer> queryUserIds();
 
-    List<ClientGroup> queryAllGroup();
+    List<TreeNode> queryAllGroup();
 
     int addGroup(ClientGroup group);
 
-    int deleteGroup(Integer id);
+    int deleteGroupOrClient(Integer id, Integer gid, boolean isClient);
 
-    int move(Integer id, Integer pid, boolean isClient);
+    int move(Integer[] ids, Integer pid, Integer oldpid, boolean isClient, boolean isCopy);
+
+    int updateName(Integer userid, String uname);
 
 }

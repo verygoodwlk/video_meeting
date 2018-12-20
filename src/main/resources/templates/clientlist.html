@@ -44,7 +44,7 @@
             <br/>
 
             <div class="tab-content default-tab" id="tab1">
-                <form id="formid" method="post">
+                <!--<form id="formid" method="post">-->
                 <table>
                     <thead>
                     <tr>
@@ -54,35 +54,71 @@
                         <th>终端名称</th>
                         <th>MAC地址</th>
                         <th>IP地址</th>
+                        <th>操作</th>
                     </tr>
                     </thead>
 
                     <tbody>
                     <tr th:each="clientmsg : ${clientMsgList}">
-                        <td th:utext="${clientmsg.status == 1 ? '<font color=&#34;green&#34;>在线</font>' : '<font color=&#34;red&#34;>离线</font>'}">在线</td>
+                        <!--<td th:utext="${clientmsg.status == 1 ? '<font color=&#34;green&#34;>在线</font>' : '<font color=&#34;red&#34;>离线</font>'}">
+                            <img th:src="${clientmsg.status == 1 ? 'resources/images/online.png' : 'resources/images/offline.png'}"/>
+                        </td>-->
+                        <td>
+                            <img width="15px" th:src="${clientmsg.status == 1 ? 'resources/images/online.png' : 'resources/images/offline.png'}"/>
+                        </td>
                         <td th:text="${clientmsg.userid}">Lorem ipsum dolor</td>
                         <td th:text="${clientmsg.productsmodel}">Lorem ipsum dolor</td>
-                        <td th:text="${clientmsg.terminalname}">Lorem ipsum dolor</td>
+                        <td th:text="${clientmsg.terminalname}" th:id="${'td_' + clientmsg.userid}">Lorem ipsum dolor</td>
                         <td th:text="${clientmsg.mac}">Lorem ipsum dolor</td>
                         <td th:text="${clientmsg.ip}">Lorem ipsum dolor</td>
-                        <!--<td>
-                            &lt;!&ndash; Icons &ndash;&gt; <a href="#" title="Edit"><img
-                                src="resources/images/icons/pencil.png" alt="Edit" /></a> <a
+                        <td>
+                            <a th:href="${'javascript:updateName(' + clientmsg.userid + ');'}" title="Edit"><img
+                                src="resources/images/icons/pencil.png" alt="Edit" /></a>
+                            <!--<a
                                 href="#" title="Delete"><img
                                 src="resources/images/icons/cross.png" alt="Delete" /></a> <a
                                 href="#" title="Edit Meta"><img
                                 src="resources/images/icons/hammer_screwdriver.png"
-                                alt="Edit Meta" /></a>
-                        </td>-->
+                                alt="Edit Meta" /></a>-->
+                        </td>
                     </tr>
                     </tbody>
+
+                    <script th:inline="javascript">
+
+                        function updateName(userid){
+                            //获得旧的名字
+                            var uname = $("#td_" + userid).html();
+                            $("#td_" + userid).html("<input id='updateinput_" + userid + "' style='width: 50px' type='text' value='" +  uname + "'/>");
+
+                            //获得焦点
+                            $("#updateinput_" + userid).select();
+                            $("#updateinput_" + userid).blur(function(){
+                                var value = $(this).val().trim();
+
+                                if(value == null || value.trim() == ""){
+                                    alert("终端名称不能为空！");
+                                    $("#td_" + userid).html(uname);
+                                    return;
+                                }
+
+                                $.post([[${#request.getContextPath()}]] + "/client/updatename", {uname: value, userid: userid}, function(data){
+                                    var name = uname;
+                                    if(data == 1){
+                                        name = value;
+                                    }
+                                    $("#td_" + userid).html(name);
+                                });
+                            });
+                        }
+                    </script>
 
                     <!-- 脚部 -->
                     <tfoot>
                     <tr>
                         <td colspan="6">
                             <div class="bulk-actions align-left">
-                                <a class="mybutton" href="javascript:deletemeeting();">删除会议</a>
+                               <!-- <a class="mybutton" href="javascript:deletemeeting();">删除会议</a>-->
                             </div>
                             <!-- 分页导航 -->
                             <div class="pagination" th:replace="page :: fenye">
@@ -92,7 +128,7 @@
                     </tr>
                     </tfoot>
                 </table>
-                </form>
+                <!--</form>-->
 
 
             </div>

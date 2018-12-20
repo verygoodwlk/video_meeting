@@ -91,8 +91,15 @@
 
             var showStr = "";
             var hiddenStr = "";
-            for(var i = 0; i < checkedNodes.length; i++){
+            var cids = new Array();
+            A:for(var i = 0; i < checkedNodes.length; i++){
                 if(checkedNodes[i].id == null){
+                    for(var j = 0; j < cids.length; j++){
+                        if(cids[j] == checkedNodes[i].userid){
+                            continue A;
+                        }
+                    }
+                    cids.push(checkedNodes[i].userid);
                     //说明当前是终端
                     showStr += "<input name='client_start' type='radio' value='" + checkedNodes[i].userid + "'/> " + checkedNodes[i].gname;
                     hiddenStr += "<input name='client_ids' type='hidden' value='" + checkedNodes[i].userid + "'/>";
@@ -172,7 +179,7 @@
                                         <option value="45">45</option>
                                     </select> 分钟
                                     <input type="checkbox"
-                                           name="isfoerver" value="1" alt="false"/> 永久会议
+                                           name="isfoerver" value="1" alt="false" checked/> 永久会议
                                 </td>
                             </tr>
                             <tr style="background-color:#fff;">
@@ -194,7 +201,7 @@
                                 <td><label>开会方式</label></td>
                                 <td><select name="fs">
                                     <option value="0">中途允许加入</option>
-                                    <option value="1">中途不允许加入</option>
+                                    <option value="1" selected>中途不允许加入</option>
                                 </select></td>
                                 <td><label>三级级联口</label></td>
                                 <td><select name="lk">

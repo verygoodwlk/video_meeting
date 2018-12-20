@@ -45,7 +45,10 @@ public class SocketInitHandler {
                 if(i != 0){
                     sb.append(",");
                 }
-                sb.append("\"").append(clientMsgs.get(i).getUserid()).append("\"");
+                sb.append("{");
+                sb.append("\"id\":\"").append(clientMsgs.get(i).getUserid()).append("\",");
+                sb.append("\"terminalname\":\"").append(clientMsgs.get(i).getTerminalname()).append("\"");
+                sb.append("}");
             }
         }
         sb.append("]}");

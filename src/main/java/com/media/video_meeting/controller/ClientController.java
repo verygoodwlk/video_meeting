@@ -2,6 +2,9 @@ package com.media.video_meeting.controller;
 
 import com.media.video_meeting.entity.ClientGroup;
 import com.media.video_meeting.entity.ClientMsg;
+import com.media.video_meeting.entity.TreeNode;
+import com.media.video_meeting.log.LogType;
+import com.media.video_meeting.log.SysLog;
 import com.media.video_meeting.page.Page;
 import com.media.video_meeting.page.PageHelper;
 import com.media.video_meeting.service.IClientService;
@@ -11,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -47,16 +51,17 @@ public class ClientController {
      */
     @RequestMapping("/group")
     @ResponseBody
-    public List<ClientGroup> groupManager(){
+    public List<TreeNode> groupManager(){
         //获得所有组已经组内的终端
-        List<ClientGroup> clientGroups = clientService.queryAllGroup();
-        return clientGroups;
+        List<TreeNode> treeNodes = clientService.queryAllGroup();
+        return treeNodes;
     }
 
     /**
      * 添加群组
      * @return
      */
+    @SysLog(value = LogType.INSERT, info = "添加了群组")
     @RequestMapping("/addgroup")
     public String addGroup(ClientGroup clientGroup){
         clientService.addGroup(clientGroup);
@@ -68,11 +73,12 @@ public class ClientController {
      * @param id
      * @return
      */
+    @SysLog(value = LogType.DELETE, info = "删除群组")
     @RequestMapping("/deletegroup")
     @ResponseBody
-    public boolean deleteGroup(Integer id){
+    public boolean deleteGroup(Integer id, Integer gid, boolean isClient){
         try {
-            clientService.deleteGroup(id);
+            clientService.deleteGroupOrClient(id, gid, isClient);
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -84,15 +90,28 @@ public class ClientController {
      * 移动群组和设备
      * @return
      */
+    @SysLog(value = LogType.UPDATE, info = "移动群组和设备")
     @RequestMapping("/move")
     @ResponseBody
-    public boolean moveClientGroup(Integer id, Integer pid, boolean isClient){
-        System.out.println("需要移动：" + id + "到" + pid + " 子节点：" + isClient);
+    public boolean moveClientGroup(Integer[] ids, Integer pid,  Integer oldpid, boolean isClient, boolean isCopy){
+        System.out.println("需要移动：" + Arrays.toString(ids) + "到" + pid + " 子节点：" + isClient + " 是否复制：" + isCopy);
         try {
-            clientService.move(id, pid, isClient);
+            clientService.move(ids, pid, oldpid, isClient, isCopy);
         } catch (Exception e) {
             return false;
         }
         return true;
+    }
+
+    /**
+     * 修改终端名称
+     * @return
+     */
+    @SysLog(value = LogType.UPDATE, info = "修改终端名称")
+    @RequestMapping("/updatename")
+    @ResponseBody
+    public int updateName(Integer userid, String uname){
+        int result = clientService.updateName(userid, uname);
+        return result;
     }
 }

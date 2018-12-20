@@ -96,23 +96,38 @@ public class GroupUtil {
      */
     private int countNum(List<ClientGroup> clientGroups, Integer id){
 
+//        int number = 0;
+//        if(clientGroups != null && clientGroups.size() > 0){
+//            for (ClientGroup clientGroup : clientGroups) {
+//                if(clientGroup.getPid() == id){
+//                    number++;
+//                    break;
+//                }
+//            }
+//        }
+//
+//        int n = 0;
+//        for (ClientGroup clientGroup : clientGroups) {
+//            if(clientGroup.getPid() == id){
+//                int m = countNum(clientGroups, clientGroup.getId());
+//                n = Math.max(n, m);
+//            }
+//        }
+//        return number + n;
+
         int number = 0;
         if(clientGroups != null && clientGroups.size() > 0){
             for (ClientGroup clientGroup : clientGroups) {
-                if(clientGroup.getPid() == id){
+                if(clientGroup.getId() == id){
+                    if(clientGroup.getPid() != -1){
+                        number += countNum(clientGroups, clientGroup.getPid());
+                    }
                     number++;
                     break;
                 }
             }
         }
 
-        int n = 0;
-        for (ClientGroup clientGroup : clientGroups) {
-            if(clientGroup.getPid() == id){
-                int m = countNum(clientGroups, clientGroup.getId());
-                n = Math.max(n, m);
-            }
-        }
-        return number + n;
+        return number;
     }
 }

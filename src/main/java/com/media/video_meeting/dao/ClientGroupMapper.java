@@ -58,4 +58,7 @@ public interface ClientGroupMapper {
     List<ClientGroup> queryAllGroupJoinClient();
 
     int deleteGroup(Integer id);
+
+    int updateGourp2DefaultByPid(Integer pid);
+
 }

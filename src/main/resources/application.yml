@@ -22,7 +22,7 @@ mybatis:
 logging:
   config: classpath:log4j2.xml
 page:
-  size: 5
+  size: 10
 
 #golang服务器注册地址
 golang:

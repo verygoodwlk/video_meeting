@@ -27,8 +27,16 @@ public class MeetingMsgUtil {
     public void sendCreateMeeting(Meeting meeting){
         StringBuilder sb = new StringBuilder();
         sb.append("{");
-        sb.append("\"id\":\"createGroup\",");
-        sb.append("\"room\":\"" + meeting.getId() + "\",");
+
+        if(meeting.getType().equals(0)){
+            //主麦模式
+            sb.append("\"id\":\"createOneToMany\",");
+        } else {
+            //多方讨论模式
+            sb.append("\"id\":\"createGroup\",");
+            sb.append("\"room\":\"" + meeting.getId() + "\",");
+        }
+
         sb.append("\"name\":\"" + meeting.getClient_start() + "\",");
         sb.append("\"users\":[");
         int j = 0;

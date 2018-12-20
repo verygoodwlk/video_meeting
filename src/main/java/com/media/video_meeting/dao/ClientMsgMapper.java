@@ -1,6 +1,7 @@
 package com.media.video_meeting.dao;
 
 import com.media.video_meeting.entity.ClientMsg;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -57,5 +58,14 @@ public interface ClientMsgMapper {
 
     List<Integer> queryUserIds();
 
-    int updateByGroupId(Integer groupid);
+//    int updateByGroupId(Integer groupid);
+    int update2DefaultGroupId(@Param("cid") Integer cid, @Param("oldgid") Integer oldgid);
+
+    int insertClientGroupTable(@Param("cid") Integer cid, @Param("gid") Integer gid);
+
+    int deleteClientAllGroupTable(@Param("cid") Integer cid);
+
+    int deleteClientGroupTable(@Param("cid") Integer cid, @Param("gid") Integer gid);
+
+    List<Integer> selectClientIdsByGourpId(Integer gid);
 }
