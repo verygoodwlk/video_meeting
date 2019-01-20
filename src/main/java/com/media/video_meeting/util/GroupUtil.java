@@ -32,23 +32,34 @@ public class GroupUtil {
      */
     public void sendGroupInfo(){
         //组装信息发送
-        List<ClientGroup> clientGroups = clientGroupMapper.queryAllGroupJoinClient();
 
         StringBuilder sb = new StringBuilder("{");
         //编号
         sb.append("\"id\":").append("\"terminalGroup\",");
-        //分组
-        sb.append("\"groups\":[");
 
-        sb.append(getGroupJson(clientGroups, -1));
+        sb.append(getGroups());
 
-        sb.append("]");
         sb.append("}");
 
         LogUtil.info(logger, "发送的分组消息：" + sb.toString());
 
         myWebSocket.send(sb.toString());
 //        System.out.println("分组json：" + sb.toString());
+    }
+
+    public String getGroups(){
+        //组装信息发送
+        List<ClientGroup> clientGroups = clientGroupMapper.queryAllGroupJoinClient();
+
+        StringBuilder sb = new StringBuilder();
+        //分组
+        sb.append("\"groups\":[");
+
+        sb.append(getGroupJson(clientGroups, -1));
+
+        sb.append("]");
+
+        return sb.toString();
     }
 
     private String getGroupJson(List<ClientGroup> clientGroups, Integer pid){
