@@ -68,4 +68,6 @@ public interface ClientMsgMapper {
     int deleteClientGroupTable(@Param("cid") Integer cid, @Param("gid") Integer gid);
 
     List<Integer> selectClientIdsByGourpId(Integer gid);
+
+    int deleteByCid(@Param("cid") String cid);
 }

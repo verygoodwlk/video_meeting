@@ -35,6 +35,8 @@ db:
   path: C:/Users/ken/Desktop/admin_hy/Meeting.db
 spring:
   profiles: window
+upload:
+  path: C:/Users/ken/Desktop/admin_hy/imgs
 
 ---
 server:
@@ -43,3 +45,5 @@ db:
   path: /usr/local/software/Meeting.db
 spring:
   profiles: linux
+upload:
+  path:

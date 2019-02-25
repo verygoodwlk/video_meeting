@@ -71,9 +71,14 @@ public class GroupUtil {
                 if(sb.length() != 0){
                     sb.append(",");
                 }
-                //瓶装一个分组
+                //封装一个分组
                 sb.append("{");
-                sb.append("\"gname\":").append("\"").append(clientGroup.getGname()).append("\",");
+                if(clientGroup.getId() == 1){
+                    sb.append("\"gname\":").append("\"").append("defualt group").append("\",");
+                } else {
+                    sb.append("\"gname\":").append("\"").append(clientGroup.getGname()).append("\",");
+                }
+
                 sb.append("\"level\":").append("" + countNum(clientGroups, clientGroup.getId()) + ",");
                 sb.append("\"clients\":").append("[");
 

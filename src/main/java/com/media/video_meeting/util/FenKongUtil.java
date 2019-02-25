@@ -70,8 +70,10 @@ public class FenKongUtil {
                 "\"mp3\": [\"1.mp3\", \"G.E.M.邓紫棋 - 喜欢你.mp3\"],\n" +
                 "\"terminal\": [\"1\", \"2\", \"3\"]\n" +
                 "}],\n" +
+                "\"curentSolution\": \"Default Solution\",\n" +
                 "\"timeTask\": [{\n" +
                 "\"solution\": \"Default Solution\",\n" +
+                "\"task\": [{\n" +
                 "\"taskid\": \"112\",\n" +
                 "\"taskname\": \"Region\",\n" +
                 "\"taskPriority\": 0,\n" +
@@ -87,8 +89,10 @@ public class FenKongUtil {
                 "\"samll\": 0,\n" +
                 "\"startDate\": \"2018-12-14\",\n" +
                 "\"weekMask\": 254\n" +
+                "}, {}]\n" +
                 "}, {\n" +
-                "\"solution\": \"Default Solution\",\n" +
+                "\"solution\": \"232\",\n" +
+                "\"task\": [{\n" +
                 "\"taskid\": \"112\",\n" +
                 "\"taskname\": \"Region\",\n" +
                 "\"taskPriority\": 0,\n" +
@@ -104,6 +108,10 @@ public class FenKongUtil {
                 "\"samll\": 0,\n" +
                 "\"startDate\": \"2018-12-14\",\n" +
                 "\"weekMask\": 254\n" +
+                "}]\n" +
+                "}, {\n" +
+                "\"solution\": \"232\",\n" +
+                "\"task\": []\n" +
                 "}],\n" +
                 "\"collectTask\": [{\n" +
                 "\"taskid\": \"112\",\n" +

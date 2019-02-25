@@ -470,7 +470,7 @@ form textarea,
 form .wysiwyg {
                 padding: 6px;
                 font-size: 13px;
-                background: #fff url('../images/bg-form-field.gif') top left repeat-x;
+                /*background: #fff url('../images/bg-form-field.gif') top left repeat-x;*/
                 border: 1px solid #d5d5d5;
 				color: #333;
                 }

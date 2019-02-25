@@ -252,6 +252,7 @@
     delete from client_group_table where cid = #{cid}
   </delete>
 
+
   <select id="selectClientIdsByGourpId" resultType="java.lang.Integer">
     select cid from client_group_table where gid = #{gid}
   </select>
@@ -260,6 +261,10 @@
     update client_group_table set gid = 1 where cid = #{cid} and gid = #{oldgid} and
                         (select count(*) from client_group_table where cid = #{cid} and gid = 1) = 0
   </update>
+
+  <delete id="deleteByCid">
+    delete from client_msg where id = #{cid}
+  </delete>
 
 
 </mapper>

@@ -21,6 +21,8 @@ public interface IClientService {
 
     List<TreeNode> queryAllGroup();
 
+    ClientMsg queryById(Integer userid);
+
     int addGroup(ClientGroup group);
 
     int deleteGroupOrClient(Integer id, Integer gid, boolean isClient);
@@ -28,5 +30,7 @@ public interface IClientService {
     int move(Integer[] ids, Integer pid, Integer oldpid, boolean isClient, boolean isCopy);
 
     int updateName(Integer userid, String uname);
+
+    int deleteClientByCid(String cid);
 
 }

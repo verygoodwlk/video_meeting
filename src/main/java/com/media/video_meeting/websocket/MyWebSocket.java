@@ -1,6 +1,9 @@
 package com.media.video_meeting.websocket;
 
+import com.alibaba.fastjson.JSONObject;
 import com.media.video_meeting.util.LogUtil;
+import com.media.video_meeting.util.SpringUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 import org.slf4j.Logger;
@@ -18,6 +21,7 @@ import java.util.concurrent.Executors;
  * @Time 2018/12/15 8:23
  * @Version 1.0
  */
+@Slf4j
 public class MyWebSocket extends WebSocketClient {
 
     private static final Logger logger = LoggerFactory.getLogger(MyWebSocket.class);
@@ -26,11 +30,12 @@ public class MyWebSocket extends WebSocketClient {
     private ExecutorService executorService2 = Executors.newFixedThreadPool(5);
 
     @Autowired
-    private SocketMsgHandler socketMsgHandler;
-    @Autowired
     private SocketInitHandler socketInitHandler;
     @Autowired
     private SocketHeartHandler socketHeartHandler;
+
+    @Autowired
+    private SpringUtil springUtil;
 
     public MyWebSocket(String url) throws URISyntaxException {
         super(new URI(url));
@@ -54,7 +59,18 @@ public class MyWebSocket extends WebSocketClient {
         executorService2.execute(new Runnable() {
             @Override
             public void run() {
-                socketMsgHandler.handler(s);
+                //解析JSON
+                JSONObject jsonObject = JSONObject.parseObject(s);
+                String id = jsonObject.getString("id");
+
+                //获得对应的处理器对象
+                //根据id获得相应的处理器对象
+                try {
+                    SocketMsgHandler socketMsgHandler = (SocketMsgHandler) springUtil.getBean(id);
+                    socketMsgHandler.handler(s);
+                } catch (Exception e) {
+                    log.error("处理Bean获得异常，" + s, e);
+                }
             }
         });
     }

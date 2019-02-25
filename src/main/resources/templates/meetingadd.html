@@ -75,6 +75,9 @@
                 },
                 dataType:"json"
             });
+
+            //初始化
+            grouptype_change();
         });
 
         /**
@@ -118,6 +121,30 @@
             closeDialog("dialog_div");
         }
 
+
+        //组播方式的改变事件
+        function grouptype_change(){
+            var select = $("#grouptype_id");
+
+            var groupip = $("#groupip_id");
+            var groupport1 = $("#groupport_id1");
+            var groupport2 = $("#groupport_id2");
+            var groupport3 = $("#groupport_id3");
+
+            if(select.val() == 0){
+                //不支持 - 禁用
+                groupip.attr("disabled","disabled");
+                groupport1.attr("disabled","disabled");
+                groupport2.attr("disabled","disabled");
+                groupport3.attr("disabled","disabled");
+            } else {
+                //支持
+                groupip.removeAttr("disabled");
+                groupport1.removeAttr("disabled");
+                groupport2.removeAttr("disabled");
+                groupport3.removeAttr("disabled");
+            }
+        }
 
     </script>
 
@@ -297,7 +324,7 @@
                             </tr>
                             <tr style="background-color:#fff;">
                                 <td><label>组播方式</label></td>
-                                <td><select name="grouptype">
+                                <td><select id="grouptype_id" name="grouptype" onchange="grouptype_change();">
                                     <option value="0" th:selected="${default.grouptype == 0 }">不支持</option>
                                     <option value="1" th:selected="${default.grouptype == 1 }">支持</option>
                                 </select></td>
@@ -310,7 +337,7 @@
                             </tr>
                             <tr style="background-color:#fff;">
                                 <td><label>组播IP地址</label></td>
-                                <td><input
+                                <td><input id="groupip_id"
                                         class="text-input" type="text"
                                         name="gourpip" value="226.0.0.2" th:value="${default.gourpip}"/></td>
                                 <td><label>辅视频能力</label></td>
@@ -320,14 +347,14 @@
                             </tr>
                             <tr style="background-color:#fff;">
                                 <td><label>组播端口</label></td>
-                                <td>音频：<input
+                                <td>音频：<input id="groupport_id1"
                                         class="text-input" type="text"
                                         name="groupportyp" style="width: 30px" value="12781"
                                         th:value="${default.groupportyp}"/><br/><br/>
-                                    主视频：<input
+                                    主视频：<input id="groupport_id2"
                                             class="text-input" type="text"
                                             name="groupportzsp" style="width: 30px" value="12782" th:value="${default.groupportzsp}"/><br/><br/>
-                                    辅视频：<input
+                                    辅视频：<input id="groupport_id3"
                                             class="text-input" type="text"
                                             name="groupportfsp" style="width: 30px" value="12783" th:value="${default.groupportfsp}"/><br/><br/>
                                 </td>

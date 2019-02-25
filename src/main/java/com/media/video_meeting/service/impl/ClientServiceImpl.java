@@ -96,6 +96,11 @@ public class ClientServiceImpl implements IClientService {
     }
 
     @Override
+    public ClientMsg queryById(Integer userid) {
+        return clientMsgMapper.selectByPrimaryKey(userid);
+    }
+
+    @Override
     public int addGroup(ClientGroup group) {
         //发送分组消息
         int result = clientGroupMapper.insert(group);
@@ -179,6 +184,17 @@ public class ClientServiceImpl implements IClientService {
         if(result > 0){
             clientUtil.sendUpdateName(clientMsg);
         }
+        return result;
+    }
+
+    /**
+     * 根据终端id删除终端
+     * @param cid
+     * @return
+     */
+    @Override
+    public int deleteClientByCid(String cid) {
+        int result = clientMsgMapper.deleteByCid(cid);
         return result;
     }
 

@@ -33,11 +33,12 @@ public class SocketHeartHandler {
             executorService = Executors.newSingleThreadScheduledExecutor();
         }
 
+        LogUtil.info(logger, "开始发送心跳消息...");
         executorService.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
                 int andIncrement = count.incrementAndGet();
-                LogUtil.info(logger, "开始发送心跳消息..." + andIncrement);
+//                LogUtil.info(logger, "开始发送心跳消息..." + andIncrement);
                 webSocket.send("{\"id\":\"ack\",\"name\":\"1\"}");
                 if (andIncrement >= 2 && !webSocket.isClosed()) {
                     LogUtil.info(logger, "心跳响应超时，客户端断开连接...");

@@ -114,4 +114,16 @@ public class ClientController {
         int result = clientService.updateName(userid, uname);
         return result;
     }
+
+    /**
+     * 根据id查询终端信息
+     * @param userid
+     * @return
+     */
+    @RequestMapping("/querybyid")
+    @ResponseBody
+    public ClientMsg queryClientInfoById(Integer userid){
+        ClientMsg clientMsg = clientService.queryById(userid);
+        return clientMsg;
+    }
 }

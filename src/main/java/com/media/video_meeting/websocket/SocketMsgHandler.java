@@ -1,71 +1,40 @@
 package com.media.video_meeting.websocket;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.media.video_meeting.entity.ClientMsg;
-import com.media.video_meeting.service.IClientService;
-import com.media.video_meeting.util.FenKongUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import lombok.extern.slf4j.Slf4j;
 
 /**
+ * 处理器父类
  * @Author ken
  * @Time 2018/12/15 15:17
  * @Version 1.0
  */
-@Component
-public class SocketMsgHandler {
-
-    @Autowired
-    private IClientService clientService;
-
-    @Autowired
-    private SocketHeartHandler socketHeartHandler;
-
-    @Autowired
-    private FenKongUtil fenKongUtil;
+@Slf4j
+public abstract class SocketMsgHandler {
 
     /**
-     * 连接好之后需要初始化的操作
+     * 获得接收的消息
+     * @param msg
      */
-    public void init(){
+    public void handler(String msg){
+        JSONObject jsonObject = JSONObject.parseObject(msg);
 
+        try {
+            handlerMsg(msg, jsonObject);
+        } catch (Throwable t) {
+            log.error("websocket_handle_error:处理websocket数据异常", t);
+            exception(t);
+        }
     }
 
     /**
      * 处理接收的消息
      * @param msg
      */
-    public void handler(String msg){
-        JSONObject jsonObject = JSONObject.parseObject(msg);
-        String id = jsonObject.getString("id");
+    public abstract void handlerMsg(String msg, JSONObject jsonObject) throws Exception;
 
-        switch (id){
-            case "online":
-                //设备上线
-                ClientMsg clientMsgOnline = JSON.parseObject(msg, ClientMsg.class);
-                clientMsgOnline.setStatus(1);
-                clientService.insertOrUpdate(clientMsgOnline);
-                break;
-            case "offline":
-                //设备离线
-                int userid = jsonObject.getIntValue("response");
-                ClientMsg clientMsgOff = new ClientMsg();
-                clientMsgOff.setUserid(userid);
-                clientMsgOff.setId("offline");
-                clientMsgOff.setStatus(0);
-                clientService.insertOrUpdate(clientMsgOff);
-                break;
-            case "ack":
-                //心跳机制
-                socketHeartHandler.response(msg);
-                break;
-            case "webconLogin":
-                //分控登录
-                fenKongUtil.sendWebconLoginResponse();
-                break;
-             default:
-                 break;
-        }
-    }
+    /**
+     * 处理相应的异常
+     */
+    public abstract void exception(Throwable t);
 }

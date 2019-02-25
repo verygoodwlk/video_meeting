@@ -35,8 +35,8 @@ public class SocketInitHandler {
         //注册消息
         LogUtil.info(logger, "发送注册消息....");
         webSocketClient.send("{\"id\":\"register\",\"name\":\"webserver\"}");
+
         //发送终端列表
-        LogUtil.info(logger, "首次发送终端列表....");
         List<ClientMsg> clientMsgs = clientService.queryPage();
         StringBuilder sb = new StringBuilder();
         sb.append("{\"id\":\"alluser\", \"users\":[");
@@ -52,7 +52,11 @@ public class SocketInitHandler {
             }
         }
         sb.append("]}");
-        System.out.println("发送的终端列表：" + sb.toString());
+        LogUtil.info(logger, "首次发送终端列表...." + sb.toString());
         webSocketClient.send(sb.toString());
+
+        //获取终端状态
+        LogUtil.info(logger, "首次连接同步终端状态请求：{\"id\":\"terminalStatus\"}");
+        webSocketClient.send("{\"id\":\"terminalStatus\"}");
     }
 }

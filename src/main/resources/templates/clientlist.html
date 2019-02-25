@@ -7,20 +7,25 @@
     <!-- Invalid Stylesheet. This makes stuff look pretty. Remove it if you want the CSS completely valid -->
     <!-- Reset Stylesheet -->
     <link rel="stylesheet" href="resources/css/reset.css" type="text/css"
-          media="screen" />
+          media="screen"/>
     <!-- Main Stylesheet -->
     <link rel="stylesheet" href="resources/css/style.css" type="text/css"
-          media="screen" />
+          media="screen"/>
     <link rel="stylesheet" href="resources/css/invalid.css" type="text/css"
-          media="screen" />
+          media="screen"/>
 
     <!--                       Javascripts                       -->
     <!-- jQuery -->
     <script type="text/javascript"
-            src="resources/scripts/jquery-1.3.2.min.js"></script>
+            src="resources/scripts/jquery-2.1.0.min.js"></script>
     <!-- jQuery Configuration -->
     <script type="text/javascript"
             src="resources/scripts/simpla.jquery.configuration.js"></script>
+
+    <!-- dialog弹出框的导入-->
+    <link rel="stylesheet" href="//apps.bdimg.com/libs/jqueryui/1.10.4/css/jquery-ui.min.css"/>
+    <script type="text/javascript" src="resources/widget/dialog/jquery-ui-1.9.2.custom.min.js"></script>
+    <script type="text/javascript" src="resources/js/plugin.js"></script>
 
     <script th:inline="javascript">
     </script>
@@ -54,6 +59,7 @@
                         <th>终端名称</th>
                         <th>MAC地址</th>
                         <th>IP地址</th>
+                        <th>固件版本</th>
                         <th>操作</th>
                     </tr>
                     </thead>
@@ -64,16 +70,19 @@
                             <img th:src="${clientmsg.status == 1 ? 'resources/images/online.png' : 'resources/images/offline.png'}"/>
                         </td>-->
                         <td>
-                            <img width="15px" th:src="${clientmsg.status == 1 ? 'resources/images/online.png' : 'resources/images/offline.png'}"/>
+                            <img width="15px"
+                                 th:src="${clientmsg.status == 1 ? 'resources/images/online.png' : 'resources/images/offline.png'}"/>
                         </td>
                         <td th:text="${clientmsg.userid}">Lorem ipsum dolor</td>
                         <td th:text="${clientmsg.productsmodel}">Lorem ipsum dolor</td>
-                        <td th:text="${clientmsg.terminalname}" th:id="${'td_' + clientmsg.userid}">Lorem ipsum dolor</td>
+                        <td th:text="${clientmsg.terminalname}" th:id="${'td_' + clientmsg.userid}">Lorem ipsum dolor
+                        </td>
                         <td th:text="${clientmsg.mac}">Lorem ipsum dolor</td>
                         <td th:text="${clientmsg.ip}">Lorem ipsum dolor</td>
+                        <td th:text="${clientmsg.productsmodel}"></td>
                         <td>
-                            <a th:href="${'javascript:updateName(' + clientmsg.userid + ');'}" title="Edit"><img
-                                src="resources/images/icons/pencil.png" alt="Edit" /></a>
+                            <a th:href="${'javascript:updateInfo(' + clientmsg.userid + ');'}" title="Edit"><img
+                                    src="resources/images/icons/pencil.png" alt="Edit"/></a>
                             <!--<a
                                 href="#" title="Delete"><img
                                 src="resources/images/icons/cross.png" alt="Delete" /></a> <a
@@ -86,7 +95,14 @@
 
                     <script th:inline="javascript">
 
-                        function updateName(userid){
+                        //修改终端信息
+                        function updateInfo(userid) {
+
+                            //获得终端信息
+                            // $.post([[${#request.getContextPath()}]] + "/client/querybyid", {userid: userid}, function (data) {
+                            //     openDialog("update_div", "修改终端");
+                            // });
+
                             //获得旧的名字
                             var uname = $("#td_" + userid).html();
                             $("#td_" + userid).html("<input id='updateinput_" + userid + "' style='width: 50px' type='text' value='" +  uname + "'/>");
@@ -118,7 +134,7 @@
                     <tr>
                         <td colspan="6">
                             <div class="bulk-actions align-left">
-                               <!-- <a class="mybutton" href="javascript:deletemeeting();">删除会议</a>-->
+                                <!-- <a class="mybutton" href="javascript:deletemeeting();">删除会议</a>-->
                             </div>
                             <!-- 分页导航 -->
                             <div class="pagination" th:replace="page :: fenye">
@@ -137,5 +153,61 @@
     </div>
 </div>
 <!-- End #main-content -->
+
+
+<!-- 修改的弹出框 -->
+<!--<div id="update_div" style="display: none;">
+    <div class="tab-content default-tab" id="tab2">
+        <form action="#" method="post">
+            <fieldset id="online">
+                &lt;!&ndash; Set class to "column-left" or "column-right" on fieldsets to divide the form into columns &ndash;&gt;
+                <p>
+                    <label>产品型号</label>
+                    <input
+                        class="text-input small-input" type="text"
+                        name="small-input"/>
+                </p>
+                <p>
+                    <label>终端名称</label>
+                    <input
+                        class="text-input medium-input datepicker" type="text"
+                        name="medium-input"/>
+                </p>
+                <p>
+                    <label>MAC地址</label> <input
+                        class="text-input medium-input" type="text"
+                        name="large-input"/>
+                </p>
+                <p>
+                    <label>IP地址</label> <input
+                        class="text-input medium-input" type="text"
+                        name="large-input"/>
+                </p>
+                <p>
+                    <label>固件版本</label> <input
+                        class="text-input medium-input" type="text"
+                        name="large-input"/>
+                </p>
+                <p>
+                    <input class="mybutton" type="submit" value="修改"/>
+                </p>
+            </fieldset>
+            <fieldset id="offline">
+                &lt;!&ndash; Set class to "column-left" or "column-right" on fieldsets to divide the form into columns &ndash;&gt;
+                <p>
+                    <label>终端名称</label>
+                    <input
+                            class="text-input medium-input datepicker" type="text"
+                            name="medium-input"/>
+                </p>
+                <p>
+                    <input class="mybutton" type="submit" value="修改"/>
+                </p>
+            </fieldset>
+            <div class="clear"></div>
+            &lt;!&ndash; End .clear &ndash;&gt;
+        </form>
+    </div>
+</div>-->
 </body>
 </html>
