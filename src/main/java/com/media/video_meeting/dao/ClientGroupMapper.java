@@ -61,4 +61,8 @@ public interface ClientGroupMapper {
 
     int updateGourp2DefaultByPid(Integer pid);
 
+    int deleteAllGroup();
+
+    int deleteAllGroupAndClients();
+
 }

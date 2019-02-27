@@ -5808,3 +5808,63 @@ Caused by: java.lang.ClassNotFoundException: com.media.video_meeting.websocket.h
 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624) [?:1.8.0_161]
 	at java.lang.Thread.run(Thread.java:748) [?:1.8.0_161]
 
+2019-02-27 23:44:15.908 [pool-3-thread-2-72] ERROR com.media.video_meeting.websocket.MyWebSocket 72 run - 处理Bean获得异常，{"id":"alluserResponse","response":"success"} org.springframework.beans.factory.NoSuchBeanDefinitionException: No bean named 'alluserResponse' available
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.getBeanDefinition(DefaultListableBeanFactory.java:685) ~[spring-beans-5.0.10.RELEASE.jar:5.0.10.RELEASE]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getMergedLocalBeanDefinition(AbstractBeanFactory.java:1209) ~[spring-beans-5.0.10.RELEASE.jar:5.0.10.RELEASE]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:291) ~[spring-beans-5.0.10.RELEASE.jar:5.0.10.RELEASE]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199) ~[spring-beans-5.0.10.RELEASE.jar:5.0.10.RELEASE]
+	at org.springframework.context.support.AbstractApplicationContext.getBean(AbstractApplicationContext.java:1087) ~[spring-context-5.0.10.RELEASE.jar:5.0.10.RELEASE]
+	at com.media.video_meeting.util.SpringUtil.getBean(SpringUtil.java:26) ~[classes/:?]
+	at com.media.video_meeting.websocket.MyWebSocket$1.run(MyWebSocket.java:69) [classes/:?]
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149) [?:1.8.0_161]
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624) [?:1.8.0_161]
+	at java.lang.Thread.run(Thread.java:748) [?:1.8.0_161]
+
+2019-02-27 23:44:15.908 [pool-3-thread-1-72] ERROR com.media.video_meeting.websocket.MyWebSocket 72 run - 处理Bean获得异常，{"id":"resgisterResponse","response":"accepted","userlist":[{"id":"6","terminalname":"6","status":0},{"id":"9","terminalname":"9","status":0},{"id":"12","terminalname":"12","status":0},{"id":"15","terminalname":"15","status":0},{"id":"2","terminalname":"小明子","status":0},{"id":"1","terminalname":"1","status":0},{"id":"3","terminalname":"3","status":0},{"id":"4","terminalname":"4","status":0}]} org.springframework.beans.factory.NoSuchBeanDefinitionException: No bean named 'resgisterResponse' available
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.getBeanDefinition(DefaultListableBeanFactory.java:685) ~[spring-beans-5.0.10.RELEASE.jar:5.0.10.RELEASE]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getMergedLocalBeanDefinition(AbstractBeanFactory.java:1209) ~[spring-beans-5.0.10.RELEASE.jar:5.0.10.RELEASE]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:291) ~[spring-beans-5.0.10.RELEASE.jar:5.0.10.RELEASE]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199) ~[spring-beans-5.0.10.RELEASE.jar:5.0.10.RELEASE]
+	at org.springframework.context.support.AbstractApplicationContext.getBean(AbstractApplicationContext.java:1087) ~[spring-context-5.0.10.RELEASE.jar:5.0.10.RELEASE]
+	at com.media.video_meeting.util.SpringUtil.getBean(SpringUtil.java:26) ~[classes/:?]
+	at com.media.video_meeting.websocket.MyWebSocket$1.run(MyWebSocket.java:69) [classes/:?]
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149) [?:1.8.0_161]
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624) [?:1.8.0_161]
+	at java.lang.Thread.run(Thread.java:748) [?:1.8.0_161]
+
+2019-02-27 23:47:22.362 [pool-3-thread-1-72] ERROR com.media.video_meeting.websocket.MyWebSocket 72 run - 处理Bean获得异常，{"id":"resgisterResponse","response":"accepted","userlist":[{"id":"3","terminalname":"3","status":0},{"id":"4","terminalname":"4","status":0},{"id":"6","terminalname":"6","status":0},{"id":"9","terminalname":"9","status":0},{"id":"12","terminalname":"12","status":0},{"id":"15","terminalname":"15","status":0},{"id":"2","terminalname":"小明子","status":0},{"id":"1","terminalname":"1","status":0}]} org.springframework.beans.factory.NoSuchBeanDefinitionException: No bean named 'resgisterResponse' available
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.getBeanDefinition(DefaultListableBeanFactory.java:685) ~[spring-beans-5.0.10.RELEASE.jar:5.0.10.RELEASE]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getMergedLocalBeanDefinition(AbstractBeanFactory.java:1209) ~[spring-beans-5.0.10.RELEASE.jar:5.0.10.RELEASE]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:291) ~[spring-beans-5.0.10.RELEASE.jar:5.0.10.RELEASE]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199) ~[spring-beans-5.0.10.RELEASE.jar:5.0.10.RELEASE]
+	at org.springframework.context.support.AbstractApplicationContext.getBean(AbstractApplicationContext.java:1087) ~[spring-context-5.0.10.RELEASE.jar:5.0.10.RELEASE]
+	at com.media.video_meeting.util.SpringUtil.getBean(SpringUtil.java:26) ~[classes/:?]
+	at com.media.video_meeting.websocket.MyWebSocket$1.run(MyWebSocket.java:69) [classes/:?]
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149) [?:1.8.0_161]
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624) [?:1.8.0_161]
+	at java.lang.Thread.run(Thread.java:748) [?:1.8.0_161]
+
+2019-02-27 23:47:22.393 [pool-3-thread-2-72] ERROR com.media.video_meeting.websocket.MyWebSocket 72 run - 处理Bean获得异常，{"id":"alluserResponse","response":"success"} org.springframework.beans.factory.NoSuchBeanDefinitionException: No bean named 'alluserResponse' available
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.getBeanDefinition(DefaultListableBeanFactory.java:685) ~[spring-beans-5.0.10.RELEASE.jar:5.0.10.RELEASE]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getMergedLocalBeanDefinition(AbstractBeanFactory.java:1209) ~[spring-beans-5.0.10.RELEASE.jar:5.0.10.RELEASE]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:291) ~[spring-beans-5.0.10.RELEASE.jar:5.0.10.RELEASE]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199) ~[spring-beans-5.0.10.RELEASE.jar:5.0.10.RELEASE]
+	at org.springframework.context.support.AbstractApplicationContext.getBean(AbstractApplicationContext.java:1087) ~[spring-context-5.0.10.RELEASE.jar:5.0.10.RELEASE]
+	at com.media.video_meeting.util.SpringUtil.getBean(SpringUtil.java:26) ~[classes/:?]
+	at com.media.video_meeting.websocket.MyWebSocket$1.run(MyWebSocket.java:69) [classes/:?]
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149) [?:1.8.0_161]
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624) [?:1.8.0_161]
+	at java.lang.Thread.run(Thread.java:748) [?:1.8.0_161]
+
+2019-02-27 23:48:16.651 [pool-3-thread-4-72] ERROR com.media.video_meeting.websocket.MyWebSocket 72 run - 处理Bean获得异常，{"id":"createOneToManyResponse","response":""} org.springframework.beans.factory.NoSuchBeanDefinitionException: No bean named 'createOneToManyResponse' available
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.getBeanDefinition(DefaultListableBeanFactory.java:685) ~[spring-beans-5.0.10.RELEASE.jar:5.0.10.RELEASE]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getMergedLocalBeanDefinition(AbstractBeanFactory.java:1209) ~[spring-beans-5.0.10.RELEASE.jar:5.0.10.RELEASE]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:291) ~[spring-beans-5.0.10.RELEASE.jar:5.0.10.RELEASE]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199) ~[spring-beans-5.0.10.RELEASE.jar:5.0.10.RELEASE]
+	at org.springframework.context.support.AbstractApplicationContext.getBean(AbstractApplicationContext.java:1087) ~[spring-context-5.0.10.RELEASE.jar:5.0.10.RELEASE]
+	at com.media.video_meeting.util.SpringUtil.getBean(SpringUtil.java:26) ~[classes/:?]
+	at com.media.video_meeting.websocket.MyWebSocket$1.run(MyWebSocket.java:69) [classes/:?]
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149) [?:1.8.0_161]
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624) [?:1.8.0_161]
+	at java.lang.Thread.run(Thread.java:748) [?:1.8.0_161]
+

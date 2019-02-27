@@ -33,4 +33,6 @@ public interface IClientService {
 
     int deleteClientByCid(String cid);
 
+    int insertClientGroupTable(Integer gid, Integer cid);
+
 }

@@ -24,7 +24,7 @@ public class TaskServiceImpl implements ITaskService {
 
     @Override
     public int update(Task task) {
-        return taskMapper.updateByPrimaryKeySelective(task);
+        return taskMapper.updateById(task);
     }
 
     @Override

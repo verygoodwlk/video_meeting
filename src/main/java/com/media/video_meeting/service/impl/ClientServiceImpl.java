@@ -198,5 +198,10 @@ public class ClientServiceImpl implements IClientService {
         return result;
     }
 
+    @Override
+    public int insertClientGroupTable(Integer gid, Integer cid) {
+        return clientMsgMapper.insertClientGroupTable(cid, gid);
+    }
+
 
 }

@@ -14,10 +14,11 @@ spring:
     multipart:
       max-file-size: 10MB
 #    type: com.mchange.v2.c3p0.ComboPooledDataSource
-mybatis:
+mybatis-plus:
   mapper-locations: classpath:com/media/video_meeting/dao/mapper/*.xml
-  type-aliases-package: com.media.video_meeting.entity
   config-location: classpath:mybatis-config.xml
+  type-aliases-package: com.media.video_meeting.entity
+
 #日志设置
 logging:
   config: classpath:log4j2.xml
