@@ -235,23 +235,16 @@
             var proxys = ele.split("|");
             var pstr = "";
             if(proxys != null && proxys.length > 0){
+                var powers = JSON.parse([[${powerJson}]]);
                 for(var i = 0; i < proxys.length; i++){
-                    pstr += "<br/>"
-                    pstr += "<li>";
-                    if(proxys[i] == 1){
-                        pstr += "定时打铃权限";
-                    } else if(proxys[i] == 2){
-                        pstr += "语音合成权限";
-                    } else if(proxys[i] == 3){
-                        pstr += "定时采集权限";
-                    } else if(proxys[i] == 4){
-                        pstr += "实时广播权限";
-                    } else if(proxys[i] == 5){
-                        pstr += "上传下载权限";
-                    } else if(proxys[i] == 6){
-                        pstr += "可视对讲权限";
+                    for(var j = 0; j < powers.length; j++){
+                        if(proxys[i] == powers[j].id){
+                            pstr += "<br/>"
+                            pstr += "<li>";
+                            pstr += powers[j].showinfo;
+                            pstr += "</li>";
+                        }
                     }
-                    pstr += "</li>";
                 }
             }
 
@@ -295,11 +288,11 @@
 
                             //禁用该节点的复选框
                             nodes[i].chkDisabled = ele.disabled ? ele.disabled : false;
+                        }
 
-                            //选择
-                            if(ele.succ){
-                                ele.succ(ztreeObj);
-                            }
+                        //选择
+                        if(ele.succ){
+                            ele.succ(ztreeObj);
                         }
                     }
                 });
@@ -499,12 +492,16 @@
                 </p>
                 <p>
                     <label>拥有权限</label>
-                    <input type="checkbox" name="proxys" value="1"/>定时打铃权限
+                    <a th:each="power : ${powerlist}">
+                        <input type="checkbox" name="proxys" th:value="${power.id}"/><span th:text="${power.showinfo}"></span>
+                    </a>
+
+                    <!--<input type="checkbox" name="proxys" value="1"/>定时打铃权限
                     <input type="checkbox" name="proxys" value="2"/>语音合成权限
                     <input type="checkbox" name="proxys" value="3"/>定时采集权限
                     <input type="checkbox" name="proxys" value="4"/>实时广播权限
                     <input type="checkbox" name="proxys" value="5"/>上传下载权限
-                    <input type="checkbox" name="proxys" value="6"/>可视对讲权限
+                    <input type="checkbox" name="proxys" value="6"/>可视对讲权限-->
                 </p>
                 <p>
                     <input class="mybutton" type="button" value="提交" onclick="submitForm();" />

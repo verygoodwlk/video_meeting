@@ -4,6 +4,7 @@ import com.media.video_meeting.entity.Webcon;
 import com.media.video_meeting.page.Page;
 import com.media.video_meeting.page.PageHelper;
 import com.media.video_meeting.service.IWebconService;
+import com.media.video_meeting.util.PowerInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,8 +32,13 @@ public class WebconController {
     @RequestMapping("/list")
     @PageHelper
     public String list(Model model, Page page){
+        //获得所有分控
         List<Webcon> webconList = webconService.getWebconList();
+        //获得所有权限
+        PowerInfo[] powerList = PowerInfo.values();
         model.addAttribute("list", webconList);
+        model.addAttribute("powerlist", powerList);
+        model.addAttribute("powerJson", PowerInfo.toJson());
         return "webconlist";
     }
 
