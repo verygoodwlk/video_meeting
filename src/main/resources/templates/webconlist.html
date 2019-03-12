@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <base th:href="${#request.getContextPath() + '/'}"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Insert title here</title>
+    <!-- Invalid Stylesheet. This makes stuff look pretty. Remove it if you want the CSS completely valid -->
+    <!-- Reset Stylesheet -->
+    <link rel="stylesheet" href="resources/css/reset.css" type="text/css"
+          media="screen" />
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="resources/css/style.css" type="text/css"
+          media="screen" />
+    <link rel="stylesheet" href="resources/css/invalid.css" type="text/css"
+          media="screen" />
+
+    <!--                       Javascripts                       -->
+    <!-- jQuery -->
+    <script type="text/javascript"
+            src="resources/scripts/jquery-2.1.0.min.js"></script>
+    <!-- jQuery Configuration -->
+    <script type="text/javascript"
+            src="resources/scripts/simpla.jquery.configuration.js"></script>
+
+    <!-- dialog弹出框的导入-->
+    <link rel="stylesheet" href="//apps.bdimg.com/libs/jqueryui/1.10.4/css/jquery-ui.min.css"/>
+    <script type="text/javascript" src="resources/widget/dialog/jquery-ui-1.9.2.custom.min.js"></script>
+    <script type="text/javascript" src="resources/js/plugin.js"></script>
+
+    <!-- ztree树形结构 -->
+    <link rel="stylesheet" href="resources/widget/zTree/zTreeStyle/zTreeStyle.css"/>
+    <script type="text/javascript" src="resources/widget/zTree/jquery.ztree.all.min.js"></script>
+
+    <!-- 表单验证 -->
+    <!--<link rel="stylesheet" href="resources/widget/easyform/js/easyform/easyform.css">
+    <script src="resources/widget/easyform/js/easyform/easyform.js"></script>-->
+
+    <script th:inline="javascript">
+        //删除分控
+        function deleteWebcon(){
+            //批量删除
+            var length = $("input[type='checkbox'][name='mid']:checked").length;
+            if(length <= 0){
+                alert("请至少选择一条分控信息");
+                return;
+            }
+
+
+            if(confirm("确定要删除指定的分控信息吗？")){
+                var out_trade_no = [[${#request.getContextPath()}]];
+                $("#formdelete").attr("action", out_trade_no + "/webcon/deleteWebcons");
+                //提交表单
+                $("#formdelete").submit();
+            }
+        }
+
+
+        /**
+         * 初始化
+         */
+        function initClients(ele){
+            $.ajax({
+                url:[[${#request.getContextPath()}]] + "/client/group",
+                success: function(data){
+                    var zTreeNodes = data;
+
+                    var setting = {
+                        data:{
+                            simpleData:{
+                                enable: true,
+                                pIdKey: "pid"
+                            },
+                            key: {
+                                name: "gname"
+                            }
+                        },
+                        check:{
+                            enable: true
+                        }
+                    };
+
+                    var ztreeObj = $.fn.zTree.init($("#ztree_div"), setting, zTreeNodes);
+                    ztreeObj.expandAll(true);
+
+                    if(ele.succ){
+                        //成功后的回调
+                        ele.succ(ztreeObj);
+                    }
+                },
+                dataType:"json"
+            });
+        }
+
+        /**
+         * 选择终端
+         */
+        function select(){
+            var treeObj = $.fn.zTree.getZTreeObj("ztree_div");
+            //获得所有被选择的节点
+            var checkedNodes = treeObj.getCheckedNodes(true);
+
+            var hiddenStr = "";
+            A:for(var i = 0; i < checkedNodes.length; i++){
+                if(checkedNodes[i].id == null){
+                    //说明当前是终端
+                    hiddenStr += "<input name='clientss' type='hidden' value='" + checkedNodes[i].pid + "-" + checkedNodes[i].userid + "'/>";
+                }
+            }
+
+            if(hiddenStr != ""){
+                $("#label_id").html("终端（已选择）");
+                $("#cspan_id").html(hiddenStr);
+            } else {
+                $("#label_id").html("终端（未选择）");
+                $("#cspan_id").html("");
+            }
+
+
+            closeDialog("dialog_div");
+        }
+
+        /**
+         * 新增分控
+         */
+        function insertWebcon(){
+            //初始化终端列表
+            initClients();
+            //清空表单
+            clearForm();
+            //弹出dialog
+            openDialog("webcon_div", "新增分控");
+        }
+
+        /**
+         * 弹出选择终端框
+         */
+        function select_clients(){
+            //显示按钮
+            $("#btnid").show();
+            openDialog("dialog_div", "选择终端设备", 300, 400);
+        }
+
+        /**
+         * 校验用户名的唯一性
+         */
+        var check = true;
+        function checkAccount(account){
+            var acc = $("#account");
+
+            $.ajax({
+                url:[[${#request.getContextPath()}]] + '/webcon/checkAccount',
+                data:{'account':account},
+                success:function(data){
+                    check = data;
+                    if(data){
+                        alert("用户名已经存在！");
+                    }
+                }
+            });
+        }
+
+        /**
+         * 提交表单
+         */
+        function submitForm(){
+            //用户名不能为空
+            var account = $("#account").val();
+            var password = $("#password").val();
+            var againpassword = $("#againpassword").val();
+            var nickname = $("#nickname").val();
+            var cspan = $("#cspan_id").html();
+            var priority = $("#priority").val();
+
+            //验证
+            if(check){
+                alert("用户名已经存在！");
+                return;
+            }
+
+            if(account.trim() == ""){
+                alert("用户名不能为空");
+                return;
+            }
+
+            if(password.trim() == ""){
+                alert("密码不能为空");
+                return;
+            }
+
+            if(password != againpassword){
+                alert("两次密码不相同");
+                return;
+            }
+
+            if(nickname.trim() == ""){
+                alert("昵称不能为空");
+                return;
+            }
+
+            if(priority.trim() == ""){
+                alert("优先级不能为空！");
+                return;
+            }
+
+            if(priority < 1 || priority > 15){
+                alert("优先级范围必须在1~15之间");
+                return;
+            }
+
+
+            if(cspan.trim() == ""){
+                alert("终端选择不能为空！");
+                return;
+            }
+
+            //提交表单
+            $("#formid").submit();
+        }
+
+        /**
+         * 清空表单
+         */
+        function clearForm(){
+            check = true;
+            $("input[name='account'][type='hidden']").remove();
+            $("#account").removeAttr("disabled");
+            $("#formid")[0].reset();
+            $("#label_id").html("终端（未选择）");
+        }
+
+        /**
+         * 显示权限列表
+         */
+        function showProxy(ele){
+            var proxys = ele.split("|");
+            var pstr = "";
+            if(proxys != null && proxys.length > 0){
+                for(var i = 0; i < proxys.length; i++){
+                    pstr += "<br/>"
+                    pstr += "<li>";
+                    if(proxys[i] == 1){
+                        pstr += "定时打铃权限";
+                    } else if(proxys[i] == 2){
+                        pstr += "语音合成权限";
+                    } else if(proxys[i] == 3){
+                        pstr += "定时采集权限";
+                    } else if(proxys[i] == 4){
+                        pstr += "实时广播权限";
+                    } else if(proxys[i] == 5){
+                        pstr += "上传下载权限";
+                    } else if(proxys[i] == 6){
+                        pstr += "可视对讲权限";
+                    }
+                    pstr += "</li>";
+                }
+            }
+
+            $("#proxy_ul").html(pstr);
+            openDialog("show_proxy", "拥有权限列表", 300, 200);
+
+        }
+
+        /**
+         * 初始化终端列表值
+         */
+        function initTree(ele){
+            var clients = ele.data.split("|");
+            if(clients != null && clients.length > 0){
+                initClients({
+                    succ: function(ztreeObj){
+                        //禁用所有终端的选择框
+                        var nodes = ztreeObj.transformToArray(ztreeObj.getNodes());
+                        for(var i = 0; i < nodes.length; i++){
+                            //判断终端 是否为该分控选中的终端
+                            //如果是终端
+                            for (var j = 0; j < clients.length; j++) {
+                                var clis = clients[j].split("-");
+                                if(nodes[i].id == null) {
+                                    //如果是终端
+                                    //判断当前终端是否选中
+                                    if (clis[0] == nodes[i].pid && clis[1] == nodes[i].userid) {
+                                        ztreeObj.checkNode(nodes[i], true, true);
+                                        break;
+                                    }
+                                } else {
+                                    //如果是分组
+                                    if(clis[0] == nodes[i].id){
+                                        ztreeObj.checkNode(nodes[i], true, false);
+                                        break;
+                                    }
+                                }
+
+                            }
+
+
+                            //禁用该节点的复选框
+                            nodes[i].chkDisabled = ele.disabled ? ele.disabled : false;
+
+                            //选择
+                            if(ele.succ){
+                                ele.succ(ztreeObj);
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        /**
+         * 显示终端列表
+         * @param ele
+         */
+        function showClients(ele){
+            //初始化终端树形列表的值
+            initTree({
+                data:ele,
+                disabled: true
+            });
+
+            //隐藏按钮
+            $("#btnid").hide();
+
+            //弹出终端列表框
+            openDialog("dialog_div", "关联终端设备", 300, 400);
+        }
+
+        /**
+         * 弹出修改框
+         */
+        function updateWebcon(account){
+            $.ajax({
+                url: [[${#request.getContextPath()}]] + '/webcon/queryByAccount',
+                data: {"account": account},
+                success: function(data){
+                    //用户名不能为空
+                    var account = $("#account");
+                    var password = $("#password");
+                    var againpassword = $("#againpassword");
+                    var nickname = $("#nickname");
+                    var cspan = $("#cspan_id");
+                    var priority = $("#priority");
+
+                    account.attr("disabled", "disabled");
+                    account.after("<input type='hidden' name='account' value='" + data.account + "'/>");
+
+                    account.val(data.account);
+                    password.val(data.password);
+                    againpassword.val(data.password);
+                    nickname.val(data.nickname);
+                    priority.val(data.priority);
+
+                    //设置选择的权限
+                    var pstrs = data.proxy.split("|");
+                    var proxys = $("input[name='proxys']");
+                    for(var i = 0; i < proxys.length; i++){
+                        for(var j = 0; j < pstrs.length; j++){
+                            if(pstrs[j] == proxys[i].value){
+                                proxys[i].checked = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    //设置选择的终端
+                    //初始化终端列表
+                    initTree({
+                        data:data.clients,
+                        disabled:false,
+                        succ: function(){
+                            select();
+                        }
+                    });
+                    //设置无需检测用户名是否唯一
+                    check = false;
+
+                    //弹出dialog
+                    openDialog("webcon_div", "修改分控");
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+<div id="main-content">
+    <div class="content-box">
+        <!-- End .content-box-header -->
+        <div class="content-box-content">
+            <h2>分控列表</h2>
+            <!-- 搜索
+            <form th:action="${#request.getContextPath() + '/meeting/search'}" method="get">
+                <input
+                        class="text-input small-input" type="text"
+                        name="keyword" placeholder="请输入会议名称或者号码" th:value="${keyword}"/>
+                <button type="submit" class="mybutton">搜索</button>
+            </form>-->
+
+            <br/>
+            <hr/>
+            <br/>
+
+            <div class="tab-content default-tab" id="tab1">
+                <form id="formdelete" method="post">
+                <table>
+                    <thead>
+                    <tr>
+                        <th><input class="check-all" type="checkbox" />全选</th>
+                        <th>用户名</th>
+                        <th>昵称</th>
+                        <th>优先级</th>
+                        <th>权限</th>
+                        <th>终端列表</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr th:each="webcon : ${list}">
+                        <td><input type="checkbox" name="mid" th:value="${webcon.account}"/></td>
+                        <td th:text="${webcon.account}">Lorem ipsum dolor</td>
+                        <td th:text="${webcon.nickname}">Sit amet</td>
+                        <td th:text="${webcon.priority}">Consectetur adipiscing</td>
+                        <td><a th:href="|javascript:showProxy('${webcon.proxy}');|">查看权限</a></td>
+                        <td><a th:href="|javascript:showClients('${webcon.clients}');|">查看终端列表</a></td>
+                        <td>
+                            <a th:href="|javascript:updateWebcon('${webcon.account}');|" title="Edit">
+                                <img src="resources/images/icons/pencil.png" alt="Edit" />
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+
+                    <!-- 脚部 -->
+                    <tfoot>
+                    <tr>
+                        <td colspan="6">
+                            <div class="bulk-actions align-left">
+                                <a class="mybutton" href="javascript:insertWebcon();">新增分控</a>
+                            </div>
+                            <div class="bulk-actions align-left" style="margin-left: 10px">
+                                <a class="mybutton" href="javascript:deleteWebcon();">删除分控</a>
+                            </div>
+                            <!-- 分页导航 -->
+                            <div class="pagination" th:replace="page :: fenye">
+                            </div> <!-- End .pagination -->
+                            <div class="clear"></div>
+                        </td>
+                    </tr>
+                    </tfoot>
+                </table>
+                </form>
+            </div>
+        </div>
+        <!-- End .content-box-content -->
+    </div>
+</div>
+<!-- End #main-content -->
+
+<!-- 弹出终端选择框 -->
+<div id="dialog_div" style="display: none;">
+    <!-- 树形结构 -->
+    <div id="ztree_div" class="ztree"></div>
+    <button id="btnid" class="mybutton" type="button" onclick="select();">确定</button>
+</div>
+
+<!-- 弹出分控添加框 -->
+<div id="webcon_div" style="display: none;">
+    <div class="tab-content default-tab" id="tab2">
+        <form id="formid" th:action="${#request.getContextPath() + '/webcon/insert'}" method="post">
+            <fieldset>
+                <!-- Set class to "column-left" or "column-right" on fieldsets to divide the form into columns -->
+                <p>
+                    <label>用户名</label> <input
+                        class="text-input medium-input" type="text" id="account"
+                        name="account" onblur="checkAccount(this.value.trim());"/>
+                </p>
+                <p>
+                    <label>密码</label> <input
+                        class="text-input medium-input" type="password" id="password"
+                        name="password" />
+                </p>
+                <p>
+                    <label>重复密码</label> <input
+                        class="text-input medium-input" type="password" id="againpassword"
+                        name="againpassword" />
+                </p>
+                <p>
+                    <label>昵称</label> <input
+                        class="text-input large-input" type="text" id="nickname"
+                        name="nickname" />
+                </p>
+                <p>
+                    <label>优先级</label> <input
+                        class="text-input small-input" type="text" id="priority"
+                        name="priority" />（优先级范围1~15）
+                </p>
+                <p>
+                    <label id="label_id">终端（未选择）</label>
+                    <button class="mybutton" type="button" onclick="select_clients();">选择终端</button>
+                    <span id="cspan_id"></span>
+                </p>
+                <p>
+                    <label>拥有权限</label>
+                    <input type="checkbox" name="proxys" value="1"/>定时打铃权限
+                    <input type="checkbox" name="proxys" value="2"/>语音合成权限
+                    <input type="checkbox" name="proxys" value="3"/>定时采集权限
+                    <input type="checkbox" name="proxys" value="4"/>实时广播权限
+                    <input type="checkbox" name="proxys" value="5"/>上传下载权限
+                    <input type="checkbox" name="proxys" value="6"/>可视对讲权限
+                </p>
+                <p>
+                    <input class="mybutton" type="button" value="提交" onclick="submitForm();" />
+                </p>
+            </fieldset>
+            <div class="clear"></div>
+            <!-- End .clear -->
+        </form>
+    </div>
+</div>
+
+<!-- 权限展示框 -->
+<div id="show_proxy" style="display: none;">
+    <div id="proxy_ul"></div>
+</div>
+
+</body>
+</html>

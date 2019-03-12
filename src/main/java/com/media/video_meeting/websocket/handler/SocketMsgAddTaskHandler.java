@@ -34,6 +34,7 @@ public class SocketMsgAddTaskHandler extends SocketMsgHandler {
     @Override
     public void handlerMsg(String msg, JSONObject jsonObject) throws Exception {
         Task task = JSON.parseObject(msg, Task.class);
+        task.setTaskt(1);//定时音乐
         taskService.insert(task);
     }
 

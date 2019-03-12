@@ -30,6 +30,7 @@ public class SocketMsgPlayMusicTaskHandler extends SocketMsgHandler {
     public void handlerMsg(String msg, JSONObject jsonObject) throws Exception {
         //新建实时音乐
         Task task = JSON.parseObject(msg, Task.class);
+        task.setTaskt(5);//实时音乐
         //终端列表
         JSONArray jsonArrayClient = jsonObject.getJSONArray("terminal");
         task.setUsers(jsonArrayClient.toString());

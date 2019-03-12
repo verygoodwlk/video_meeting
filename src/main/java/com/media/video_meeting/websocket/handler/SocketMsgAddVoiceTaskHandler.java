@@ -27,6 +27,7 @@ public class SocketMsgAddVoiceTaskHandler extends SocketMsgHandler {
     @Override
     public void handlerMsg(String msg, JSONObject jsonObject) throws Exception {
         Task task = JSON.parseObject(msg, Task.class);
+        task.setTaskt(4);//语音合成
         taskService.insert(task);
     }
 

@@ -5,7 +5,9 @@ import com.media.video_meeting.log.SysLog;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,13 +32,19 @@ public class ResourceController {
      * @return
      */
     @RequestMapping("/upload")
+    @CrossOrigin
     @SysLog(value = LogType.INSERT, info = "上传了一个音频文件")
-    public String uploadFile(MultipartFile file){
+    public String uploadFile(@RequestParam("file") MultipartFile file, String account){
 
-        log.info("上传了一个文件：" + file.getOriginalFilename() + " 文件大小为：" + file.getSize());
+        log.info("upload file: 上传了一个文件->" + file.getOriginalFilename() + " 文件大小为：" + file.getSize() + " 分控名称为：" + account);
+
+        if(account != null && !account.trim().equals("")){
+            uploadPath += File.separator;
+            uploadPath += account;
+        }
 
         File files = new File(uploadPath);
-        if(files.isDirectory() && !files.exists()){
+        if(!files.exists()){
             files.mkdirs();
         }
         files = new File(files, file.getOriginalFilename());
@@ -49,7 +57,7 @@ public class ResourceController {
             IOUtils.copy(in, out);
 
         } catch (IOException e) {
-            log.error("上传文件失败！" + file.getOriginalFilename(), e);
+            log.error("upload file error: 上传文件失败！" + file.getOriginalFilename(), e);
             return "error";
         }
 

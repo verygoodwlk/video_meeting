@@ -29,6 +29,7 @@ public class SocketMsgAddFireTaskHandler extends SocketMsgHandler {
     @Override
     public void handlerMsg(String msg, JSONObject jsonObject) throws Exception {
         Task task = JSON.parseObject(msg, Task.class);
+        task.setTaskt(3);//消防报警
         taskService.insert(task);
     }
 

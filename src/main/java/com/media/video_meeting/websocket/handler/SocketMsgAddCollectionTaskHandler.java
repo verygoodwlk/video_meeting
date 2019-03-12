@@ -30,6 +30,7 @@ public class SocketMsgAddCollectionTaskHandler extends SocketMsgHandler {
     @Override
     public void handlerMsg(String msg, JSONObject jsonObject) throws Exception {
         Task task = JSON.parseObject(msg, Task.class);
+        task.setTaskt(2);//定时采集
         taskService.insert(task);
     }
 

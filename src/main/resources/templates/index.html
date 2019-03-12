@@ -96,6 +96,11 @@
                         <li><a onclick="itemclick(this);" th:name="${#request.getContextPath() + '/topage/clientgroup'}" name="/topage/clientgroup">群组管理</a></li>
                     </ul>
                 </li>
+                <li><a class="nav-top-item"> 分控管理 </a>
+                    <ul>
+                        <li><a onclick="itemclick(this);" th:name="${#request.getContextPath() + '/webcon/list'}" name="/client/list">分控列表</a></li>
+                    </ul>
+                </li>
                 <li><a class="nav-top-item"> 系统诊断 </a>
                     <ul>
                         <li><a onclick="itemclick(this);" name="/model/list" >模块状态</a></li>

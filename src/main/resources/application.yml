@@ -1,3 +1,4 @@
+
 spring:
   datasource:
     url: jdbc:sqlite:${db.path}
@@ -28,7 +29,8 @@ page:
 #golang服务器注册地址
 golang:
   serverpath: ws://47.107.235.165:8000/
-
+server:
+  port: 8080
 ---
 server:
   os: window
