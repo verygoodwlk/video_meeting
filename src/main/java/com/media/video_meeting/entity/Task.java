@@ -1,50 +1,63 @@
 package com.media.video_meeting.entity;
 
+import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Task implements Serializable {
-    private Integer id;
+    @TableId(type = IdType.AUTO)
+    private int id;
     private String taskid;
     private String solution;
     private String account;
-    private Integer taskt;//任务类型 1 - 定时音乐 2 - 定时采集 3 - 消防报警 4 - 语音合成 5 - 实时音乐
-    private Integer taskpriority;
+    private int taskt;//任务类型 1 - 定时音乐 2 - 定时采集 3 - 消防报警 4 - 语音合成 5 - 实时音乐
+    private int taskpriority;
     private String taskname;
-    private Integer taskclassify;
-    private Integer playorder;
+    private int taskclassify;
+    private int playorder;
     private String startdate;
     private String starttime;
     private String stopdate;
-    private Integer isenddate;
-    private Integer duration;
-    private Integer isduration;
-    private Integer startinadvance;
+    private int isenddate;
+    private int duration;
+    private int isduration;
+    private int startinadvance;
     private String mp3;
-    private Integer looptype;
-    private Integer muiscduration;
-    private Integer samll;
-    private Integer volume;
-    private Integer keybind;
-    private Integer weekmask;
+    private int looptype;
+    private int muiscduration;
+    private int samll;
+    private int volume;
+    private int keybind;
+    private int weekmask;
     private String users;
     private String collectionclient;
     private String area;
-    private Integer fireterminal;
-    private Integer port;
-    private Integer islevel;
-    private Integer isexternalmusic;
+    private int fireterminal;
+    private int port;
+    private int islevel;
+    private int isexternalmusic;
     private String externalfireterminal;
     private String info;
-    private Integer reporter;
-    private Integer speed;
-    private Integer loopnum;
-    private Integer tasktype;
-    private Integer status;
+    private int reporter;
+    private int speed;
+    private int loopnum;
+    private int tasktype;
+    private int status;
+
+    public List<String> getMp3(){
+        return JSON.parseArray(mp3, String.class);
+    }
+
+    public List<String> getUsers(){
+        return JSON.parseArray(users, String.class);
+    }
 }

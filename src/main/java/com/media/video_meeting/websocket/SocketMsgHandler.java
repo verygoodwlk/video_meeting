@@ -18,9 +18,10 @@ public abstract class SocketMsgHandler {
      */
     public void handler(String msg){
         JSONObject jsonObject = JSONObject.parseObject(msg);
+        jsonObject.remove("id");
 
         try {
-            handlerMsg(msg, jsonObject);
+            handlerMsg(jsonObject.toJSONString(), jsonObject);
         } catch (Throwable t) {
             log.error("websocket_handle_error:处理websocket数据异常", t);
             exception(t);
@@ -37,4 +38,5 @@ public abstract class SocketMsgHandler {
      * 处理相应的异常
      */
     public abstract void exception(Throwable t);
+
 }

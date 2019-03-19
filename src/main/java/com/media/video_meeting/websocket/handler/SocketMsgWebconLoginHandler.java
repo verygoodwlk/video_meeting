@@ -13,13 +13,11 @@ import com.media.video_meeting.service.IWebconService;
 import com.media.video_meeting.util.GroupUtil;
 import com.media.video_meeting.websocket.MyWebSocket;
 import com.media.video_meeting.websocket.SocketMsgHandler;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 分控登录处理
@@ -28,6 +26,7 @@ import java.util.Map;
  * @Version 1.0
  */
 @Component("webconLogin")
+@Slf4j
 public class SocketMsgWebconLoginHandler extends SocketMsgHandler {
 
     @Autowired
@@ -58,6 +57,7 @@ public class SocketMsgWebconLoginHandler extends SocketMsgHandler {
         if(webcon != null){
             if (webcon.getPassword().equals(passwd)){
                 //登录成功
+                log.info("webcon login：登录的分控信息->" + webcon);
 
                 //获取方案名称
                 Solution solu = solutionService.queryById(webcon.getSolutionid());
@@ -66,7 +66,7 @@ public class SocketMsgWebconLoginHandler extends SocketMsgHandler {
                 String clients = webcon.getClients();
                 //查询终端列表
                 List<Map<String, Object>> clientMsgs = new ArrayList<>();
-                String[] cts = clients.split("|");
+                String[] cts = clients.split("\\|");
                 for (String groupclient : cts){
                     String[] client = groupclient.split("-");
                     ClientMsg clientMsg = clientService.queryById(Integer.parseInt(client[1]));
@@ -108,7 +108,7 @@ public class SocketMsgWebconLoginHandler extends SocketMsgHandler {
                 sb.append("{\n" +
                         "\"id\": \"webconLoginResponse\",\n" +
                         "\"response\": \"accepted\",\n" +
-                        "\"account\": \"admin\",\n" +
+                        "\"account\": \"" + webcon.getAccount() + "\",\n" +
                         "\"userlist\":" +
                         JSON.toJSONString(clientMsgs) +
                         ",\n" +
@@ -129,17 +129,24 @@ public class SocketMsgWebconLoginHandler extends SocketMsgHandler {
                         "\"voiceTask\": " +
                         JSON.toJSONString(voiceTasks) +
                         ",\n" +
-                        "\"mp3\": [\"1.mp3\", \"2.mp3\"]\n" +
+                        "\"mp3\":[{\"name\":\"1.mp3\",\"folder\":\"admin\",\"duration\":\"60\" },{\"name\":\"2.mp3\",\"folder\":\"admin/123\",\"duration\":\"280\" }]\n" +
                         "}");
 
-                webSocket.send(sb.toString());
+                //替换特殊字符
+                //将"mp3":"[\"1\", \"2\"]" 替换成 "mp3":["1", "2"]
+//                String str = sb.toString().replace("\"[", "[").replace("]\"", "]").replace("\\\"", "\"");
+                String str = sb.toString();
+
+                log.info("webcon login : 分控登录成功 " + str);
+                webSocket.send(str);
 
                 return;
             }
         }
 
         //登录失败
-        webSocket.send("{\"id\":\"webconLoginResponse\",\"response\":\"fail\"}");
+        log.info("webcon login : 分控登录失败 ");
+        webSocket.send("{\"id\":\"webconLoginResponse\",\"response\":\"fail\",\"account\":\"" + webcon.getAccount() +"\"}");
     }
 
     @Override

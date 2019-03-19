@@ -14,7 +14,7 @@ import java.io.Serializable;
 public class Solution implements Serializable {
 
     @TableId(type = IdType.AUTO)
-    private Integer id;
+    private int id;
     private String solutionname;
     private String account;//方案所属分控
 }

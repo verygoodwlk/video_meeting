@@ -16,10 +16,10 @@ public class Webcon implements Serializable {
     private String account;
     private String password;
     private String nickname;
-    private Integer priority;
+    private int priority;
     private String proxy;
     private String clients;
-    private Integer solutionid;
+    private int solutionid = 1;
 
 
     public void setProxy(String proxy){
