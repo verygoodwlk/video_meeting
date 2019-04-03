@@ -17,7 +17,13 @@ public interface ITaskService {
 
     int deleteByTaskId(String taskid);
 
+    int deleteById(int tid);
+
     List<Task> queryBySolution(String solution);
 
     List<Task> queryByAccountAndTaskType(String account, int taskt);
+
+    Task queryById(int tid);
+
+    Task queryByTaskId(String taskid);
 }

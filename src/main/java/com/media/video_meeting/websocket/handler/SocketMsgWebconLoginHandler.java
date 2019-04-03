@@ -134,8 +134,8 @@ public class SocketMsgWebconLoginHandler extends SocketMsgHandler {
 
                 //替换特殊字符
                 //将"mp3":"[\"1\", \"2\"]" 替换成 "mp3":["1", "2"]
-//                String str = sb.toString().replace("\"[", "[").replace("]\"", "]").replace("\\\"", "\"");
-                String str = sb.toString();
+                String str = sb.toString().replace("\"[", "[").replace("]\"", "]").replace("\\\"", "\"");
+//                String str = sb.toString();
 
                 log.info("webcon login : 分控登录成功 " + str);
                 webSocket.send(str);

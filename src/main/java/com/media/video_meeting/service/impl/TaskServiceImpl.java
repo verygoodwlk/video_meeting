@@ -35,6 +35,11 @@ public class TaskServiceImpl implements ITaskService {
         return taskMapper.deleteByTaskId(taskid);
     }
 
+    @Override
+    public int deleteById(int tid) {
+        return taskMapper.deleteById(tid);
+    }
+
     /**
      * 根据方案名称查询所有任务
      * @param solution
@@ -58,5 +63,28 @@ public class TaskServiceImpl implements ITaskService {
         queryWrapper.eq("account", account);
         queryWrapper.eq("taskt", taskt);
         return taskMapper.selectList(queryWrapper);
+    }
+
+    /**
+     * 根据id查询任务
+     * @param tid
+     * @return
+     */
+    @Override
+    public Task queryById(int tid) {
+        Task task = taskMapper.selectById(tid);
+        return task;
+    }
+
+    /**
+     * 根据任务
+     * @param taskid
+     * @return
+     */
+    @Override
+    public Task queryByTaskId(String taskid) {
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.eq("taskid", taskid);
+        return taskMapper.selectOne(queryWrapper);
     }
 }

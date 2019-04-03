@@ -7,12 +7,12 @@ package com.media.video_meeting.util;
  */
 public enum PowerInfo {
 
-    POWER1(1,"定时打铃"),
-    POWER2(2,"语音合成"),
-    POWER3(3,"定时采集"),
-    POWER4(4,"实时广播"),
-    POWER5(5,"上传下载"),
-    POWER6(6,"可视对讲");
+    POWER1(1,"定时音乐"),
+    POWER2(2,"定时采集"),
+    POWER3(3,"语音合成"),
+    POWER4(4,"实时寻呼"),
+    POWER5(5,"上传曲目"),
+    POWER6(6,"实时音乐");
 
     private int id;
     private String showinfo;

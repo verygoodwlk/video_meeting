@@ -35,11 +35,11 @@ server:
 server:
   os: window
 db:
-  path: C:/Users/ken/Desktop/admin_hy/Meeting.db
+  path: C:/worker/千锋/项目/admin_hy/Meeting.db
 spring:
   profiles: window
 upload:
-  path: C:/Users/ken/Desktop/admin_hy/imgs
+  path: C:/worker/千锋/项目/admin_hy/imgs
 
 ---
 server:

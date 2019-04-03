@@ -1,5 +1,6 @@
 package com.media.video_meeting.service;
 
+import com.media.video_meeting.entity.ClientMsg;
 import com.media.video_meeting.entity.Webcon;
 
 import java.util.List;
@@ -20,4 +21,6 @@ public interface IWebconService {
     int deleteAccounts(String[] accounts);
 
     int updateWebcon(Webcon webcon);
+
+    List<ClientMsg> queryClientsByWebcon(String account);
 }
