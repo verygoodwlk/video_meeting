@@ -216,7 +216,7 @@
                         tasks = data;
                         var html = "";
                         for (var i = 0; i < data.length; i++) {
-                            html += "<tr id='tr_task_" + data[i].id + "' taskid='" + data[i].id + "' onclick='trtask(" + data[i].id + ");'>";
+                            html += "<tr id='tr_task_" + data[i].id + "' taskid='" + data[i].id + "' taskidstr='" + data[i].taskid + "' onclick='trtask(" + data[i].id + ");'>";
                             html += "<td>" + data[i].taskname + "</td>";
                             html += "<td>" + data[i].status + "</td>";
                             html += "<td>" + data[i].duration + "</td>";
@@ -281,9 +281,9 @@
             }
 
             if(confirm("是否确认删除选中的任务？")){
-                var tid = task.getAttribute("taskid");
+                var tid = task.getAttribute("taskidstr");
 
-                $.get([[${#request.getContextPath()}]] + "/web/task/delete", {"tid":tid}, function(data){
+                $.get([[${#request.getContextPath()}]] + "/web/task/delete", {"taskid":tid}, function(data){
                     if(data > 0){
                         $("[alt='del']").remove();
                         $("#mp3_list").html("");
@@ -295,6 +295,144 @@
 
 
             }
+        }
+
+        /**
+         * 拷贝任务
+         */
+        function copy_task(){
+            var task = $("[alt='del']")[0];
+            if(!task){
+                alert("请选中需要拷贝的任务！");
+                return;
+            }
+
+            if(confirm("是否确认复制选中的任务？")){
+                var tid = task.getAttribute("taskidstr");
+
+                $.get([[${#request.getContextPath()}]] + "/web/task/copy", {"taskid":tid}, function(data){
+                    if(data){
+                        var html ="";
+                        html += "<tr id='tr_task_" + data.id + "' taskid='" + data.id + "' taskidstr='" + data.taskid + "' onclick='trtask(" + data.id + ");'>";
+                        html += "<td>" + data.taskname + "</td>";
+                        html += "<td>" + data.status + "</td>";
+                        html += "<td>" + data.duration + "</td>";
+                        html += "<td></td>";
+                        html += "</tr>";
+
+                        $("#task_list").append(html);
+                    } else {
+                        alert("复制失败！");
+                    }
+                },"json");
+            }
+        }
+
+        /**
+         * 手动执行
+         */
+        function action_task(){
+            var task = $("[alt='del']")[0];
+            if(!task){
+                alert("请选中需要执行的任务！");
+                return;
+            }
+
+            if(confirm("是否确认执行选中的任务？")){
+                var tid = task.getAttribute("taskidstr");
+
+                $.get([[${#request.getContextPath()}]] + "/web/task/action", {"taskid":tid}, function(data){
+                    if(data){
+                        alert("开始执行！");
+                    } else {
+                        alert("执行失败！");
+                    }
+                },"json");
+            }
+        }
+
+        /**
+         * 手动暂停
+         */
+        function pause_task(){
+            var task = $("[alt='del']")[0];
+            if(!task){
+                alert("请选中需要暂停的任务！");
+                return;
+            }
+
+            if(confirm("是否确认暂停选中的任务？")){
+                var tid = task.getAttribute("taskidstr");
+
+                $.get([[${#request.getContextPath()}]] + "/web/task/pause", {"taskid":tid}, function(data){
+                    if(data){
+                    } else {
+                        alert("暂停失败！");
+                    }
+                },"json");
+            }
+        }
+
+        /**
+         * 手动停止
+         */
+        function stop_task(){
+            var task = $("[alt='del']")[0];
+            if(!task){
+                alert("请选中需要停止的任务！");
+                return;
+            }
+
+            if(confirm("是否确认停止选中的任务？")){
+                var tid = task.getAttribute("taskidstr");
+
+                $.get([[${#request.getContextPath()}]] + "/web/task/stop", {"taskid":tid}, function(data){
+                    if(data){
+                    } else {
+                        alert("停止失败！");
+                    }
+                },"json");
+            }
+        }
+
+        /**
+         * 上一曲
+         */
+        function pre_task(){
+            var task = $("[alt='del']")[0];
+            if(!task){
+                alert("请选中需要执行的任务！");
+                return;
+            }
+
+            var tid = task.getAttribute("taskidstr");
+
+            $.get([[${#request.getContextPath()}]] + "/web/task/pre", {"taskid":tid}, function(data){
+                if(data){
+                } else {
+                    alert("执行上一曲失败！");
+                }
+            },"json");
+        }
+
+        /**
+         * 下一曲
+         */
+        function next_task(){
+            var task = $("[alt='del']")[0];
+            if(!task){
+                alert("请选中需要执行的任务！");
+                return;
+            }
+
+            var tid = task.getAttribute("taskidstr");
+
+            $.get([[${#request.getContextPath()}]] + "/web/task/next", {"taskid":tid}, function(data){
+                if(data){
+                } else {
+                    alert("执行下一曲失败！");
+                }
+            },"json");
         }
     </script>
 
@@ -331,22 +469,22 @@
     <button class="btn btn-primary dim btn-large-dim" type="button" onclick="delete_task();">
         删除任务
     </button>
-    <button class="btn btn-primary dim btn-large-dim" type="button">
+    <button class="btn btn-primary dim btn-large-dim" type="button" onclick="copy_task();">
         复制任务
     </button>
-    <button class="btn btn-primary dim btn-large-dim" type="button">
+    <button class="btn btn-primary dim btn-large-dim" type="button" onclick="action_task();">
         手动执行
     </button>
-    <button class="btn btn-primary dim btn-large-dim" type="button">
+    <button class="btn btn-primary dim btn-large-dim" type="button" onclick="pause_task();">
         手动暂停
     </button>
-    <button class="btn btn-primary dim btn-large-dim" type="button">
+    <button class="btn btn-primary dim btn-large-dim" type="button" onclick="stop_task();">
         手动停止
     </button>
-    <button class="btn btn-primary dim btn-large-dim" type="button">
+    <button class="btn btn-primary dim btn-large-dim" type="button" onclick="pre_task();">
         上一曲
     </button>
-    <button class="btn btn-primary dim btn-large-dim" type="button">
+    <button class="btn btn-primary dim btn-large-dim" type="button" onclick="next_task();">
         下一曲
     </button>
 </div>

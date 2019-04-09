@@ -1,6 +1,5 @@
 package com.media.video_meeting.controller_webcon;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.media.video_meeting.entity.ClientMsg;
 import com.media.video_meeting.entity.Task;
@@ -8,6 +7,8 @@ import com.media.video_meeting.entity.Webcon;
 import com.media.video_meeting.service.IClientService;
 import com.media.video_meeting.service.ITaskService;
 import com.media.video_meeting.websocket.MyWebSocket;
+import com.media.video_meeting.websocket_aop.SocketSend;
+import com.media.video_meeting.websocket_aop.send.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,25 +37,12 @@ public class TaskController {
      */
     @ResponseBody
     @RequestMapping("/insert")
+    @SocketSend(params = "#result", sendClass = MusicAddSocketSend.class)
     public Task insert(Task task, @SessionAttribute("account") Webcon webcon){
         task.setTaskid(UUID.randomUUID().toString());
         task.setAccount(webcon.getAccount());
         System.out.println("添加任务：" + task);
         taskService.insert(task);
-
-        //发送websocket
-        if(myWebSocket.isOpen()){
-            Map<String, Object> map = new HashMap<>();
-            map.put("id", "playMusicTask");
-            map.put("account", task.getAccount());
-            map.put("taskname", task.getTaskname());
-            map.put("loopType", task.getLooptype());
-            map.put("volume", task.getVolume());
-            map.put("mp3", JSON.parseArray(task.getMp3(), String.class));
-            map.put("terminal", JSON.parseArray(task.getUsers(), Integer.class));
-            myWebSocket.send(JSON.toJSONString(map));
-        }
-
         return task;
     }
 
@@ -71,15 +59,95 @@ public class TaskController {
 
     /**
      * 删除任务
-     * @param tid
+     * @param taskid
      * @return
      */
     @ResponseBody
     @RequestMapping("/delete")
-    public int delete(int tid){
-        int result = taskService.deleteById(tid);
+    @SocketSend(params = "#taskid", sendClass = MusicDeleteSocketSend.class)
+    public int delete(String taskid){
+        int result = taskService.deleteByTaskId(taskid);
         return result;
     }
+
+    /**
+     * 拷贝任务
+     * @param taskid
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/copy")
+    @SocketSend(params = "#result", sendClass = MusicCopySocketSend.class)
+    public Task copy(String taskid){
+        Task task = taskService.copyTask(taskid);
+        return task;
+    }
+
+    /**
+     * 手动执行任务
+     * @param taskid
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/action")
+    @SocketSend(params = "#result", sendClass = MusicActionSocketSend.class)
+    public Task action(String taskid){
+        Task task = taskService.queryByTaskId(taskid);
+        return task;
+    }
+
+    /**
+     * 手动暂停
+     * @param taskid
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/pause")
+    @SocketSend(params = "#result", sendClass = MusicPauseSocketSend.class)
+    public Task pause (String taskid){
+        Task task = taskService.queryByTaskId(taskid);
+        return task;
+    }
+
+    /**
+     * 手动停止
+     * @param taskid
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/stop")
+    @SocketSend(params = "#result", sendClass = MusicStopSocketSend.class)
+    public Task stop(String taskid){
+        Task task = taskService.queryByTaskId(taskid);
+        return task;
+    }
+
+    /**
+     * 上一曲
+     * @param taskid
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/pre")
+    @SocketSend(params = "#result", sendClass = MusicPreSocketSend.class)
+    public Task pre(String taskid){
+        Task task = taskService.queryByTaskId(taskid);
+        return task;
+    }
+
+    /**
+     * 下一曲
+     * @param taskid
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/next")
+    @SocketSend(params = "#result", sendClass = MusicNextSocketSend.class)
+    public Task next(String taskid){
+        Task task = taskService.queryByTaskId(taskid);
+        return task;
+    }
+
 
     /**
      * 获得任务信息

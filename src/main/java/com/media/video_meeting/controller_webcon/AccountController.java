@@ -3,6 +3,7 @@ package com.media.video_meeting.controller_webcon;
 import com.media.video_meeting.entity.Webcon;
 import com.media.video_meeting.service.IWebconService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +16,9 @@ public class AccountController {
 
     @Autowired
     private IWebconService webconService;
+
+    @Value("${golang.serverpath}")
+    private String golangServer;
 
     /**
      * 进行登录
@@ -30,7 +34,7 @@ public class AccountController {
 
                 //保存进session中
                 model.addAttribute("account", webcon);
-
+                model.addAttribute("golang", golangServer);
                 //登录成功
                 return "webcon/index";
             } else {

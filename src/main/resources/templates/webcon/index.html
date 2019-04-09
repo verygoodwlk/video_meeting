@@ -98,7 +98,33 @@
             });
         });
 
+        /**
+         * 初始化websocket
+         */
+        $(function(){
+            initWs([[${golang}]], {
+                onopen: function(event){
+                    console.log("服务器连接成功！");
+                },
+                onclose: function(event){
+                    console.log("服务器连接关闭！");
+                },
+                onerror: function(event){
+                    console.log("服务器连接异常！");
+                },
+                onmessage: function(event){
+                    console.log("接收到服务器的消息：" + event.data);
 
+                    var obj = JSON.parse(event.data);
+                    eval("fun_" + obj.id + "('" + event.data + "')");
+
+                }
+            });
+        });
+
+        // function fun_ack(str){
+        //     console.log("------->处理响应请求：" + str);
+        // }
     </script>
 
 </head>

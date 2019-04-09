@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @Author ken
@@ -38,6 +39,20 @@ public class TaskServiceImpl implements ITaskService {
     @Override
     public int deleteById(int tid) {
         return taskMapper.deleteById(tid);
+    }
+
+    /**
+     * 拷贝任务
+     * @return
+     */
+    @Override
+    public Task copyTask(String taskid) {
+        Task task = queryByTaskId(taskid);
+        if(task != null){
+            task.setTaskid(UUID.randomUUID().toString());
+            insert(task);
+        }
+        return task;
     }
 
     /**
