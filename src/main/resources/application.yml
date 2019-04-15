@@ -40,6 +40,7 @@ spring:
   profiles: window
 upload:
   path: C:/worker/千锋/项目/admin_hy/imgs
+  apkpath: C:/worker/千锋/项目/admin_hy/imgs
 
 ---
 server:
@@ -50,3 +51,4 @@ spring:
   profiles: linux
 upload:
   path:
+  apkpath:

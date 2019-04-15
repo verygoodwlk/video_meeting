@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <base th:href="${#request.getContextPath() + '/'}"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Insert title here</title>
+    <!-- Invalid Stylesheet. This makes stuff look pretty. Remove it if you want the CSS completely valid -->
+    <!-- Reset Stylesheet -->
+    <link rel="stylesheet" href="resources/css/reset.css" type="text/css"
+          media="screen"/>
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="resources/css/style.css" type="text/css"
+          media="screen"/>
+    <link rel="stylesheet" href="resources/css/invalid.css" type="text/css"
+          media="screen"/>
+
+    <!--                       Javascripts                       -->
+    <!-- jQuery -->
+    <script type="text/javascript"
+            src="resources/scripts/jquery-2.1.0.min.js"></script>
+    <!-- jQuery Configuration -->
+    <script type="text/javascript"
+            src="resources/scripts/simpla.jquery.configuration.js"></script>
+
+    <!-- dialog弹出框的导入-->
+    <link rel="stylesheet" href="//apps.bdimg.com/libs/jqueryui/1.10.4/css/jquery-ui.min.css"/>
+    <script type="text/javascript" src="resources/widget/dialog/jquery-ui-1.9.2.custom.min.js"></script>
+    <script type="text/javascript" src="resources/js/plugin.js"></script>
+
+    <!-- ztree树形结构 -->
+    <link rel="stylesheet" href="resources/widget/zTree/zTreeStyle/zTreeStyle.css"/>
+    <script type="text/javascript" src="resources/widget/zTree/jquery.ztree.all.min.js"></script>
+
+    <script th:inline="javascript">
+
+        /**
+         * 初始化
+         */
+        function initClients(ele){
+            $.ajax({
+                url:[[${#request.getContextPath()}]] + "/client/group",
+                success: function(data){
+                    var zTreeNodes = data;
+
+                    var setting = {
+                        data:{
+                            simpleData:{
+                                enable: true,
+                                pIdKey: "pid"
+                            },
+                            key: {
+                                name: "gname"
+                            }
+                        },
+                        check:{
+                            enable: true
+                        }
+                    };
+
+                    var ztreeObj = $.fn.zTree.init($("#ztree_div"), setting, zTreeNodes);
+                    ztreeObj.expandAll(true);
+
+                    if(ele.succ){
+                        //成功后的回调
+                        ele.succ(ztreeObj);
+                    }
+                },
+                dataType:"json"
+            });
+        }
+
+        /**
+         * 弹出选择终端框
+         */
+        function select_clients(){
+            //初始化终端列表
+            initClients();
+            //显示按钮
+            $("#btnid").show();
+            openDialog("dialog_div", "选择终端设备", 300, 400);
+        }
+
+        /**
+         * 上传apk
+         */
+        function upload_apk(ele){
+
+            var apk = $("#apkfile").val();
+
+            if(apk == ""){
+                alert("请选择需要上传的apk文件！");
+                return;
+            }
+
+            $(ele).html("上传中...");
+            $("#formid").submit();
+        }
+
+
+        /**
+         * 选择终端更新
+         */
+        function select(){
+            var treeObj = $.fn.zTree.getZTreeObj("ztree_div");
+            //获得所有被选择的节点
+            var checkedNodes = treeObj.getCheckedNodes(true);
+
+            var arr = [];
+
+            if(checkedNodes.length <= 0){
+                alert("请选择需要更新的终端设备！");
+                return;
+            }
+
+            A:for(var i = 0; i < checkedNodes.length; i++){
+                if(checkedNodes[i].id == null){
+                    //说明当前终端没有保存
+                    for(var j = 0; j < arr.length; j++){
+                        if(checkedNodes[i].userid == arr[j]){
+                            continue A;
+                        }
+                    }
+
+                    arr.push(checkedNodes[i].userid);
+                }
+            }
+
+            //关闭dialog
+            closeDialog("dialog_div");
+
+            //发送ajax
+            $.ajax({
+                type: "POST",
+                url: [[${#request.getContextPath()}]] + "/apk/updateClient",
+                data: {"clients":arr},
+                success: function(data){
+                    if(data == "succ"){
+                        alert("版本更新成功！");
+                    } else {
+                        alert("版本更新失败！");
+                    }
+                }
+            });
+        }
+
+    </script>
+
+</head>
+<body>
+<div id="main-content">
+    <div class="content-box">
+        <!-- End .content-box-header -->
+        <div class="content-box-content">
+            <h2>apk版本管理</h2>
+
+            <form id="formid" th:action="${#request.getContextPath() + '/apk/upload'}" method="post" enctype="multipart/form-data">
+                <p>
+                    <input class="text-input" type="file" name="file" id="apkfile"/>
+                </p>
+                <p>
+                    <button class="mybutton" type="button" onclick="upload_apk(this);">上传apk</button>
+                </p>
+            </form>
+
+            <br/>
+            <hr/>
+            <br/>
+
+            <p>
+                <button class="mybutton" type="button" onclick="select_clients();">终端更新</button>
+            </p>
+        </div>
+        <!-- End .content-box-content -->
+    </div>
+</div>
+<!-- End #main-content -->
+
+
+<!-- 弹出终端选择框 -->
+<div id="dialog_div" style="display: none;">
+    <!-- 树形结构 -->
+    <div id="ztree_div" class="ztree"></div>
+    <button id="btnid" class="mybutton" type="button" onclick="select();">确定</button>
+</div>
+
+</body>
+</html>
