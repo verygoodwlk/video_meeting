@@ -547,11 +547,12 @@
         overflow-y: auto;
         overflow-x: auto;
     }
+
 </style>
 
 <!-- 弹出框 -->
 <div class="modal inmodal" id="myModal2" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog" style="width: 900px">
+    <div class="modal-dialog" style="width: 1200px">
         <!-- animated bounceInRight -->
         <!-- animated flipInY -->
         <div class="modal-content animated flipInY">
@@ -565,12 +566,60 @@
             <!-- 内容部分 -->
             <div class="modal-body" style="padding: 0px">
                 <div class="row" style="margin: 0px;">
-                    <div class="col-lg-12" style="padding: 4px;">
-
+                    <div class="col-lg-4" style="padding: 4px;">
+                        <div class="ibox float-e-margins" style="margin-bottom: 0px">
+                            <div class="ibox-content" style="position: relative; height: 500px;">
+                                <form class="form-horizontal">
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label">任务名称</label>
+                                        <div class="col-lg-9">
+                                            <input type="text" placeholder="任务名称" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label">任务类型</label>
+                                        <div class="col-lg-9">
+                                            <select class="select2_demo_1 form-control">
+                                                <option value="1">每天任务</option>
+                                                <option value="2">每周任务</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label">开始日期</label>
+                                        <div class="col-lg-9">
+                                            <input type="text" placeholder="开始日期" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label">开始时间</label>
+                                        <div class="col-lg-9">
+                                            <input type="text" placeholder="开始时间" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label">结束时间</label>
+                                        <div class="col-lg-9">
+                                            <input type="text" placeholder="开始日期" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label">持续时间</label>
+                                        <div class="col-lg-9">
+                                            <input type="text" placeholder="持续时间" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label">提前开启</label>
+                                        <div class="col-lg-9">
+                                            <input type="text" placeholder="提前开启" class="form-control">
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="row" style="margin: 0px;">
-                    <div class="col-lg-6" style="padding: 4px;">
+                    <div class="col-lg-4" style="padding: 4px;">
                         <div class="ibox float-e-margins" style="margin-bottom: 0px">
                             <div class="ibox-content" style="position: relative; height: 500px;">
                                 <!-- 音乐上传 -->
@@ -611,14 +660,15 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-6" style="padding: 4px">
+                    <div class="col-lg-4" style="padding: 4px">
                         <div class="ibox float-e-margins" style="margin-bottom: 0px">
-                            <div class="ibox-content my-sroll" style="height: 350px;">
+                            <div class="ibox-content my-sroll" style="height: 340px;">
                                 <!-- 分控选择 -->
                                 <form role="form" class="form-inline">
                                     <div class="form-group">
-                                        <input type="text" placeholder="任务标识" id="taskname"
-                                               class="form-control" style="width: 160px">
+                                       <!-- <input type="text" placeholder="任务标识" id="taskname"
+                                               class="form-control" style="width: 160px">-->
+                                        <span style="width: 160px;">终端选择</span>
                                     </div>
                                     <div class="checkbox m-r-xs">
                                         <input type="checkbox" id="checkbox1" onclick="checkall(this.checked);">
@@ -634,19 +684,19 @@
                             </div>
                         </div>
                         <div class="ibox float-e-margins" style="margin-bottom: 0px;">
-                            <div class="ibox-content" style="height: 150px;">
+                            <div class="ibox-content" style="height: 160px;">
                                 <form class="form-horizontal">
                                     <div class="form-group">
-                                        <label class="col-lg-2 control-label" style="padding-right: 0px">音量管理</label>
-                                        <div class="col-lg-10">
+                                        <label class="col-lg-3 control-label" style="padding-right: 0px">音量管理</label>
+                                        <div class="col-lg-9">
                                             <label class="checkbox-inline" style="width: 60%; margin-left: 0px; padding-left: 10px">
                                                 <div id="volume"></div>
                                             </label>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="col-lg-2 control-label" style="padding-right: 0px">星期选择</label>
-                                        <div class="col-lg-10">
+                                        <label class="col-lg-3 control-label" style="padding-right: 0px">星期选择</label>
+                                        <div class="col-lg-9">
                                             <!-- 星期选择 -->
                                             <div class="checkbox checkbox-primary">
                                                 <input id="checkbox2" type="checkbox">
