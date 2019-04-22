@@ -36,7 +36,7 @@ public class SocketMsgRemoveTerminal extends SocketMsgHandler {
     }
 
     @Override
-    public void exception(Throwable t) {
+    public void exception(Throwable t, String msg, JSONObject jsonObject) {
         log.error("删除终端异常", t);
         //异常方法
         myWebSocket.send("{\"id\":\"delTerminalResponse\",\"response\":\"fail\", \"account\":\"admin\"}");

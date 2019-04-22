@@ -56,7 +56,7 @@ public class SocketMsgGetSolutionTaskHandler extends SocketMsgHandler {
     }
 
     @Override
-    public void exception(Throwable t) {
+    public void exception(Throwable t, String msg, JSONObject jsonObject) {
         String error = "{\"id\":\"getSolutionTaskResponse\", \"response\":\"fail\",\"account\":\"admin\"}";
         myWebSocket.send(error);
     }

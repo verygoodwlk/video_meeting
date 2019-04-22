@@ -29,7 +29,7 @@ public class SocketMsgUpdateSolutionTaskHandler extends SocketMsgHandler {
     }
 
     @Override
-    public void exception(Throwable t) {
+    public void exception(Throwable t, String msg, JSONObject jsonObject) {
 
     }
 }

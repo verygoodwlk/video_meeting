@@ -28,7 +28,7 @@ public class SocketMsgCopyPlayMusicHandler extends SocketMsgHandler {
     }
 
     @Override
-    public void exception(Throwable t) {
-        socketMsgPlayMusicTaskHandler.exception(t);
+    public void exception(Throwable t, String msg, JSONObject jsonObject) {
+        socketMsgPlayMusicTaskHandler.exception(t, msg, jsonObject);
     }
 }

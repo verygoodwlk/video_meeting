@@ -34,7 +34,7 @@ public class MeetingMsgUtil {
         } else {
             //多方讨论模式
             sb.append("\"id\":\"createGroup\",");
-            sb.append("\"room\":\"" + meeting.getId() + "\",");
+            sb.append("\"room\":\"" + meeting.getClient_start() + "\",");
         }
 
         sb.append("\"name\":\"" + meeting.getClient_start() + "\",");

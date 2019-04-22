@@ -24,7 +24,7 @@ public abstract class SocketMsgHandler {
             handlerMsg(jsonObject.toJSONString(), jsonObject);
         } catch (Throwable t) {
             log.error("websocket_handle_error:处理websocket数据异常", t);
-            exception(t);
+            exception(t, jsonObject.toJSONString(), jsonObject);
         }
     }
 
@@ -37,6 +37,6 @@ public abstract class SocketMsgHandler {
     /**
      * 处理相应的异常
      */
-    public abstract void exception(Throwable t);
+    public abstract void exception(Throwable t, String msg, JSONObject jsonObject);
 
 }

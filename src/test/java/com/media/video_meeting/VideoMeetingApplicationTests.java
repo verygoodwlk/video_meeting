@@ -1,12 +1,9 @@
 package com.media.video_meeting;
 
-import com.media.video_meeting.websocket.SocketMsgHandler;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import javax.annotation.Resource;
 
 /**
  *
@@ -15,8 +12,8 @@ import javax.annotation.Resource;
 @SpringBootTest
 public class VideoMeetingApplicationTests {
 
-	@Resource(name = "getRecordlist")
-	private SocketMsgHandler socketMsgHandler;
+//	@Resource(name = "getRecordlist")
+//	private SocketMsgHandler socketMsgHandler;
 
 	@Test
 	public void contextLoads() {
@@ -25,7 +22,7 @@ public class VideoMeetingApplicationTests {
 
 //		socketMsgHandler.handler("{\"id\":\"saveRecord\", \"host\":\"1\", \"type\":\"1\", \"starttime\":\"2019-12-17 23:36:38\",\"endtime\":\"2019-12-17 23:36:38\", \"record\":\"1_2018-12-03_14-54-39.webm\", \"users\":[\"1\", \"3\", \"7\"]}");
 
-		socketMsgHandler.handler("{\"id\":\"getRecordlist\", \"terminal\":\"1\"}");
+//		socketMsgHandler.handler("{\"id\":\"getRecordlist\", \"terminal\":\"1\"}");
 	}
 
 }

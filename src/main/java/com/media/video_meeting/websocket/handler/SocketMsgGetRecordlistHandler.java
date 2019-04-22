@@ -37,16 +37,20 @@ public class SocketMsgGetRecordlistHandler extends SocketMsgHandler {
 
         Map map = new HashMap();
         map.put("id", "recordlist");
+        map.put("terminal", cid);
         map.put("list", records);
 
         System.out.println("发送的接送：" + JSON.toJSONString(map));
         webSocket.send(JSON.toJSONString(map));
     }
 
+
     @Override
-    public void exception(Throwable t) {
+    public void exception(Throwable t, String msg, JSONObject jsonObject) {
+        Integer cid = jsonObject.getInteger("terminal");
         Map map = new HashMap();
         map.put("id", "recordlist");
+        map.put("terminal", cid);
         map.put("list", "[]");
 
         webSocket.send(JSON.toJSONString(map));

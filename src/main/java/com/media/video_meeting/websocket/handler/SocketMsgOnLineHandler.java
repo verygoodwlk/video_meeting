@@ -43,7 +43,7 @@ public class SocketMsgOnLineHandler extends SocketMsgHandler {
      * @param t
      */
     @Override
-    public void exception(Throwable t) {
+    public void exception(Throwable t, String msg, JSONObject jsonObject) {
 
     }
 }
