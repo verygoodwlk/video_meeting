@@ -25,7 +25,8 @@ public class SocketMsgUpdateSolutionTaskHandler extends SocketMsgHandler {
     public void handlerMsg(String msg, JSONObject jsonObject) throws Exception {
         String oldname = jsonObject.getString("oldname");
         String newname = jsonObject.getString("newname");
-        solutionMapper.updateByName(oldname, newname);
+        String account = jsonObject.getString("account");
+        solutionMapper.updateByName(oldname, newname, account);
     }
 
     @Override

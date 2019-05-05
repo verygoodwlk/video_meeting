@@ -203,5 +203,10 @@ public class ClientServiceImpl implements IClientService {
         return clientMsgMapper.insertClientGroupTable(cid, gid);
     }
 
+    @Override
+    public int updateId(int oldid, int newid) {
+        return clientMsgMapper.updateByOldId(newid, oldid);
+    }
+
 
 }

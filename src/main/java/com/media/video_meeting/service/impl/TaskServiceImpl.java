@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.media.video_meeting.dao.TaskMapper;
 import com.media.video_meeting.entity.Task;
 import com.media.video_meeting.service.ITaskService;
+import com.media.video_meeting.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +30,14 @@ public class TaskServiceImpl implements ITaskService {
     @Override
     public int update(Task task) {
         return taskMapper.updateById(task);
+    }
+
+    @Override
+    public Task updateByTaskId(Task task) {
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.eq("taskid", task.getTaskid());
+        taskMapper.update(task, queryWrapper);
+        return this.queryByTaskId(task.getTaskid());
     }
 
     @Override
@@ -77,6 +86,15 @@ public class TaskServiceImpl implements ITaskService {
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.eq("account", account);
         queryWrapper.eq("taskt", taskt);
+        return taskMapper.selectList(queryWrapper);
+    }
+
+    @Override
+    public List<Task> queryTimeTaskByAccountAndTaskType(String account, int taskt, String solution) {
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.eq("account", account);
+        queryWrapper.eq("taskt", taskt);
+        queryWrapper.eq("solution", StringUtil.isNotEmpty(solution) ? solution : "Default Solution");
         return taskMapper.selectList(queryWrapper);
     }
 

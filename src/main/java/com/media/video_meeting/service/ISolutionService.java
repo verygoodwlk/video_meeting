@@ -16,4 +16,10 @@ public interface ISolutionService {
     Solution queryById(Integer id);
 
     Solution queryByName(String name);
+
+    int insertSolution(Solution solution);
+
+    int updateSolution(Solution solution, String oldName);
+
+    int deleteSolution(Solution solution);
 }

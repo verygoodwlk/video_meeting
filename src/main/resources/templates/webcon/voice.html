@@ -3,7 +3,7 @@
 <head>
     <base th:href="${#request.getContentType() + '/resources_webcon/'}"/>
     <meta charset="UTF-8">
-    <title>定时音乐</title>
+    <title>语音合成</title>
     <link href="css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
     <style>
         .btn-large-dim {
@@ -27,11 +27,6 @@
     </style>
 
 
-    <!--引入webuploader-->
-    <link rel="stylesheet" type="text/css" href="widget/webuploader/webuploader.css">
-    <script type="text/javascript" src="widget/webuploader/webuploader.min.js"></script>
-    <script type="text/javascript" src="myjs/upload.js"></script>
-
     <!-- 引入ztree -->
     <link rel="stylesheet" href="widget/zTree/zTreeStyle/zTreeStyle.css"/>
     <script type="text/javascript" src="widget/zTree/jquery.ztree.all.min.js"></script>
@@ -44,9 +39,6 @@
             //动态计算高度
             autoHeight();
 
-            //获取方案列表
-            initSolutionList();
-
             //初始化任务列表
             initTaskList();
 
@@ -54,73 +46,14 @@
 
 
         /**
-         * 打开弹出框 - 新建方案
-         */
-        function create_Solution() {
-            //显示弹出框
-            $("#myModal3").modal('show');
-        }
-
-        /**
-         * 编辑方案
-         */
-        function edit_Solution(){
-            //显示弹出框
-            $("#myModal4").modal('show');
-
-            //获得旧的方案名称
-            var oldname = $("#solution_select").val();
-
-            //设置旧名称
-            $("#solutionname2").val(oldname);
-        }
-
-        /**
-         * 初始化树形结构
-         */
-        var ztreeObj;
-
-        function initClients() {
-            $.ajax({
-                url: [[${#request.getContextPath()}]] + "/client/group",
-                success: function (data) {
-                    var zTreeNodes = data;
-
-                    var setting = {
-                        data: {
-                            simpleData: {
-                                enable: true,
-                                pIdKey: "pid"
-                            },
-                            key: {
-                                name: "gname"
-                            }
-                        },
-                        check: {
-                            enable: true
-                        }
-                    };
-
-                    ztreeObj = $.fn.zTree.init($("#ztree_div"), setting, zTreeNodes);
-                    ztreeObj.expandAll(true);
-                },
-                dataType: "json"
-            });
-        }
-
-        /**
          * 初始化任务列表
          */
         var tasks;
 
         function initTaskList() {
-
-            //获得方案
-            var solution = $("#solution_select").val();
-
             $.ajax({
-                url: [[${#request.getContextPath()}]] + "/web/task/timelist",
-                data: {"taskt": 1, "solution": solution},
+                url: [[${#request.getContextPath()}]] + "/web/task/list",
+                data: {"taskt": 4},
                 success: function (data) {
                     if (data) {
                         tasks = data;
@@ -130,39 +63,27 @@
                             html += "<td>" + data[i].taskname + "</td>";
                             html += "<td>" + data[i].status + "</td>";
                             html += "<td>" + data[i].startDate + "</td>";
-                            html += "<td>" + data[i].duration + "</td>";
                             html += "<td>" + data[i].stopDate + "</td>";
-                            html += "<td>" + data[i].playOrder + "</td>";
-                            html += "<td>" + data[i].volume + "</td>";
-                            html += "<td></td>";
+                            html += "<td>" + data[i].loopnum + "</td>";
+                            if(data[i].reporter == 1){
+                                html += "<td>小燕 - 中文（女声）</td>";
+                            } else if(data[i].reporter == 2){
+                                html += "<td>小琪 - 中文（女声）</td>";
+                            } else if(data[i].reporter == 3){
+                                html += "<td>小美 - 粤语（女声）</td>";
+                            } else if(data[i].reporter == 4){
+                                html += "<td>小文 - 中文（男声）</td>";
+                            } else if(data[i].reporter == 5){
+                                html += "<td>henry - 英文（男声）</td>";
+                            } else if(data[i].reporter == 6){
+                                html += "<td>mary - 英文（女声）</td>";
+                            }
+
                             html += "</tr>";
                         }
 
                         $("#task_list").html(html);
                     }
-                },
-                dataType: "json"
-            });
-        }
-
-        /**
-         * 获得方案列表
-         */
-        function initSolutionList() {
-            $.ajax({
-                url: [[${#request.getContextPath()}]] + "/web/solution/list",
-                data: {},
-                success: function (data) {
-                    var html = "";
-                    for (var i = 0; i < data.length; i++) {
-
-                        if (i == 0) {
-                            $("#solution_default").html(data[i].solutionname);
-                        }
-
-                        html += "<option value='" + data[i].solutionname + "'>" + data[i].solutionname + "</option>";
-                    }
-                    $("#solution_select").html(html);
                 },
                 dataType: "json"
             });
@@ -200,12 +121,6 @@
 
         }
 
-        /**
-         * 全选终端
-         */
-        function checkall(flag) {
-            ztreeObj.checkAllNodes(flag);
-        }
 
         /**
          * 删除任务
@@ -220,7 +135,7 @@
             if (confirm("是否确认删除选中的任务？")) {
                 var tid = task.getAttribute("taskidstr");
 
-                $.get([[${#request.getContextPath()}]] + "/web/task/delete", {"taskid": tid, "taskt":1}, function (data) {
+                $.get([[${#request.getContextPath()}]] + "/web/task/delete", {"taskid": tid, "taskt":2}, function (data) {
                     if (data > 0) {
                         $("[alt='del']").remove();
                         $("#mp3_list").html("");
@@ -234,40 +149,6 @@
             }
         }
 
-        /**
-         * 拷贝任务
-         */
-        function copy_task() {
-            var task = $("[alt='del']")[0];
-            if (!task) {
-                alert("请选中需要拷贝的任务！");
-                return;
-            }
-
-            if (confirm("是否确认复制选中的任务？")) {
-                var tid = task.getAttribute("taskidstr");
-
-                $.get([[${#request.getContextPath()}]] + "/web/task/copy", {"taskid": tid}, function (data) {
-                    if (data) {
-                        var html = "";
-                        html += "<tr id='tr_task_" + data.id + "' taskid='" + data.id + "' taskidstr='" + data.taskid + "' onclick='trtask(" + data.id + ");'>";
-                        html += "<td>" + data.taskname + "</td>";
-                        html += "<td>" + data.status + "</td>";
-                        html += "<td>" + data.startDate + "</td>";
-                        html += "<td>" + data.duration + "</td>";
-                        html += "<td>" + data.stopDate + "</td>";
-                        html += "<td>" + data.loopType + "</td>";
-                        html += "<td>" + data.volume + "</td>";
-                        html += "<td></td>";
-                        html += "</tr>";
-
-                        $("#task_list").append(html);
-                    } else {
-                        alert("复制失败！");
-                    }
-                }, "json");
-            }
-        }
 
         /**
          * 手动执行
@@ -292,27 +173,6 @@
             }
         }
 
-        /**
-         * 手动暂停
-         */
-        function pause_task() {
-            var task = $("[alt='del']")[0];
-            if (!task) {
-                alert("请选中需要暂停的任务！");
-                return;
-            }
-
-            if (confirm("是否确认暂停选中的任务？")) {
-                var tid = task.getAttribute("taskidstr");
-
-                $.get([[${#request.getContextPath()}]] + "/web/task/pause", {"taskid": tid}, function (data) {
-                    if (data) {
-                    } else {
-                        alert("暂停失败！");
-                    }
-                }, "json");
-            }
-        }
 
         /**
          * 手动停止
@@ -336,45 +196,6 @@
             }
         }
 
-        /**
-         * 上一曲
-         */
-        function pre_task() {
-            var task = $("[alt='del']")[0];
-            if (!task) {
-                alert("请选中需要执行的任务！");
-                return;
-            }
-
-            var tid = task.getAttribute("taskidstr");
-
-            $.get([[${#request.getContextPath()}]] + "/web/task/pre", {"taskid": tid}, function (data) {
-                if (data) {
-                } else {
-                    alert("执行上一曲失败！");
-                }
-            }, "json");
-        }
-
-        /**
-         * 下一曲
-         */
-        function next_task() {
-            var task = $("[alt='del']")[0];
-            if (!task) {
-                alert("请选中需要执行的任务！");
-                return;
-            }
-
-            var tid = task.getAttribute("taskidstr");
-
-            $.get([[${#request.getContextPath()}]] + "/web/task/next", {"taskid": tid}, function (data) {
-                if (data) {
-                } else {
-                    alert("执行下一曲失败！");
-                }
-            }, "json");
-        }
     </script>
 
     <!-- 音量选择控件 -->
@@ -419,12 +240,6 @@
             }
         }
 
-        //选择方案
-        function selectSolution() {
-            //获得任务列表
-            initTaskList();
-        }
-
     </script>
 
     <!-- 日期插件 -->
@@ -452,29 +267,11 @@
     <button class="btn btn-primary dim btn-large-dim" type="button" onclick="delete_task();">
         删除任务
     </button>
-    <button class="btn btn-primary dim btn-large-dim" type="button" onclick="copy_task();">
-        复制任务
-    </button>
     <button class="btn btn-primary dim btn-large-dim" type="button" onclick="action_task();">
         手动执行
     </button>
-    <button class="btn btn-primary dim btn-large-dim" type="button" onclick="pause_task();">
-        手动暂停
-    </button>
     <button class="btn btn-primary dim btn-large-dim" type="button" onclick="stop_task();">
         手动停止
-    </button>
-    <button class="btn btn-primary dim btn-large-dim" type="button" onclick="create_Solution();">
-        新建方案
-    </button>
-    <button class="btn btn-primary dim btn-large-dim" type="button" onclick="edit_Solution();">
-        编辑方案
-    </button>
-    <button class="btn btn-primary dim btn-large-dim" type="button" onclick="exec_Solution();">
-        执行方案
-    </button>
-    <button class="btn btn-primary dim btn-large-dim" type="button" onclick="delete_Solution();">
-        删除方案
     </button>
 </div>
 <!-- 工作区 -->
@@ -482,14 +279,6 @@
     <div class="row">
         <div class="col-lg-12" style="padding: 0px;">
             <div class="ibox float-e-margins">
-                <div class="ibox-title">
-                    <h5>当前执行方案：<span id="solution_default">默认方案</span>
-                        &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
-                        方案选择：
-                        <select id="solution_select" onchange="selectSolution();">
-
-                        </select></h5>
-                </div>
                 <div class="ibox-content  h_1" style="padding: 0px;">
 
                     <table class="table table-striped">
@@ -498,11 +287,12 @@
                             <th>任务名称</th>
                             <th>任务状态</th>
                             <th>开始时间</th>
-                            <th>持续时间</th>
-                            <th>结束时间</th>
-                            <th>播放类型</th>
+                            <th>停止时间</th>
+                            <th>循环次数</th>
+                            <th>播音员</th>
+                           <!-- <th>播放类型</th>
                             <th>任务音量</th>
-                            <th>任务进度</th>
+                            <th>任务进度</th>-->
                         </tr>
                         </thead>
                         <tbody id="task_list">
@@ -531,7 +321,7 @@
 
 <!-- 弹出框 -->
 <div class="modal inmodal" id="myModal2" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog" style="width: 70%">
+    <div class="modal-dialog" style="width: 50%">
         <!-- animated bounceInRight -->
         <!-- animated flipInY -->
         <div class="modal-content animated flipInY">
@@ -540,12 +330,17 @@
                 <button type="button" class="close" data-dismiss="modal">
                     <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
                 </button>
-                <h4 class="modal-title">定时音乐</h4>
+                <h4 class="modal-title">语音合成</h4>
             </div>
             <!-- 内容部分 -->
             <div class="modal-body" style="padding: 0px">
                 <div class="row" style="margin: 0px;">
-                    <div class="col-lg-4" style="padding: 4px;">
+                    <div class="col-lg-12" style="padding: 4px;">
+                        <textarea id="info" class="form-control" placeholder="请输入文本信息" style="width: 100%; height: 83px;"></textarea>
+                    </div>
+                </div>
+                <div class="row" style="margin: 0px;">
+                    <div class="col-lg-6" style="padding: 4px;">
                         <div class="ibox float-e-margins" style="margin-bottom: 0px">
                             <div class="ibox-content" style="position: relative; height: 500px;">
                                 <form class="form-horizontal">
@@ -596,75 +391,40 @@
                                             </div>
                                         </div>
                                     </div>
+
                                     <div class="form-group">
-                                        <label class="col-lg-3 control-label">持续时间</label>
-                                        <div class="col-lg-6">
-                                            <input type="text" id="durtime" placeholder="持续时间" class="form-control"
-                                                   disabled="disabled">
-                                        </div>
-                                        <div class="col-lg-3">
-                                            <div class="checkbox checkbox-primary">
-                                                <input id="checkbox_dur" type="checkbox"
-                                                       onclick="open_dur(this.checked);">
-                                                <label for="checkbox_dur">
-                                                    开启
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-lg-3 control-label">提前开启</label>
+                                        <label class="col-lg-3 control-label">播报员</label>
                                         <div class="col-lg-9">
-                                            <input id="start" type="text" placeholder="提前开启" class="form-control"
-                                                   onclick="WdatePicker({dateFmt:'ss'})">
+                                            <select id="reporter" class="select2_demo_1 form-control">
+                                                <option value="1">小燕（中文-女声）</option>
+                                                <option value="2">小琪（中文-女声）</option>
+                                                <option value="3">小美（粤语-女声）</option>
+                                                <option value="4">小文（中文-男声）</option>
+                                                <option value="5">henry（英文-男声）</option>
+                                                <option value="6">mary（英文-女声）</option>
+                                            </select>
                                         </div>
                                     </div>
+
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label">语速</label>
+                                        <div class="col-lg-9">
+                                            <input type="text" id="speed" placeholder="语速" class="form-control">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label">循环次数</label>
+                                        <div class="col-lg-9">
+                                            <input type="text" id="loopnum" placeholder="循环次数" class="form-control">
+                                        </div>
+                                    </div>
+
                                 </form>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4" style="padding: 4px;">
-                        <div class="ibox float-e-margins" style="margin-bottom: 0px">
-                            <div class="ibox-content" style="position: relative; height: 500px;">
-                                <!-- 音乐上传 -->
-                                <div class="btns">
-                                    <button id="picker" type="button" class="btn btn-w-m btn-info">选择文件</button>
-                                    <button id="upload_btn" class="btn btn-w-m btn-primary" onclick="start_upload();">
-                                        开始上传
-                                    </button>
-                                </div>
-                                <div class="ibox-content"
-                                     style="padding-left: 0px; padding-right: 0px; padding-top: 10px; height: 400px; overflow:scroll; overflow-y: auto; overflow-x: auto;">
-
-                                    <table class="table">
-                                        <thead>
-                                        <tr>
-                                            <th colspan="2">上传列表</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody id="upload_list">
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div>
-                                    <select id="loopType" class="form-control m-b" name="loopType">
-                                        <option value="0">随机播放</option>
-                                        <option value="1">循环播放</option>
-                                        <option value="2">顺序播放</option>
-                                    </select>
-                                    <!--<label>
-                                        <input type="radio" checked="checked" value="0" name="loopType">
-                                        随机播放
-                                    </label>
-                                    <label style="margin-left: 20px">
-                                        <input type="radio" checked="checked" value="1" name="loopType">
-                                        循环播放
-                                    </label>-->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4" style="padding: 4px">
+                    <div class="col-lg-6" style="padding: 4px">
                         <div class="ibox float-e-margins" style="margin-bottom: 0px">
                             <div class="ibox-content my-sroll" style="height: 340px;">
                                 <!-- 分控选择 -->
@@ -690,7 +450,7 @@
                         <div class="ibox float-e-margins" style="margin-bottom: 0px;">
                             <div class="ibox-content" style="height: 160px;">
                                 <form class="form-horizontal">
-                                    <div class="form-group">
+                                  <!--  <div class="form-group">
                                         <label class="col-lg-3 control-label" style="padding-right: 0px">音量管理</label>
                                         <div class="col-lg-9">
                                             <label class="checkbox-inline"
@@ -698,7 +458,7 @@
                                                 <div id="volume"></div>
                                             </label>
                                         </div>
-                                    </div>
+                                    </div>-->
                                     <div class="form-group">
                                         <label class="col-lg-3 control-label" style="padding-right: 0px">星期选择</label>
                                         <div class="col-lg-9">
@@ -762,160 +522,15 @@
             </div>
             <!-- 底部按钮 -->
             <div class="modal-footer">
-                <button type="button" id="submitBtn"  class="btn btn-primary" onclick="submit_task();">提交</button>
+                <button type="button" id="submitBtn" class="btn btn-primary" onclick="submit_task();">提交</button>
                 <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
             </div>
         </div>
     </div>
 </div>
 
-
-<!-- 新建方案弹出框 -->
-<div class="modal inmodal" id="myModal3" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog" style="width: 30%">
-        <div class="modal-content animated flipInY">
-            <!-- 头部信息 -->
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">
-                    <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
-                </button>
-                <h4 class="modal-title">新建方案</h4>
-            </div>
-            <!-- 内容部分 -->
-            <div class="modal-body" style="padding: 20px">
-                <form class="form-horizontal">
-                    <div class="form-group">
-                        <label class="col-lg-2 control-label">方案名称</label>
-                        <div class="col-lg-10">
-                            <input id="solutionname" type="text" placeholder="请输入方案名称" class="form-control">
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <!-- 底部按钮 -->
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" onclick="submit_solution();">提交</button>
-                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- 编译方案弹出框 -->
-<div class="modal inmodal" id="myModal4" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog" style="width: 30%">
-        <div class="modal-content animated flipInY">
-            <!-- 头部信息 -->
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">
-                    <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
-                </button>
-                <h4 class="modal-title">编译方案</h4>
-            </div>
-            <!-- 内容部分 -->
-            <div class="modal-body" style="padding: 20px">
-                <form class="form-horizontal">
-                    <div class="form-group">
-                        <label class="col-lg-2 control-label">方案名称</label>
-                        <div class="col-lg-10">
-                            <input id="solutionname2" type="text" placeholder="请输入方案名称" class="form-control">
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <!-- 底部按钮 -->
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" onclick="update_solution();">编辑</button>
-                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 <script th:inline="javascript">
-
-    /**
-     * 提交方案
-     */
-    function submit_solution(){
-        //获得方案名称
-        var solutionName = $("#solutionname").val();
-
-        //提交方案名称
-        $.post([[${#request.getContextPath()}]] + "/web/solution/insert", {"solutionname": solutionName}, function(data){
-            if(data > 0){
-                //
-                $("#myModal3").modal('hide');
-                $("#solution_select").append("<option value='" + solutionName + "'>" + solutionName + "</option>");
-            } else if(data == -1){
-                alert("方案名已经存在！");
-            } else {
-                alert("添加方案失败！");
-            }
-        });
-    }
-
-    /**
-     * 修改方案
-     */
-    function update_solution(){
-        //获得旧方案名称
-        var oldName = $("#solution_select").val();
-
-        //获得新方案名称
-        var solutionName = $("#solutionname2").val();
-
-        //提交方案名称
-        $.post([[${#request.getContextPath()}]] + "/web/solution/update", {"solutionname": solutionName, "oldName": oldName}, function(data){
-            if(data > 0){
-                //
-                $("#myModal4").modal('hide');
-                var option = $("option[value='" + oldName +"']");
-                option.html(solutionName);
-                option.attr("value", solutionName);
-            } else if(data == -1){
-                alert("方案名已经存在！");
-            } else {
-                alert("修改方案失败！");
-            }
-        });
-    }
-
-    /**
-     * 删除方案
-     */
-    function delete_Solution(){
-        //获得当前方案名称
-        var solutionname = $("#solution_select").val();
-
-        //提交方案名称
-        $.post([[${#request.getContextPath()}]] + "/web/solution/delete", {"solutionname": solutionname}, function(data){
-            if(data > 0){
-                //
-                location.reload();
-            } else {
-                alert("删除方案失败！");
-            }
-        });
-    }
-
-    /**
-     * TODO 执行方案
-     */
-    function exec_Solution(){
-        //获得方案名称
-        var solutionname = $("#solution_select").val();
-
-        //提交方案名称
-        $.post([[${#request.getContextPath()}]] + "/web/solution/exec", {"solutionname": solutionname}, function(data){
-            if(data > 0){
-                //
-                $("#solution_default").html(solutionname);
-            } else {
-                alert("执行方案失败！");
-            }
-        });
-    }
 
     /**
      * 打开弹出框
@@ -923,19 +538,12 @@
     function open_Model() {
         //初始化树形结构
         initClients();
-        //重置上传
-        resetUpload();
-
         //显示弹出框
         $("#myModal2").modal('show');
 
-        //延迟刷新上传控件
-        setTimeout(function () {
-            uploader.refresh();
-        }, 500);
-
         //设置按钮的点击事件
         $("#submitBtn").attr("onclick", "submit_task();");
+
     }
 
     /**
@@ -944,8 +552,6 @@
     function submit_task() {
         //获得任务名称
         var taskname = $("#taskname").val();
-        //获得循环类型
-        var loopType = $("#loopType").val();
         //获得任务类型
         var playOrder = $("#playOrder").val();
         //获得开始日期
@@ -954,28 +560,34 @@
         var startTime = $("#startTime").val();
         //获得结束时间
         var stopDate = $("#endTime").val();
-        //获得持续时间
-        var duration = $("#durtime").val() ? $("#durtime").val() : 0;
-        //获得提前开始
-        var start = $("#start").val() ? $("#start").val() : 0;;
 
-        //获得音量
-        var volume = $("#volume").attr("value");
+        //获得播报员
+        var reporter = $("#reporter").val();
+        //获得速度
+        var speed = $("#speed").val();
+        //获得循环次数
+        var loopnum = $("#loopnum").val();
+
+        //获得文本信息
+        var info = $("#info").val();
+
         //获得星期
         var weekMask = 0;
         $("input[name='week']:checked").each(function () {
             weekMask += parseInt($(this).val());
         });
 
-        //
-        var solution = $("#solution_select").val();
-
 
         //获得被选择的终端
         var znodes = ztreeObj.getCheckedNodes(true);
         var terminal = [];
-        for (var i = 0; i < znodes.length; i++) {
+        A:for (var i = 0; i < znodes.length; i++) {
             if (znodes[i].isClient == 1) {
+                for(var j = 0; j < terminal.length; j++){
+                    if(terminal[j] == znodes[i].userid){
+                        continue A;
+                    }
+                }
                 //如果是终端
                 terminal.push(znodes[i].userid);
             }
@@ -991,20 +603,18 @@
             type: "POST",
             url: [[${#request.getContextPath()}]] + '/web/task/insert',
             data: {
-                "mp3": JSON.stringify(files),
                 "users": JSON.stringify(terminal),
                 "taskname": taskname,
-                "looptype": loopType,
-                "taskt": 1,
+                "taskt": 4,
                 "playOrder": playOrder,
                 "startDate": startDate,
                 "startTime": startTime,
                 "stopDate": stopDate,
-                "duration": duration,
-                "startinadvance": start,
-                "volume": volume,
+                "reporter": reporter,
                 "weekMask": weekMask,
-                "solution": solution
+                "speed": speed,
+                "loopnum": loopnum,
+                "info": info,
             },
             success: function (data) {
                 //发送websocket
@@ -1015,11 +625,22 @@
                 html += "<td>" + data.taskname + "</td>";
                 html += "<td>" + data.status + "</td>";
                 html += "<td>" + startDate + "</td>";
-                html += "<td>" + data.duration + "</td>";
                 html += "<td>" + stopDate + "</td>";
-                html += "<td>" + data.playOrder + "</td>";
-                html += "<td>" + data.volume + "</td>";
-                html += "<td></td>";
+                html += "<td>" + data.loopnum + "</td>";
+                if(data.reporter == 1){
+                    html += "<td>小燕 - 中文（女声）</td>";
+                } else if(data.reporter == 2){
+                    html += "<td>小琪 - 中文（女声）</td>";
+                } else if(data.reporter == 3){
+                    html += "<td>小美 - 粤语（女声）</td>";
+                } else if(data.reporter == 4){
+                    html += "<td>小文 - 中文（男声）</td>";
+                } else if(data.reporter == 5){
+                    html += "<td>henry - 英文（男声）</td>";
+                } else if(data.reporter == 6){
+                    html += "<td>mary - 英文（女声）</td>";
+                }
+
                 html += "</tr>";
                 $("#task_list").append(html);
 
@@ -1031,7 +652,6 @@
             }
         });
     }
-
 
     /**
      * 弹出修改任务的弹出框
@@ -1053,44 +673,28 @@
                 //设置默认值
                 console.log(JSON.stringify(data));
 
-                var taskname = data.taskname;
-                var looptype = data.looptype;
-                var mp3 = data.mp3;
                 var users = data.users;
-                //获得任务类型
+                var taskname = data.taskname;
                 var playOrder = data.playOrder;
-                //获得开始日期
                 var startDate = data.startDate;
-                //获得开始时间
                 var startTime = data.startTime;
-                //获得结束时间
                 var stopDate = data.stopDate;
-                //获得持续时间
-                var duration = data.duration;
-                //获得提前开始
-                var start = data.startinadvance;
-                //获得星期几
+                var reporter = data.reporter;
+                var speed = data.speed;
+                var loopnum = data.loopnum;
+                var info = data.info;
                 var weekMask = data.weekMask;
-                //获得音量
-                var volume = data.volume;
 
                 //设置默认值
                 $("#taskname").val(taskname);
-                $("#loopType").val(looptype);
                 $("#playOrder").val(playOrder);
                 $("#startDate").val(startDate);
                 $("#startTime").val(startTime);
                 $("#endTime").val(stopDate);
-                $("#durtime").val(duration);
-                $("#start").val(start);
-                showUpdate(mp3);
-                showUsers(users);
-
-                //TODO 设置修改的音量
-                // var slider = $("#volume").data("ionRangeSlider");
-                // slider.update({
-                //     from: volume
-                // });
+                $("#reporter").val(reporter);
+                $("#speed").val(speed);
+                $("#loopnum").val(loopnum);
+                $("#info").val(info);
 
                 if(stopDate){
                     $("#checkbox_end").attr("checked", true);
@@ -1100,19 +704,14 @@
                     $("#endTime").attr("disabled", "disabled");
                 }
 
-                if(duration){
-                    $("#checkbox_dur").attr("checked", true);
-                    $("#durtime").removeAttr("disabled");
-                } else {
-                    $("#checkbox_dur").attr("checked", false);
-                    $("#durtime").attr("disabled", "disabled");
-                }
-
                 if(playOrder == 2){
                     $("input[name='week']").each(function(){
-                       $(this).removeAttr("disabled");
+                        $(this).removeAttr("disabled");
                     });
                 }
+
+
+                showUsers(users);
 
             }
         },"json");
@@ -1125,8 +724,6 @@
     function update_task(tid){
         //获得任务名称
         var taskname = $("#taskname").val();
-        //获得循环类型
-        var loopType = $("#loopType").val();
         //获得任务类型
         var playOrder = $("#playOrder").val();
         //获得开始日期
@@ -1135,28 +732,34 @@
         var startTime = $("#startTime").val();
         //获得结束时间
         var stopDate = $("#endTime").val();
-        //获得持续时间
-        var duration = $("#durtime").val() ? $("#durtime").val() : 0;
-        //获得提前开始
-        var start = $("#start").val() ? $("#start").val() : 0;;
 
-        //获得音量
-        var volume = $("#volume").attr("value");
+        //获得播报员
+        var reporter = $("#reporter").val();
+        //获得速度
+        var speed = $("#speed").val();
+        //获得循环次数
+        var loopnum = $("#loopnum").val();
+
+        //获得文本信息
+        var info = $("#info").val();
+
         //获得星期
         var weekMask = 0;
         $("input[name='week']:checked").each(function () {
             weekMask += parseInt($(this).val());
         });
 
-        //
-        var solution = $("#solution_select").val();
-
 
         //获得被选择的终端
         var znodes = ztreeObj.getCheckedNodes(true);
         var terminal = [];
-        for (var i = 0; i < znodes.length; i++) {
+        A:for (var i = 0; i < znodes.length; i++) {
             if (znodes[i].isClient == 1) {
+                for(var j = 0; j < terminal.length; j++){
+                    if(terminal[j] == znodes[i].userid){
+                        continue A;
+                    }
+                }
                 //如果是终端
                 terminal.push(znodes[i].userid);
             }
@@ -1172,26 +775,23 @@
             type: "POST",
             url: [[${#request.getContextPath()}]] + '/web/task/update',
             data: {
-                "mp3": JSON.stringify(files),
                 "users": JSON.stringify(terminal),
                 "taskname": taskname,
-                "looptype": loopType,
-                "taskt": 1,
+                "taskt": 4,
                 "playOrder": playOrder,
                 "startDate": startDate,
                 "startTime": startTime,
                 "stopDate": stopDate,
-                "duration": duration,
-                "startinadvance": start,
-                "volume": volume,
+                "reporter": reporter,
                 "weekMask": weekMask,
-                "solution": solution,
+                "speed": speed,
+                "loopnum": loopnum,
+                "info": info,
                 "taskid": tid
             },
             success: function (data) {
                 //发送websocket
                 console.log(data);
-
 
                 //移除原来的节点
                 $("#tr_task_" + data.id).remove();
@@ -1201,11 +801,22 @@
                 html += "<td>" + data.taskname + "</td>";
                 html += "<td>" + data.status + "</td>";
                 html += "<td>" + startDate + "</td>";
-                html += "<td>" + data.duration + "</td>";
                 html += "<td>" + stopDate + "</td>";
-                html += "<td>" + data.playOrder + "</td>";
-                html += "<td>" + data.volume + "</td>";
-                html += "<td></td>";
+                html += "<td>" + data.loopnum + "</td>";
+                if(data.reporter == 1){
+                    html += "<td>小燕 - 中文（女声）</td>";
+                } else if(data.reporter == 2){
+                    html += "<td>小琪 - 中文（女声）</td>";
+                } else if(data.reporter == 3){
+                    html += "<td>小美 - 粤语（女声）</td>";
+                } else if(data.reporter == 4){
+                    html += "<td>小文 - 中文（男声）</td>";
+                } else if(data.reporter == 5){
+                    html += "<td>henry - 英文（男声）</td>";
+                } else if(data.reporter == 6){
+                    html += "<td>mary - 英文（女声）</td>";
+                }
+
                 html += "</tr>";
                 $("#task_list").append(html);
 
@@ -1217,6 +828,7 @@
             }
         });
     }
+
 </script>
 
 </body>

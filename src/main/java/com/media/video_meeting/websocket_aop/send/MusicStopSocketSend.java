@@ -17,7 +17,27 @@ public class MusicStopSocketSend extends ISocketSend {
 
         Task task = (Task) objs[0];
         Map<String, Object> map = task2Map(task);
-        map.put("id", "stopMusicTask");
+        switch (task.getTaskt()){
+            case 5:
+                //实时音乐
+                map.put("id", "stopMusicTask");
+                break;
+            case 1:
+                //定时音乐
+                map.put("id", "stopTask");
+                break;
+            case 2:
+                //定时采集
+                map.put("id", "stopCollectTask");
+                break;
+            case 3:
+                map.put("id", "stopFireTask");
+                break;
+            case 4:
+                map.put("id", "stopVoiceTask");
+                break;
+        }
+
         return map;
     }
 }

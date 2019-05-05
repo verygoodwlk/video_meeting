@@ -15,6 +15,8 @@ public interface ITaskService {
 
     int update(Task task);
 
+    Task updateByTaskId(Task task);
+
     int deleteByTaskId(String taskid);
 
     int deleteById(int tid);
@@ -24,6 +26,8 @@ public interface ITaskService {
     List<Task> queryBySolution(String solution);
 
     List<Task> queryByAccountAndTaskType(String account, int taskt);
+
+    List<Task> queryTimeTaskByAccountAndTaskType(String account, int taskt, String solution);
 
     Task queryById(int tid);
 

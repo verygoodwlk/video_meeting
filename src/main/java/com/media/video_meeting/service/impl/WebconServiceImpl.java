@@ -2,12 +2,15 @@ package com.media.video_meeting.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.media.video_meeting.dao.ClientMsgMapper;
+import com.media.video_meeting.dao.SolutionMapper;
 import com.media.video_meeting.dao.WebconMapper;
 import com.media.video_meeting.entity.ClientMsg;
+import com.media.video_meeting.entity.Solution;
 import com.media.video_meeting.entity.Webcon;
 import com.media.video_meeting.service.IWebconService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,15 +30,23 @@ public class WebconServiceImpl implements IWebconService {
     @Autowired
     private ClientMsgMapper clientMsgMapper;
 
+    @Autowired
+    private SolutionMapper solutionMapper;
+
     @Override
     public List<Webcon> getWebconList() {
         return webconMapper.selectList(null);
     }
 
     @Override
+    @Transactional
     public int insertWebCon(Webcon webcon) {
         if(queryByAccount(webcon.getAccount()) == null){
             //不存在账号添加
+            //创建该分控的默认方案
+            Solution solution = new Solution(0, "Default Solution", webcon.getAccount());
+            solutionMapper.insert(solution);
+
             return webconMapper.insert(webcon);
         } else {
             //存在账号修改

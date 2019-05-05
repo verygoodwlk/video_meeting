@@ -12,7 +12,7 @@ public interface SolutionMapper extends BaseMapper<Solution> {
      * @param newName
      * @return
      */
-    int updateByName(@Param("oldname") String oldName, @Param("newname") String newName);
+    int updateByName(@Param("oldname") String oldName, @Param("newname") String newName, @Param("account") String account);
 
     /**
      * 根据方案名称删除

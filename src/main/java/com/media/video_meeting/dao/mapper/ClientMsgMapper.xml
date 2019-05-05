@@ -262,7 +262,11 @@
                         (select count(*) from client_group_table where cid = #{cid} and gid = 1) = 0
   </update>
 
-  <delete id="deleteByCid">
+  <update id="updateByOldId">
+    update client_msg set userid = #{newid} where userid = #{oldid}
+  </update>
+
+    <delete id="deleteByCid">
     delete from client_msg where id = #{cid}
   </delete>
 

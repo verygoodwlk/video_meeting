@@ -35,4 +35,6 @@ public interface IClientService {
 
     int insertClientGroupTable(Integer gid, Integer cid);
 
+    int updateId(int oldid, int newid);
+
 }

@@ -18,7 +18,27 @@ public class MusicActionSocketSend extends ISocketSend {
 
         Task task = (Task) objs[0];
         Map<String, Object> map = task2Map(task);
-        map.put("id", "startMusicTask");
+        switch (task.getTaskt()){
+            case 5:
+                //实时音乐
+                map.put("id", "startMusicTask");
+                break;
+            case 1:
+                //定时音乐
+                map.put("id", "startTask");
+                break;
+            case 2:
+                //定时采集
+                map.put("id", "startCollectTask");
+                break;
+            case 3:
+                map.put("id", "startFireTask");
+                break;
+            case 4:
+                map.put("id", "startVoiceTask");
+                break;
+        }
+
         return map;
     }
 }

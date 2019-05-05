@@ -42,8 +42,19 @@ public class TaskController {
         task.setTaskid(UUID.randomUUID().toString());
         task.setAccount(webcon.getAccount());
         System.out.println("添加任务：" + task);
-        taskService.insert(task);
+        int result = taskService.insert(task);
+        System.out.println("添加的结果：" + result);
         return task;
+    }
+
+    @ResponseBody
+    @RequestMapping("/update")
+    @SocketSend(params = "#result", sendClass = MusicUpdateSocketSend.class)
+    public Task update(Task task){
+        System.out.println("修改任务：" + task);
+        Task tasks = taskService.updateByTaskId(task);
+        System.out.println("修改的结果：" + tasks);
+        return tasks;
     }
 
     /**
@@ -58,14 +69,37 @@ public class TaskController {
     }
 
     /**
+     * 定时任务列表 - taskt任务类型， webcon谁的任务 solution方案
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/timelist")
+    public List<Task> timelist(int taskt, @SessionAttribute("account") Webcon webcon, String solution){
+        List<Task> tasks = taskService.queryTimeTaskByAccountAndTaskType(webcon.getAccount(), taskt, solution);
+        return tasks;
+    }
+
+    /**
+     * 根据任务id查询任务
+     * @param taskid
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/queryTask")
+    public Task queryTask(String taskid){
+        Task task = taskService.queryByTaskId(taskid);
+        return task;
+    }
+
+    /**
      * 删除任务
      * @param taskid
      * @return
      */
     @ResponseBody
     @RequestMapping("/delete")
-    @SocketSend(params = "#taskid", sendClass = MusicDeleteSocketSend.class)
-    public int delete(String taskid){
+    @SocketSend(params = {"#taskid", "#taskt"}, sendClass = MusicDeleteSocketSend.class)
+    public int delete(String taskid, int taskt){
         int result = taskService.deleteByTaskId(taskid);
         return result;
     }

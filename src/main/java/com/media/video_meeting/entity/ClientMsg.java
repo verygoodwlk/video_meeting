@@ -1,5 +1,9 @@
 package com.media.video_meeting.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -10,6 +14,7 @@ public class ClientMsg implements Serializable {
      *
      * @mbggenerated
      */
+    @TableId(type = IdType.AUTO)
     private Integer userid;
 
     /**
@@ -116,6 +121,7 @@ public class ClientMsg implements Serializable {
      */
     private Integer status;
 
+    @TableField(exist = false)
     private List<ClientMsg> clientMsgs;
 
     /**

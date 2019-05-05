@@ -34,7 +34,10 @@ public class SocketMsgOnLineHandler extends SocketMsgHandler {
     public void handlerMsg(String msg, JSONObject jsonObject) {
         //设备上线
         ClientMsg clientMsgOnline = JSON.parseObject(msg, ClientMsg.class);
+        clientMsgOnline.setId("online");
         clientMsgOnline.setStatus(1);
+
+        System.out.println("上线新的终端：" + clientMsgOnline);
         clientService.insertOrUpdate(clientMsgOnline);
     }
 
