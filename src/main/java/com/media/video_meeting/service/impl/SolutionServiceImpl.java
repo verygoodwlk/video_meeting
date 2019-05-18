@@ -30,6 +30,8 @@ public class SolutionServiceImpl implements ISolutionService {
     public List<Solution> queryByAccount(String account) {
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.eq("account", account);
+        queryWrapper.or();
+        queryWrapper.isNull("account");
         return solutionMapper.selectList(queryWrapper);
     }
 

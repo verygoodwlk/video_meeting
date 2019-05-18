@@ -53,12 +53,27 @@ function uploadInit(){
             "</td>" +
             "</tr>";
 
+        //ajax通知后台判断是否上传过该文件
+        $.ajax({
+            url: "/res/isupload",
+            data: {"filename":file.name},
+            success: function(data){
+                if(data){
+                    $("#progress_" + file.id).html("<font color='green'>已上传</font>");
+                    //从队列中移除
+                    uploader.cancelFile(file);
+                }
+            }
+        });
+
         $("#upload_list").append(fileHtml);
     });
 
     //设置进度条
     uploader.on('uploadProgress', function (file, percentage) {
-        // console.log("进度：" + (percentage * 100 + '%'));
+        var pg = parseInt(percentage * 100) + '%';
+        console.log("进度：" + pg);
+        $("#progress_" + file.id).html("<font color='green'>" + pg + "</font>");
     });
 
     //设置成功事件
@@ -117,6 +132,7 @@ function resetUpload(){
     //清空上传列表
     $("#upload_list").html("");
     files=[];
+    uploader.reset();
 }
 
 //回显文件列表

@@ -64,4 +64,15 @@ public class ResourceController {
         //返回上传的绝对路径
         return files.getAbsolutePath();
     }
+
+    /**
+     * 判断是否上传
+     * @return
+     */
+    @RequestMapping("/isupload")
+    public boolean isUpload(String filename){
+        System.out.println("判断文件名：" + filename);
+        File files = new File(uploadPath, filename);
+        return files.exists();
+    }
 }

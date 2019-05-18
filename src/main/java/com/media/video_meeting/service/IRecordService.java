@@ -9,4 +9,6 @@ public interface IRecordService {
     int insertRecord(Record record);
 
     List<Record> queryByCid(int cid);
+
+    int deleteRecordByName(String name);
 }

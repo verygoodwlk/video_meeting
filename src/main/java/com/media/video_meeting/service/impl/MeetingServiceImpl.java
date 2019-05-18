@@ -1,5 +1,6 @@
 package com.media.video_meeting.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.media.video_meeting.dao.MeetingMapper;
 import com.media.video_meeting.dao.MeetingMoreInfoMapper;
 import com.media.video_meeting.entity.Meeting;

@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class RecordServiceImpl implements IRecordService {
@@ -25,8 +27,6 @@ public class RecordServiceImpl implements IRecordService {
     @Override
     @Transactional
     public int insertRecord(Record record) {
-
-
         int result = recordMapper.insert(record);
 
         List<Integer> users = record.getUsers();
@@ -60,5 +60,23 @@ public class RecordServiceImpl implements IRecordService {
         }
 
         return records;
+    }
+
+    @Override
+    public int deleteRecordByName(String name) {
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.eq("record", name);
+        Record record = recordMapper.selectOne(queryWrapper);
+
+        if(record != null){
+            int id = record.getId();
+
+            Map map = new HashMap<>();
+            map.put("rid", id);
+            recordClientMapper.deleteByMap(map);
+
+            return recordMapper.deleteById(id);
+        }
+        return 0;
     }
 }

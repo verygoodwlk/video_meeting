@@ -13,8 +13,8 @@ spring:
   #设置文件上传大小
   servlet:
     multipart:
-      max-file-size: 30MB
-      max-request-size: 30MB
+      max-file-size: 300MB
+      max-request-size: 300MB
 #    type: com.mchange.v2.c3p0.ComboPooledDataSource
 mybatis-plus:
   mapper-locations: classpath:com/media/video_meeting/dao/mapper/*.xml

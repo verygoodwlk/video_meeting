@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <base th:href="${#request.getContentType() + '/resources_webcon/'}"/>
+    <meta charset="UTF-8">
+    <title>实时寻呼</title>
+    <link href="css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+    <style>
+        .btn-large-dim {
+            width: 80px;
+            height: 80px;
+            font-size: 10px;
+            margin-bottom: 0px;
+        }
+
+        /*.left_content1 {
+            height: 300px;
+        }
+
+        .left_content2 {
+            height: 300px;
+        }
+
+        .right_content {
+            height: 600px;
+        }*/
+    </style>
+
+
+    <!--引入webuploader-->
+    <link rel="stylesheet" type="text/css" href="widget/webuploader/webuploader.css">
+    <script type="text/javascript" src="widget/webuploader/webuploader.min.js"></script>
+    <script type="text/javascript" src="myjs/upload.js"></script>
+
+    <!-- 引入ztree -->
+    <link rel="stylesheet" href="widget/zTree/zTreeStyle/zTreeStyle.css"/>
+    <script type="text/javascript" src="widget/zTree/jquery.ztree.all.min.js"></script>
+    <script type="text/javascript" src="myjs/tree.js"></script>
+
+    <!-- 实时寻呼 -->
+    <link rel="shortcut icon" href="Kurento Tutorial 4_ Video Call 1 to 1 with WebRTC_files/kurento.png"
+          type="image/png">
+    <link rel="stylesheet" href="Kurento Tutorial 4_ Video Call 1 to 1 with WebRTC_files/bootstrap.min.css">
+    <link rel="stylesheet" href="Kurento Tutorial 4_ Video Call 1 to 1 with WebRTC_files/ekko-lightbox.min.css">
+    <link rel="stylesheet" href="Kurento Tutorial 4_ Video Call 1 to 1 with WebRTC_files/index.css">
+    <link rel="stylesheet" href="Kurento Tutorial 4_ Video Call 1 to 1 with WebRTC_files/kurento.css">
+    <script src="Kurento Tutorial 4_ Video Call 1 to 1 with WebRTC_files/jquery.min.js.下载"></script>
+    <script src="Kurento Tutorial 4_ Video Call 1 to 1 with WebRTC_files/bootstrap.min.js.下载"></script>
+    <script src="Kurento Tutorial 4_ Video Call 1 to 1 with WebRTC_files/ekko-lightbox.min.js.下载"></script>
+    <script src="Kurento Tutorial 4_ Video Call 1 to 1 with WebRTC_files/draggabilly.pkgd.min.js.下载"></script>
+    <script src="Kurento Tutorial 4_ Video Call 1 to 1 with WebRTC_files/adapter.js.下载"></script>
+    <script src="Kurento Tutorial 4_ Video Call 1 to 1 with WebRTC_files/index.js.下载"></script>
+    <script src="Kurento Tutorial 4_ Video Call 1 to 1 with WebRTC_files/kurento-utils.js.下载"></script>
+    <script src="Kurento Tutorial 4_ Video Call 1 to 1 with WebRTC_files/index.js"></script>
+
+
+    <script th:inline="javascript">
+        $(function () {
+
+            //动态计算高度
+            autoHeight();
+
+            //初始化树形结构
+            initClients();
+
+        });
+
+
+        /**
+         * 初始化树形结构
+         */
+        var ztreeObj;
+
+        function initClients() {
+            $.ajax({
+                url: [[${#request.getContextPath()}]] + "/client/group",
+                success: function (data) {
+                    var zTreeNodes = data;
+
+                    var setting = {
+                        data: {
+                            simpleData: {
+                                enable: true,
+                                pIdKey: "pid"
+                            },
+                            key: {
+                                name: "gname"
+                            }
+                        },
+                        check: {
+                            enable: true
+                        }
+                    };
+
+                    // ztreeObj = $.fn.zTree.init($("#ztree_div"), setting, zTreeNodes);
+                    // ztreeObj.expandAll(true);
+                },
+                dataType: "json"
+            });
+        }
+
+
+        /**
+         * 手动执行
+         */
+        function action_task() {
+            var task = $("[alt='del']")[0];
+            if (!task) {
+                alert("请选中需要执行的任务！");
+                return;
+            }
+
+            if (confirm("是否确认执行选中的任务？")) {
+                var tid = task.getAttribute("taskidstr");
+
+                $.get([[${#request.getContextPath()}]] + "/web/task/action", {"taskid": tid}, function (data) {
+                    if (data) {
+                        alert("开始执行！");
+                    } else {
+                        alert("执行失败！");
+                    }
+                }, "json");
+            }
+        }
+
+
+        /**
+         * 手动停止
+         */
+        function stop_task() {
+            var task = $("[alt='del']")[0];
+            if (!task) {
+                alert("请选中需要停止的任务！");
+                return;
+            }
+
+            if (confirm("是否确认停止选中的任务？")) {
+                var tid = task.getAttribute("taskidstr");
+
+                $.get([[${#request.getContextPath()}]] + "/web/task/stop", {"taskid": tid}, function (data) {
+                    if (data) {
+                    } else {
+                        alert("停止失败！");
+                    }
+                }, "json");
+            }
+        }
+
+    </script>
+
+    <!-- 音量选择控件 -->
+    <link href="css/plugins/ionRangeSlider/ion.rangeSlider.css" rel="stylesheet">
+    <link href="css/plugins/ionRangeSlider/ion.rangeSlider.skinFlat.css" rel="stylesheet">
+    <script src="js/plugins/ionRangeSlider/ion.rangeSlider.min.js"></script>
+    <script>
+        $("#volume").ionRangeSlider({
+            min: 0,
+            max: 15,
+            from: 0,
+            postfix: "",
+            prettify: false,
+            hasGrid: false
+        });
+
+
+    </script>
+
+    <!-- 日期插件 -->
+    <link rel="stylesheet"
+          th:href="${#request.getContextPath() + '/resources/widget/My97DatePicker/skin/WdatePicker.css'}"
+          type="text/css"/>
+    <script type="text/javascript"
+            th:src="${#request.getContextPath() + '/resources/widget/My97DatePicker/WdatePicker.js'}"></script>
+
+
+</head>
+<body>
+<!-- 顶部 -->
+<div class="row border-bottom white-bg dashboard-header myheader" style="padding: 10px 10px 10px 10px">
+
+    <button class="btn btn-primary dim btn-large-dim" type="button" onclick="action_task();">
+        手动执行
+    </button>
+    <button class="btn btn-primary dim btn-large-dim" type="button" onclick="stop_task();">
+        手动停止
+    </button>
+    <button class="btn btn-primary dim btn-large-dim" type="button">
+        录音设置
+    </button>
+    <button class="btn btn-primary dim btn-large-dim" type="button">
+        声卡设置
+    </button>
+</div>
+<!-- 工作区 -->
+<div class="animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12" style="padding: 0px;">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>
+                        采样频率：
+                        <select id="cypl">
+                            <option value="1">8000Hz</option>
+                            <option value="2">16000Hz</option>
+                            <option value="3">22050Hz</option>
+                            <option value="4">32000Hz</option>
+                            <option value="5" selected>44100Hz</option>
+                        </select>
+                        &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+                        采集方案：
+                        <select id="cjfa">
+                            <option value="1">麦克风采集</option>
+                            <option value="2">立体混音采集</option>
+                        </select>
+                    </h5>
+                </div>
+               <!-- <div class="ibox-content  h_1" style="padding: 0px;">
+
+                    <div class="col-lg-3" style="padding: 4px">
+                        <div class="ibox float-e-margins" style="margin-bottom: 0px">
+                            <div class="ibox-content my-sroll" style="height: 100%;">
+
+                                &lt;!&ndash; 树形选择器 &ndash;&gt;
+                                <div id="ztree_div" class="ztree"
+                                     style="height: 100%; overflow:scroll; overflow-y: auto; overflow-x: auto;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>-->
+
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <label class="control-label" for="name">Name</label>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <input id="name" name="name" class="form-control" type="text" onkeydown="if (event.keyCode == 13) register();">
+                                </div>
+                                <div class="col-md-6 text-right">
+                                    <a id="register" class="btn btn-primary" onclick="register()"><span class="glyphicon glyphicon-plus"></span> Register</a>
+                                </div>
+                            </div>
+
+                            <br> <br> <label class="control-label" for="peer">Peer</label>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <input id="peer" name="peer" class="form-control" type="text" onkeydown="if (event.keyCode == 13) call();">
+                                </div>
+                                <div class="col-md-6 text-right">
+                                    <a id="call" class="btn btn-success" onclick="call()"><span class="glyphicon glyphicon-play"></span> Call</a>
+                                    <a id="terminate"  class="btn btn-danger" disabled="disabled"><span class="glyphicon glyphicon-stop"></span> Stop</a>
+                                </div>
+                            </div>
+                            <br> <label class="control-label" for="console">Console</label><br>
+                            <br>
+                            <div id="console" class="democonsole">
+                                <ul></ul>
+                            </div>
+                        </div>
+                        <div class="col-md-7">
+                            <div id="videoBig">
+                                <video id="videoOutput" autoplay="" width="640px" height="480px" poster="img/webrtc.png"></video>
+                            </div>
+                            <div id="videoSmall" style="touch-action: none;">
+                                <video id="videoInput" autoplay="" width="240px" height="180px" poster="img/webrtc.png"></video>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <style>
+        .checkbox-primary {
+            float: left;
+            margin-left: 10px;
+        }
+
+        .my-sroll {
+            overflow: scroll;
+            overflow-y: auto;
+            overflow-x: auto;
+        }
+
+    </style>
+
+
+    <script th:inline="javascript">
+
+
+    </script>
+
+</body>
+</html>
