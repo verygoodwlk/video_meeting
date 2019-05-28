@@ -83,6 +83,8 @@
                         <td>
                             <a th:href="${'javascript:updateInfo(' + clientmsg.userid + ');'}" title="Edit"><img
                                     src="resources/images/icons/pencil.png" alt="Edit"/></a>
+                            <a th:href="${'javascript:updatePower(' + clientmsg.userid + ');'}" title="Update"><img
+                                    src="resources/images/icons/hammer_screwdriver.png" alt="Update"/></a>
                             <!--<a
                                 href="#" title="Delete"><img
                                 src="resources/images/icons/cross.png" alt="Delete" /></a> <a
@@ -127,6 +129,49 @@
                                 });
                             });
                         }
+
+
+                        //修改权限信息
+                        function updatePower(userid){
+                            //查询终端的权限名称
+                            $("#power_userid").val(userid);
+
+                            //清空
+                            // $("[name='checkbox']").removeAttr("checked");//取消全选
+                            var html = '';
+                            html += '<label>终端权限</label>';
+                            html += '<input type="checkbox" name="limits" value="2"/><span>视频对讲权限</span><br/>';
+                            html += '<input type="checkbox" name="limits" value="4"/><span>语音对讲权限</span><br/>';
+                            html += '<input type="checkbox" name="limits" value="8"/><span>自由模式视频权限</span><br/>';
+                            html += '<input type="checkbox" name="limits" value="16"/><span>自由模式语音权限</span><br/>';
+                            html += '<input type="checkbox" name="limits" value="32"/><span>主麦模式视频权限</span><br/>';
+                            html += '<input type="checkbox" name="limits" value="64"/><span>主麦模式语音权限</span><br/>';
+                            html += '<input type="checkbox" name="limits" value="128"/><span>循环监控</span><br/>';
+
+                            $("#powers_p").html(html);
+
+                            $.post([[${#request.getContextPath()}]] + "/client/querybyid", {"userid":userid}, function(data){
+
+                                var limits = data.limits;
+                                if(limits != 0){
+                                    var limitsArray = JSON.parse(limits);
+                                    for(var i = 0; i < limitsArray.length; i++){
+                                        $("[type='checkbox'][name='limits'][value='" + limitsArray[i] + "']").attr("checked", true);
+                                    }
+                                }
+
+                                //弹出框
+                                openDialog("update_div", "选择终端权限", 300, 400);
+                            },"json");
+                        }
+
+                        //修改
+                        function updatePowerSubmit(){
+                            $.post([[${#request.getContextPath()}]] + "/client/updatePower", $("#power_form").serialize(), function(data){
+                                closeDialog("update_div");
+                            });
+                        }
+
                     </script>
 
                     <!-- 脚部 -->
@@ -156,58 +201,23 @@
 
 
 <!-- 修改的弹出框 -->
-<!--<div id="update_div" style="display: none;">
+<div id="update_div" style="display: none;">
     <div class="tab-content default-tab" id="tab2">
-        <form action="#" method="post">
+        <form id="power_form" method="post">
+            <input type="hidden" name="userid" id="power_userid"/>
             <fieldset id="online">
-                &lt;!&ndash; Set class to "column-left" or "column-right" on fieldsets to divide the form into columns &ndash;&gt;
-                <p>
-                    <label>产品型号</label>
-                    <input
-                        class="text-input small-input" type="text"
-                        name="small-input"/>
-                </p>
-                <p>
-                    <label>终端名称</label>
-                    <input
-                        class="text-input medium-input datepicker" type="text"
-                        name="medium-input"/>
-                </p>
-                <p>
-                    <label>MAC地址</label> <input
-                        class="text-input medium-input" type="text"
-                        name="large-input"/>
-                </p>
-                <p>
-                    <label>IP地址</label> <input
-                        class="text-input medium-input" type="text"
-                        name="large-input"/>
-                </p>
-                <p>
-                    <label>固件版本</label> <input
-                        class="text-input medium-input" type="text"
-                        name="large-input"/>
-                </p>
-                <p>
-                    <input class="mybutton" type="submit" value="修改"/>
+                <p id="powers_p">
+
                 </p>
             </fieldset>
-            <fieldset id="offline">
-                &lt;!&ndash; Set class to "column-left" or "column-right" on fieldsets to divide the form into columns &ndash;&gt;
+            <fieldset>
                 <p>
-                    <label>终端名称</label>
-                    <input
-                            class="text-input medium-input datepicker" type="text"
-                            name="medium-input"/>
-                </p>
-                <p>
-                    <input class="mybutton" type="submit" value="修改"/>
+                    <button type="button" class="mybutton" onclick="updatePowerSubmit();">提交</button>
                 </p>
             </fieldset>
             <div class="clear"></div>
-            &lt;!&ndash; End .clear &ndash;&gt;
         </form>
     </div>
-</div>-->
+</div>
 </body>
 </html>

@@ -2,8 +2,13 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <base th:href="${#request.getContentType() + '/resources_webcon/'}"/>
-    <meta charset="UTF-8">
     <title>实时寻呼</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="expires" content="0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <link href="css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
     <style>
         .btn-large-dim {
@@ -26,6 +31,16 @@
         }*/
     </style>
 
+   <!-- <script src="webrtc/jquery.min.js"></script>
+    <script src="webrtc/bootstrap.min.js"></script>
+    <script src="webrtc/ekko-lightbox.min.js"></script>
+    <script src="webrtc/draggabilly.pkgd.min.js"></script>
+    <script src="webrtc/adapter.js"></script>
+    <script src="webrtc/index2.js"></script>
+
+    <script src="webrtc/kurento-utils.js"></script>
+    <script src="webrtc/index.js"></script>-->
+
 
     <!--引入webuploader-->
     <link rel="stylesheet" type="text/css" href="widget/webuploader/webuploader.css">
@@ -38,20 +53,20 @@
     <script type="text/javascript" src="myjs/tree.js"></script>
 
     <!-- 实时寻呼 -->
-    <link rel="shortcut icon" href="Kurento Tutorial 4_ Video Call 1 to 1 with WebRTC_files/kurento.png"
+    <!--<link rel="shortcut icon" href="webrtc/kurento.png"
           type="image/png">
-    <link rel="stylesheet" href="Kurento Tutorial 4_ Video Call 1 to 1 with WebRTC_files/bootstrap.min.css">
-    <link rel="stylesheet" href="Kurento Tutorial 4_ Video Call 1 to 1 with WebRTC_files/ekko-lightbox.min.css">
-    <link rel="stylesheet" href="Kurento Tutorial 4_ Video Call 1 to 1 with WebRTC_files/index.css">
-    <link rel="stylesheet" href="Kurento Tutorial 4_ Video Call 1 to 1 with WebRTC_files/kurento.css">
-    <script src="Kurento Tutorial 4_ Video Call 1 to 1 with WebRTC_files/jquery.min.js.下载"></script>
-    <script src="Kurento Tutorial 4_ Video Call 1 to 1 with WebRTC_files/bootstrap.min.js.下载"></script>
-    <script src="Kurento Tutorial 4_ Video Call 1 to 1 with WebRTC_files/ekko-lightbox.min.js.下载"></script>
-    <script src="Kurento Tutorial 4_ Video Call 1 to 1 with WebRTC_files/draggabilly.pkgd.min.js.下载"></script>
-    <script src="Kurento Tutorial 4_ Video Call 1 to 1 with WebRTC_files/adapter.js.下载"></script>
-    <script src="Kurento Tutorial 4_ Video Call 1 to 1 with WebRTC_files/index.js.下载"></script>
-    <script src="Kurento Tutorial 4_ Video Call 1 to 1 with WebRTC_files/kurento-utils.js.下载"></script>
-    <script src="Kurento Tutorial 4_ Video Call 1 to 1 with WebRTC_files/index.js"></script>
+    <link rel="stylesheet" href="webrtc/bootstrap.min.css">
+    <link rel="stylesheet" href="webrtc/ekko-lightbox.min.css">
+    <link rel="stylesheet" href="webrtc/index.css">
+    <link rel="stylesheet" href="webrtc/kurento.css">-->
+    <script src="webrtc/jquery.min.js"></script>
+    <script src="webrtc/bootstrap.min.js"></script>
+    <script src="webrtc/ekko-lightbox.min.js"></script>
+    <script src="webrtc/draggabilly.pkgd.min.js"></script>
+    <script src="webrtc/adapter.js"></script>
+    <script src="webrtc/index2.js"></script>
+    <script src="webrtc/kurento-utils.js"></script>
+    <script src="webrtc/index.js"></script>
 
 
     <script th:inline="javascript">
@@ -228,6 +243,7 @@
                     </div>
                 </div>-->
 
+                <!-- 内容 -->
                 <div class="container">
                     <div class="row">
                         <div class="col-md-5">
@@ -267,6 +283,7 @@
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>

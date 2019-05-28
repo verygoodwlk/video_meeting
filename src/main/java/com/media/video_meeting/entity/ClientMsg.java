@@ -33,6 +33,7 @@ public class ClientMsg implements Serializable {
 
     @TableField(exist = false)
     private List<ClientMsg> clientMsgs;
+    @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 
 

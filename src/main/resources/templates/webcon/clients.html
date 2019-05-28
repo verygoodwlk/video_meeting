@@ -31,7 +31,7 @@
         }
     </style>
 
-    <script>
+    <script th:inline="javascript">
         $(document).ready(function () {
 
             //动态计算高度
@@ -77,9 +77,70 @@
                 "width": "90%",
                 "height": "100%"
             });
-
-
         });
+
+
+        //点击行
+        var uid;
+        function click_tr(userid, ele){
+
+            $("tbody tr:even").css("background-color", "#f9f9f9");
+            $("tbody tr:odd").css("background-color", "#ffffff");
+
+            ele.style.backgroundColor = "#dddddd";
+            uid = userid;
+        }
+
+        var monitored = [[${listenStatus.containsKey('monitored') ? listenStatus.monitored : null}]];
+        var monitor= [[${listenStatus.containsKey('monitor') ? listenStatus.monitor : null}]];
+
+        //设置被监听终端
+        function byListener(){
+
+            if(!uid){
+                alert("请至少选择一个终端！");
+                return;
+            }
+
+            $.post([[${#request.getContextPath()}]] + "/web/clients/byListener",{"userid":uid},function(data){
+                location.reload();
+            });
+        }
+
+        //设置监听终端
+        function listener(){
+
+            if(!uid){
+                alert("请至少选择一个终端！");
+                return;
+            }
+
+            if(!monitored){
+                alert("请先选择一个被监听终端！");
+                return;
+            }
+
+            if(monitored == uid){
+                alert("被监听终端不能再设置成监听终端");
+                return;
+            }
+
+            $.post([[${#request.getContextPath()}]] + "/web/clients/listener",{"userid":uid},function(data){
+                location.reload();
+            });
+        }
+
+        //删除终端
+        function deleteClient(){
+            if(!uid){
+                alert("请至少选择一个终端！");
+                return;
+            }
+
+            $.post([[${#request.getContextPath()}]] + "/web/clients/delete",{"userid":uid},function(data){
+                location.reload();
+            });
+        }
 
     </script>
 
@@ -87,25 +148,25 @@
 <body>
 <div class="row border-bottom white-bg dashboard-header myheader" style="padding: 10px 10px 10px 10px">
 
-    <button class="btn btn-primary dim btn-large-dim" type="button">
+    <button class="btn btn-primary dim btn-large-dim" type="button" onclick="listener();">
         <img style="width: 50px; height: 50px; margin-bottom: 5px" src="img/1.png"/><br/>
         监听终端
     </button>
-    <button class="btn btn-primary dim btn-large-dim" type="button">
+    <button class="btn btn-primary dim btn-large-dim" type="button" onclick="byListener();">
         被监听终端
     </button>
     <button class="btn btn-primary dim btn-large-dim" type="button">
         音量调节
     </button>
-    <button class="btn btn-primary dim btn-large-dim" type="button">
+    <button class="btn btn-primary dim btn-large-dim" type="button" onclick="deleteClient();">
         删除终端
     </button>
-    <button class="btn btn-primary dim btn-large-dim" type="button">
+    <!--<button class="btn btn-primary dim btn-large-dim" type="button">
         双向对讲
     </button>
     <button class="btn btn-primary dim btn-large-dim" type="button">
         语音帮助
-    </button>
+    </button>-->
 
 </div>
     <div class="animated fadeInRight">
@@ -138,7 +199,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:switch="${4 - #strings.length(client.userid)}" th:each="client : ${clients}" class="gradeX">
+                            <tr th:onclick="|click_tr(${client.userid}, this);|" th:switch="${4 - #strings.length(client.userid)}" th:each="client : ${clients}" class="gradeX">
                                 <th>
                                     <img style="width: 20px; height: 20px" th:src="${client.status == 1 ? 'img/on.png' : 'img/off.png'}"/>
                                 </th>
@@ -152,7 +213,11 @@
                                 <th th:text="${client.ip}">IP地址</th>
                                 <th th:text="${client.volume}">音量</th>
                                 <th th:text="${client.updatestatus}">任务状态</th>
-                                <th></th>
+                                <th th:if="${listenStatus.containsKey('monitored') && client.userid == listenStatus.monitored}">被监听终端</th>
+                               <!-- <th th:unless="${listenStatus.containsKey('monitored') && client.userid == listenStatus.monitored}"></th>-->
+                                <th th:if="${listenStatus.containsKey('monitor') && client.userid == listenStatus.monitor}">监听终端</th>
+                                <!--<th th:unless="${listenStatus.containsKey('monitor') && client.userid == listenStatus.monitor}"></th>-->
+                                <th th:unless="${(listenStatus.containsKey('monitored') && client.userid == listenStatus.monitored) || (listenStatus.containsKey('monitor') && client.userid == listenStatus.monitor)}"></th>
                                 <th></th>
                                 <th></th>
                             </tr>

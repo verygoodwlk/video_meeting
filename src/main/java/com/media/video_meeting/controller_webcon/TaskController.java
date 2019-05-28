@@ -6,6 +6,7 @@ import com.media.video_meeting.entity.Task;
 import com.media.video_meeting.entity.Webcon;
 import com.media.video_meeting.service.IClientService;
 import com.media.video_meeting.service.ITaskService;
+import com.media.video_meeting.util.TaskStatusUtil;
 import com.media.video_meeting.websocket.MyWebSocket;
 import com.media.video_meeting.websocket_aop.SocketSend;
 import com.media.video_meeting.websocket_aop.send.*;
@@ -127,6 +128,7 @@ public class TaskController {
     @SocketSend(params = "#result", sendClass = MusicActionSocketSend.class)
     public Task action(String taskid){
         Task task = taskService.queryByTaskId(taskid);
+        TaskStatusUtil.actionTask(taskid);
         return task;
     }
 
@@ -153,7 +155,19 @@ public class TaskController {
     @SocketSend(params = "#result", sendClass = MusicStopSocketSend.class)
     public Task stop(String taskid){
         Task task = taskService.queryByTaskId(taskid);
+        TaskStatusUtil.stopTask(taskid);
         return task;
+    }
+
+    /**
+     * 是否执行
+     * @param taskid
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/isaction")
+    public boolean isAction(String taskid){
+        return TaskStatusUtil.isAction(taskid);
     }
 
     /**

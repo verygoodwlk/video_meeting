@@ -56,7 +56,7 @@ function showUsers(users){
 
     A:for(var i = 0; i < us.length; i++){
         for(var j = 0; j < nodes.length; j++){
-            console.log(us[i] + " " + nodes[j].userid + " " + nodes[j].gname);
+            //console.log(us[i] + " " + nodes[j].userid + " " + nodes[j].gname);
             if(us[i] == nodes[j].userid){
                 ztreeObj.checkNode(nodes[j], true, true);
                 //获得父节点

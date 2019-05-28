@@ -36,6 +36,11 @@ public class SolutionServiceImpl implements ISolutionService {
     }
 
     @Override
+    public List<Solution> querySolutionsList() {
+        return solutionMapper.selectList(null);
+    }
+
+    @Override
     public Solution queryById(Integer id) {
         return solutionMapper.selectById(id);
     }

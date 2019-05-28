@@ -30,6 +30,7 @@ page:
 #golang服务器注册地址
 golang:
   serverpath: ws://47.107.235.165:8000/
+#  serverpath: ws://192.168.1.186:8000/
 server:
   port: 8080
 ---

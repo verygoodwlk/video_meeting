@@ -84,7 +84,9 @@ public class TaskServiceImpl implements ITaskService {
     @Override
     public List<Task> queryByAccountAndTaskType(String account, int taskt) {
         QueryWrapper queryWrapper = new QueryWrapper();
-        queryWrapper.eq("account", account);
+        if(account != null){
+            queryWrapper.eq("account", account);
+        }
         queryWrapper.eq("taskt", taskt);
         return taskMapper.selectList(queryWrapper);
     }

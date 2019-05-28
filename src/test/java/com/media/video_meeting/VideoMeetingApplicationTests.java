@@ -15,7 +15,7 @@ import javax.annotation.Resource;
 @SpringBootTest
 public class VideoMeetingApplicationTests {
 
-	@Resource(name = "renameid")
+	@Resource(name = "online")
 	private SocketMsgHandler socketMsgHandler;
 
 	@Test
@@ -29,6 +29,8 @@ public class VideoMeetingApplicationTests {
 
 //		socketMsgHandler.handler("{\"id\":\"online\",\"userid\":\"13\",\"terminalname\":\"13\",\"mac\":\"28:ED:E0:73:C1:3A\",\"ip\":\"192.168.1.43\",\"serverip\":\"192.168.1.186\",\"volume\":\"\",\"intercomEnable\":\"\",\"cameraIntercomEnable\":\"\",\"updateStatus\":\"\",\"dhcpStatus\":\"\",\"productsModel\":\"\"}");
 //		socketMsgHandler.handler("{\"id\": \"renameid\", \"oldid\":\"5\", \"newid\":\"3\"}");
+
+		socketMsgHandler.handler("{\"id\":\"online\",\"userid\":\"58\",\"terminalname\":\"58\",\"mac\":\"28:ED:E0:73:C1:58\",\"ip\":\"192.168.1.16\",\"serverip\":\"192.168.1.186\",\"volume\":\"\",\"intercomEnable\":\"\",\"cameraIntercomEnable\":\"\",\"updateStatus\":\"\",\"dhcpStatus\":\"\",\"productsModel\":\"\"}");
 	}
 
 }

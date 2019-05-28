@@ -37,6 +37,7 @@
     <script type="text/javascript" src="widget/zTree/jquery.ztree.all.min.js"></script>
     <script type="text/javascript" src="myjs/tree.js"></script>
 
+    <script type="text/javascript" src="myjs/task.js"></script>
 
     <script th:inline="javascript">
         $(function () {
@@ -285,6 +286,7 @@
                 $("#externalFireTerminal").attr("disabled", "disabled");
             } else {
                 $("#externalFireTerminal").removeAttr("disabled");
+                alert("开启外部采集，上传的曲目将会无效！");
             }
         }
 
@@ -318,18 +320,26 @@
         <img style="width: 50px; height: 50px; margin-bottom: 5px" src="icon/dsyy_newtask.png"/><br/>
         新建任务
     </button>
-    <button class="btn btn-primary dim btn-large-dim" type="button" onclick="open_update_Model();">
+    <!--<button class="btn btn-primary dim btn-large-dim" type="button" onclick="open_update_Model();">
         <img style="width: 50px; height: 50px; margin-bottom: 5px" src="icon/dsyy_edittask.png"/><br/>
         编辑任务
+    </button>-->
+    <button class="btn btn-primary dim btn-large-dim" type="button" onclick="isAction(1);">
+        <img style="width: 50px; height: 50px; margin-bottom: 5px" src="icon/dsyy_edittask.png"/><br/>
+        编辑任务
+    </button>
+    <button class="btn btn-primary dim btn-large-dim" type="button" onclick="isAction(2);">
+        <img style="width: 50px; height: 50px; margin-bottom: 5px" src="icon/dsyy_deltask.png"/><br/>
+        删除任务
     </button>
     <button class="btn btn-primary dim btn-large-dim" type="button" onclick="copy_task();">
         <img style="width: 50px; height: 50px; margin-bottom: 5px" src="icon/dsyy_copytask.png"/><br/>
         复制任务
     </button>
-    <button class="btn btn-primary dim btn-large-dim" type="button" onclick="delete_task();">
+    <!--<button class="btn btn-primary dim btn-large-dim" type="button" onclick="delete_task();">
         <img style="width: 50px; height: 50px; margin-bottom: 5px" src="icon/dsyy_deltask.png"/><br/>
         删除任务
-    </button>
+    </button>-->
     <button class="btn btn-primary dim btn-large-dim" type="button" onclick="action_task();">
         <img style="width: 50px; height: 50px; margin-bottom: 5px" src="icon/dsyy_play.png"/><br/>
         手动执行
@@ -624,8 +634,12 @@
         //重置上传
         resetUpload();
 
+        //重置表单
+        reset_Model(3);
+
         //显示弹出框
-        $("#myModal2").modal('show');
+        // $("#myModal2").modal('show');
+        $("#myModal2").modal({backdrop: 'static', keyboard: false});
 
         //延迟刷新上传控件
         setTimeout(function () {
@@ -641,24 +655,27 @@
      */
     function submit_task() {
         //获得任务名称
-        var taskname = $("#taskname").val();
+        taskname = $("#taskname").val();
+
         //获得报警区域
-        var area = $("#area").val();
+        area = $("#area").val();
+
         //获得报警触发设备
         var fireTerminal = $("#fireTerminal").val();
         //获得端口
-        var port = $("#port").val();
+        port = $("#port").val();
+
+
         //获得邻层报警
         var isLevel = $("#isLevel").val();
         //获得指定外部音源
-        var isExternalMusic = $("#isExternalMusic:checked").val();
+        isExternalMusic = $("#isExternalMusic:checked").val();
         //获得外部报警设备
         var externalFireTerminal = $("#externalFireTerminal").val();
 
-
         //获得被选择的终端
         var znodes = ztreeObj.getCheckedNodes(true);
-        var terminal = [];
+        terminal = [];
         A:for (var i = 0; i < znodes.length; i++) {
             if (znodes[i].isClient == 1) {
                 for(var j = 0; j < terminal.length; j++){
@@ -670,6 +687,13 @@
                 terminal.push(znodes[i].userid);
             }
         }
+
+        //表单验证
+        if(!check_Form(3)){
+            return;
+        }
+
+
 
         // alert("任务名称：" + taskname);
         // alert("循环类型：" + loopType);
@@ -737,36 +761,8 @@
                 //设置默认值
                 console.log(JSON.stringify(data));
 
-                var taskname = data.taskname;
-                var area = data.area;
-                var mp3 = data.mp3;
-                var users = data.users;
-                var fireTerminal = data.fireTerminal;
-                var port = data.port;
-                var isLevel = data.isLevel;
-                var isExternalMusic = data.isExternalMusic;
-                var externalFireTerminal = data.externalFireTerminal;
-
-                //设置默认值
-                $("#taskname").val(taskname);
-                $("#area").val(area);
-                $("#fireTerminal").val(fireTerminal);
-                $("#port").val(port);
-                $("#isLevel").val(isLevel);
-                $("#externalFireTerminal").val(externalFireTerminal);
-
-
-                if(isExternalMusic == 1){
-                    $("#isExternalMusic").attr("checked", true);
-                    $("#externalFireTerminal").removeAttr("disabled");
-                } else {
-                    $("#isExternalMusic").attr("checked", false);
-                    $("#externalFireTerminal").attr("disabled", "disabled");
-                }
-
-                showUpdate(mp3);
-                showUsers(users);
-
+                //回显数据
+                showData(data, 5);
             }
         },"json");
 

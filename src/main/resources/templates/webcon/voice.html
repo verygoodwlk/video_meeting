@@ -32,6 +32,7 @@
     <script type="text/javascript" src="widget/zTree/jquery.ztree.all.min.js"></script>
     <script type="text/javascript" src="myjs/tree.js"></script>
 
+    <script type="text/javascript" src="myjs/task.js"></script>
 
     <script th:inline="javascript">
         $(function () {
@@ -261,11 +262,19 @@
         <img style="width: 50px; height: 50px; margin-bottom: 5px" src="icon/dsyy_newtask.png"/><br/>
         新建任务
     </button>
-    <button class="btn btn-primary dim btn-large-dim" type="button" onclick="open_update_Model();">
+    <!--<button class="btn btn-primary dim btn-large-dim" type="button" onclick="open_update_Model();">
         <img style="width: 50px; height: 50px; margin-bottom: 5px" src="icon/dsyy_edittask.png"/><br/>
         编辑任务
     </button>
     <button class="btn btn-primary dim btn-large-dim" type="button" onclick="delete_task();">
+        <img style="width: 50px; height: 50px; margin-bottom: 5px" src="icon/dsyy_deltask.png"/><br/>
+        删除任务
+    </button>-->
+    <button class="btn btn-primary dim btn-large-dim" type="button" onclick="isAction(1);">
+        <img style="width: 50px; height: 50px; margin-bottom: 5px" src="icon/dsyy_edittask.png"/><br/>
+        编辑任务
+    </button>
+    <button class="btn btn-primary dim btn-large-dim" type="button" onclick="isAction(2);">
         <img style="width: 50px; height: 50px; margin-bottom: 5px" src="icon/dsyy_deltask.png"/><br/>
         删除任务
     </button>
@@ -542,8 +551,14 @@
     function open_Model() {
         //初始化树形结构
         initClients();
+
+        //重置表单
+        reset_Model(4);
+
         //显示弹出框
-        $("#myModal2").modal('show');
+        // $("#myModal2").modal('show');
+        $("#myModal2").modal({backdrop: 'static', keyboard: false});
+
 
         //设置按钮的点击事件
         $("#submitBtn").attr("onclick", "submit_task();");
@@ -555,36 +570,34 @@
      */
     function submit_task() {
         //获得任务名称
-        var taskname = $("#taskname").val();
+        taskname = $("#taskname").val();
         //获得任务类型
-        var playOrder = $("#playOrder").val();
+        playOrder = $("#playOrder").val();
         //获得开始日期
-        var startDate = $("#startDate").val();
+        startDate = $("#startDate").val();
         //获得开始时间
-        var startTime = $("#startTime").val();
+        startTime = $("#startTime").val();
         //获得结束时间
-        var stopDate = $("#endTime").val();
-
+        stopDate = $("#endTime").val();
         //获得播报员
         var reporter = $("#reporter").val();
         //获得速度
-        var speed = $("#speed").val();
-        //获得循环次数
-        var loopnum = $("#loopnum").val();
+        speed = $("#speed").val();
 
+        //获得循环次数
+        loopnum = $("#loopnum").val();
         //获得文本信息
-        var info = $("#info").val();
+        info = $("#info").val();
 
         //获得星期
-        var weekMask = 0;
+        weekMask = 0;
         $("input[name='week']:checked").each(function () {
             weekMask += parseInt($(this).val());
         });
 
-
         //获得被选择的终端
         var znodes = ztreeObj.getCheckedNodes(true);
-        var terminal = [];
+        terminal = [];
         A:for (var i = 0; i < znodes.length; i++) {
             if (znodes[i].isClient == 1) {
                 for(var j = 0; j < terminal.length; j++){
@@ -595,6 +608,11 @@
                 //如果是终端
                 terminal.push(znodes[i].userid);
             }
+        }
+
+        //表单验证
+        if(!check_Form(4)){
+            return;
         }
 
         // alert("任务名称：" + taskname);
@@ -677,46 +695,8 @@
                 //设置默认值
                 console.log(JSON.stringify(data));
 
-                var users = data.users;
-                var taskname = data.taskname;
-                var playOrder = data.playOrder;
-                var startDate = data.startDate;
-                var startTime = data.startTime;
-                var stopDate = data.stopDate;
-                var reporter = data.reporter;
-                var speed = data.speed;
-                var loopnum = data.loopnum;
-                var info = data.info;
-                var weekMask = data.weekMask;
-
-                //设置默认值
-                $("#taskname").val(taskname);
-                $("#playOrder").val(playOrder);
-                $("#startDate").val(startDate);
-                $("#startTime").val(startTime);
-                $("#endTime").val(stopDate);
-                $("#reporter").val(reporter);
-                $("#speed").val(speed);
-                $("#loopnum").val(loopnum);
-                $("#info").val(info);
-
-                if(stopDate){
-                    $("#checkbox_end").attr("checked", true);
-                    $("#endTime").removeAttr("disabled");
-                } else {
-                    $("#checkbox_end").attr("checked", false);
-                    $("#endTime").attr("disabled", "disabled");
-                }
-
-                if(playOrder == 2){
-                    $("input[name='week']").each(function(){
-                        $(this).removeAttr("disabled");
-                    });
-                }
-
-
-                showUsers(users);
-
+                //回显数据
+                showData(data, 5);
             }
         },"json");
 

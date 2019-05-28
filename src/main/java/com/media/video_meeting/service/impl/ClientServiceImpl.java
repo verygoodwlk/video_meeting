@@ -1,5 +1,6 @@
 package com.media.video_meeting.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.media.video_meeting.dao.ClientGroupMapper;
 import com.media.video_meeting.dao.ClientMsgMapper;
 import com.media.video_meeting.entity.ClientGroup;
@@ -97,7 +98,7 @@ public class ClientServiceImpl implements IClientService {
 
     @Override
     public ClientMsg queryById(Integer userid) {
-        return clientMsgMapper.selectByPrimaryKey(userid);
+        return clientMsgMapper.selectById(userid);
     }
 
     @Override
@@ -206,6 +207,21 @@ public class ClientServiceImpl implements IClientService {
     @Override
     public int updateId(int oldid, int newid) {
         return clientMsgMapper.updateByOldId(newid, oldid);
+    }
+
+    @Override
+    public int updatePowers(Integer userid, Integer[] limits) {
+        ClientMsg clientMsg = clientMsgMapper.selectById(userid);
+        if(limits != null){
+            clientMsg.setLimits(JSON.toJSONString(limits));
+        }
+        clientMsgMapper.updateById(clientMsg);
+        return 1;
+    }
+
+    @Override
+    public int deleteClientByUserId(Integer userid) {
+        return clientMsgMapper.deleteById(userid);
     }
 
 

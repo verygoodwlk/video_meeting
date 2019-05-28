@@ -62,6 +62,7 @@ function uploadInit(){
                     $("#progress_" + file.id).html("<font color='green'>已上传</font>");
                     //从队列中移除
                     uploader.cancelFile(file);
+                    files.push(file.name);
                 }
             }
         });

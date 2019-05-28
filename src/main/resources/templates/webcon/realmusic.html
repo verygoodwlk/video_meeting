@@ -37,6 +37,8 @@
     <script type="text/javascript" src="widget/zTree/jquery.ztree.all.min.js"></script>
     <script type="text/javascript" src="myjs/tree.js"></script>
 
+    <script type="text/javascript" src="myjs/task.js"></script>
+
 
     <script th:inline="javascript">
         $(function () {
@@ -300,12 +302,20 @@
         <img style="width: 50px; height: 50px; margin-bottom: 5px" src="icon/ssyy_newtask.png"/><br/>
         新建任务
     </button>
-    <button class="btn btn-primary dim btn-large-dim" type="button" onclick="open_update_Model();">
+   <!-- <button class="btn btn-primary dim btn-large-dim" type="button" onclick="open_update_Model();">
         <img style="width: 50px; height: 50px; margin-bottom: 5px" src="icon/ssyy_edittask.png"/><br/>
         编辑任务
     </button>
     <button class="btn btn-primary dim btn-large-dim" type="button" onclick="delete_task();">
         <img style="width: 50px; height: 50px; margin-bottom: 5px" src="icon/ssyy_deltask.png"/><br/>
+        删除任务
+    </button>-->
+    <button class="btn btn-primary dim btn-large-dim" type="button" onclick="isAction(1);">
+        <img style="width: 50px; height: 50px; margin-bottom: 5px" src="icon/dsyy_edittask.png"/><br/>
+        编辑任务
+    </button>
+    <button class="btn btn-primary dim btn-large-dim" type="button" onclick="isAction(2);">
+        <img style="width: 50px; height: 50px; margin-bottom: 5px" src="icon/dsyy_deltask.png"/><br/>
         删除任务
     </button>
     <button class="btn btn-primary dim btn-large-dim" type="button" onclick="copy_task();">
@@ -529,6 +539,9 @@
         //重置上传
         resetUpload();
 
+        //重置表单
+        reset_Model(5);
+
         //显示弹出框
         // $("#myModal2").modal('show');
         $("#myModal2").modal({backdrop: 'static', keyboard: false});
@@ -548,18 +561,13 @@
      */
     function submit_task() {
         //获得任务名称
-        var taskname = $("#taskname").val();
-        if(taskname.trim() == ""){
-            alert("任务标识不能为空！");
-            return;
-        }
-
+        taskname = $("#taskname").val();
         //获得循环类型
         var loopType = $("#loopType").val();
 
         //获得被选择的终端
         var znodes = ztreeObj.getCheckedNodes(true);
-        var terminal = [];
+        terminal = [];
         for (var i = 0; i < znodes.length; i++) {
             if (znodes[i].isClient == 1) {
                 //如果是终端
@@ -567,8 +575,8 @@
             }
         }
 
-        if(terminal.length <= 0){
-            alert("终端选择不能为空！");
+        //表单验证
+        if(!check_Form(5)){
             return;
         }
 
@@ -630,16 +638,8 @@
                 //设置默认值
                 console.log(JSON.stringify(data));
 
-                var taskname = data.taskname;
-                var looptype = data.looptype;
-                var mp3 = data.mp3;
-                var users = data.users;
-
-                //设置默认值
-                $("#taskname").val(taskname);
-                $("#loopType").val(looptype);
-                showUpdate(mp3);
-                showUsers(users);
+                //回显数据
+                showData(data, 5);
             }
         },"json");
 

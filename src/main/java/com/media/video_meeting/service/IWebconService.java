@@ -20,6 +20,7 @@ public interface IWebconService {
 
     int deleteAccounts(String[] accounts);
 
+
     int updateWebcon(Webcon webcon);
 
     List<ClientMsg> queryClientsByWebcon(String account);

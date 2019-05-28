@@ -37,4 +37,8 @@ public interface IClientService {
 
     int updateId(int oldid, int newid);
 
+    int updatePowers(Integer userid, Integer[] limits);
+
+    int deleteClientByUserId(Integer userid);
+
 }

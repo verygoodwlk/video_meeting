@@ -37,6 +37,7 @@
     <script type="text/javascript" src="widget/zTree/jquery.ztree.all.min.js"></script>
     <script type="text/javascript" src="myjs/tree.js"></script>
 
+    <script type="text/javascript" src="myjs/task.js"></script>
 
     <script th:inline="javascript">
         $(function () {
@@ -446,11 +447,19 @@
         <img style="width: 50px; height: 50px; margin-bottom: 5px" src="icon/dsyy_newtask.png"/><br/>
         新建任务
     </button>
-    <button class="btn btn-primary dim btn-large-dim" type="button" onclick="open_update_Model();">
+   <!-- <button class="btn btn-primary dim btn-large-dim" type="button" onclick="open_update_Model();">
         <img style="width: 50px; height: 50px; margin-bottom: 5px" src="icon/dsyy_edittask.png"/><br/>
         编辑任务
     </button>
     <button class="btn btn-primary dim btn-large-dim" type="button" onclick="delete_task();">
+        <img style="width: 50px; height: 50px; margin-bottom: 5px" src="icon/dsyy_deltask.png"/><br/>
+        删除任务
+    </button>-->
+    <button class="btn btn-primary dim btn-large-dim" type="button" onclick="isAction(1);">
+        <img style="width: 50px; height: 50px; margin-bottom: 5px" src="icon/dsyy_edittask.png"/><br/>
+        编辑任务
+    </button>
+    <button class="btn btn-primary dim btn-large-dim" type="button" onclick="isAction(2);">
         <img style="width: 50px; height: 50px; margin-bottom: 5px" src="icon/dsyy_deltask.png"/><br/>
         删除任务
     </button>
@@ -936,6 +945,10 @@
         //重置上传
         resetUpload();
 
+        //重置表单
+        reset_Model(1);
+
+
         //显示弹出框
         // $("#myModal2").modal('show');
         $("#myModal2").modal({backdrop: 'static', keyboard: false});
@@ -954,47 +967,22 @@
      */
     function submit_task() {
         //获得任务名称
-        var taskname = $("#taskname").val();
-
-        if(taskname.trim() == ""){
-            alert("任务名称不能为空！");
-            return;
-        }
-
+        taskname = $("#taskname").val();
         //获得循环类型
         var loopType = $("#loopType").val();
         //获得任务类型
-        var playOrder = $("#playOrder").val();
+        playOrder = $("#playOrder").val();
         //获得开始日期
-        var startDate = $("#startDate").val();
-        if(startDate.trim() == ""){
-            alert("开始日期不能为空！");
-            return;
-        }
+        startDate = $("#startDate").val();
 
         //获得开始时间
-        var startTime = $("#startTime").val();
-        if(startTime.trim() == ""){
-            alert("开始时间不能为空！");
-            return;
-        }
-
+        startTime = $("#startTime").val();
 
         //获得结束时间
-        var stopDate = $("#endTime").val();
-        if($("#endTime").prop("disabled")==false && stopDate.trim() == ""){
-            alert("结束时间不能为空！");
-            return;
-        }
-
+        stopDate = $("#endTime").val();
 
         //获得持续时间
-        var duration = $("#durtime").val();
-        if($("#durtime").prop("disabled")==false && duration.trim() == ""){
-            alert("持续时间不能为空！");
-            return;
-        }
-
+        duration = $("#durtime").val() ? $("#durtime").val() : 0;
 
         //获得提前开始
         var start = $("#start").val() ? $("#start").val() : 0;
@@ -1003,37 +991,28 @@
         var volume = $("#volume").attr("value");
 
         //获得星期
-        var weekMask = 0;
+        weekMask = 0;
         $("input[name='week']:checked").each(function () {
             weekMask += parseInt($(this).val());
         });
-        if(parseInt(playOrder) == 2 && weekMask == 0){
-            alert("星期选择不能为空！");
-            return;
-        }
 
         //
-        var solution = $("#solution_select").val();
-        if(solution.trim() == ""){
-            alert("所选方案不能为空！");
-            return;
-        }
-
+        solution = $("#solution_select").val();
 
         //获得被选择的终端
         var znodes = ztreeObj.getCheckedNodes(true);
-        var terminal = [];
+        terminal = [];
         for (var i = 0; i < znodes.length; i++) {
             if (znodes[i].isClient == 1) {
                 //如果是终端
                 terminal.push(znodes[i].userid);
             }
         }
-        if(terminal.length <= 0){
-            alert("终端选择不能为空！");
+
+        //表单验证
+        if(!check_Form(1)){
             return;
         }
-
 
 
         // alert("任务名称：" + taskname);
@@ -1108,67 +1087,8 @@
                 //设置默认值
                 console.log(JSON.stringify(data));
 
-                var taskname = data.taskname;
-                var looptype = data.looptype;
-                var mp3 = data.mp3;
-                var users = data.users;
-                //获得任务类型
-                var playOrder = data.playOrder;
-                //获得开始日期
-                var startDate = data.startDate;
-                //获得开始时间
-                var startTime = data.startTime;
-                //获得结束时间
-                var stopDate = data.stopDate;
-                //获得持续时间
-                var duration = data.duration;
-                //获得提前开始
-                var start = data.startinadvance;
-                //获得星期几
-                var weekMask = data.weekMask;
-                //获得音量
-                var volume = data.volume;
-
-                //设置默认值
-                $("#taskname").val(taskname);
-                $("#loopType").val(looptype);
-                $("#playOrder").val(playOrder);
-                $("#startDate").val(startDate);
-                $("#startTime").val(startTime);
-                $("#endTime").val(stopDate);
-                $("#durtime").val(duration);
-                $("#start").val(start);
-                showUpdate(mp3);
-                showUsers(users);
-
-                //TODO 设置修改的音量
-                // var slider = $("#volume").data("ionRangeSlider");
-                // slider.update({
-                //     from: volume
-                // });
-
-                if(stopDate){
-                    $("#checkbox_end").attr("checked", true);
-                    $("#endTime").removeAttr("disabled");
-                } else {
-                    $("#checkbox_end").attr("checked", false);
-                    $("#endTime").attr("disabled", "disabled");
-                }
-
-                if(duration){
-                    $("#checkbox_dur").attr("checked", true);
-                    $("#durtime").removeAttr("disabled");
-                } else {
-                    $("#checkbox_dur").attr("checked", false);
-                    $("#durtime").attr("disabled", "disabled");
-                }
-
-                if(playOrder == 2){
-                    $("input[name='week']").each(function(){
-                       $(this).removeAttr("disabled");
-                    });
-                }
-
+                //回显数据
+                showData(data, 5);
             }
         },"json");
 

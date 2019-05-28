@@ -13,6 +13,8 @@ public interface ISolutionService {
 
     List<Solution> queryByAccount(String account);
 
+    List<Solution> querySolutionsList();
+
     Solution queryById(Integer id);
 
     Solution queryByName(String name);

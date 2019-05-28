@@ -29,6 +29,11 @@ public class SocketMsgTerminalStatusHandler extends SocketMsgHandler {
         if(users != null){
             for (int i = 0; i < users.size(); i++){
                 JSONObject jsonObject1 = users.getJSONObject(i);
+
+                if(jsonObject1.getString("id").equals("webserver")){
+                    continue;
+                }
+
                 ClientMsg cmsg = new ClientMsg();
                 cmsg.setUserid(jsonObject1.getInteger("id"));
                 cmsg.setId(jsonObject1.getInteger("online") == 1 ? "online" : "offline");

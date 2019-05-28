@@ -8,6 +8,8 @@ import com.media.video_meeting.log.SysLog;
 import com.media.video_meeting.page.Page;
 import com.media.video_meeting.page.PageHelper;
 import com.media.video_meeting.service.IClientService;
+import com.media.video_meeting.websocket_aop.SocketSend;
+import com.media.video_meeting.websocket_aop.send.ClientPowerSocketSend;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -125,5 +127,13 @@ public class ClientController {
     public ClientMsg queryClientInfoById(Integer userid){
         ClientMsg clientMsg = clientService.queryById(userid);
         return clientMsg;
+    }
+
+    @RequestMapping("/updatePower")
+    @ResponseBody
+    @SocketSend(params = {"#userid", "#limits"}, sendClass = ClientPowerSocketSend.class)
+    public String updatePower(Integer userid, Integer[] limits){
+        clientService.updatePowers(userid, limits);
+        return "succ";
     }
 }

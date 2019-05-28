@@ -5,7 +5,6 @@ import com.media.video_meeting.dao.ClientMsgMapper;
 import com.media.video_meeting.dao.SolutionMapper;
 import com.media.video_meeting.dao.WebconMapper;
 import com.media.video_meeting.entity.ClientMsg;
-import com.media.video_meeting.entity.Solution;
 import com.media.video_meeting.entity.Webcon;
 import com.media.video_meeting.service.IWebconService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,10 +41,16 @@ public class WebconServiceImpl implements IWebconService {
     @Transactional
     public int insertWebCon(Webcon webcon) {
         if(queryByAccount(webcon.getAccount()) == null){
-            //不存在账号添加
-            //创建该分控的默认方案
-            Solution solution = new Solution(0, "Default Solution", webcon.getAccount());
-            solutionMapper.insert(solution);
+
+//            QueryWrapper queryWrapper = new QueryWrapper();
+//            queryWrapper.eq("solutionname", "Default Solution");
+//            Solution s = solutionMapper.selectOne(queryWrapper);
+//            if(s != null) {
+//                //不存在账号添加
+//                //创建该分控的默认方案
+//                Solution solution = new Solution(0, "Default Solution", webcon.getAccount());
+//                solutionMapper.insert(solution);
+//            }
 
             return webconMapper.insert(webcon);
         } else {
