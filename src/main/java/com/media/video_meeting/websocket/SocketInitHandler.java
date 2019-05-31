@@ -84,10 +84,12 @@ public class SocketInitHandler {
             for (int i = 0; i < solutions.size(); i++) {
 
                 Solution solution = solutions.get(i);
-
-                if(i != 0){
-                    sb.append(",");
+                if(solution.getIsaction() == 0){
+                    continue;
                 }
+//                if(i != 0){
+//                    sb.append(",");
+//                }
 
                 //查询该方案的任务列表
                 List<Task> tasks = taskService.queryBySolution(solution.getSolutionname());

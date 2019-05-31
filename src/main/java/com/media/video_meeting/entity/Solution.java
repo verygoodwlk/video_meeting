@@ -17,4 +17,5 @@ public class Solution implements Serializable {
     private int id;
     private String solutionname;
     private String account;//方案所属分控
+    private int isaction;//是否为执行方案
 }

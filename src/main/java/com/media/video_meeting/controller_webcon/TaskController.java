@@ -13,6 +13,7 @@ import com.media.video_meeting.websocket_aop.send.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
@@ -203,9 +204,9 @@ public class TaskController {
      */
     @ResponseBody
     @RequestMapping("/info")
-    public Map<String, List<?>> getTaskInfo(int tid){
+    public Map<String, Object> getTaskInfo(int tid){
 
-        Map<String, List<?>> resultMap = new HashMap<>();
+        Map<String, Object> resultMap = new HashMap<>();
 
 
         //查询任务
@@ -228,8 +229,27 @@ public class TaskController {
             resultMap.put("clients", null);
         }
 
+        //设置类型
+        resultMap.put("looptype", task.getLooptype());
+        //设置音量
+        resultMap.put("volume", task.getVolume());
+
         System.out.println("获得任务信息：" + resultMap);
 
         return resultMap;
+    }
+
+
+    /**
+     *
+     * 实时更新任务状态
+     * @return
+     */
+    @RequestMapping("/updateStatus")
+    @ResponseBody
+    public List updateTaskStatus(@RequestParam("taskids[]") String[] taskids){
+        //获得这些任务的状态信息
+        List taskStatusMap = TaskStatusUtil.getTaskStatusMap(taskids);
+        return taskStatusMap;
     }
 }

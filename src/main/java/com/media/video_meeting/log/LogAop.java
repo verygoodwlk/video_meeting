@@ -43,7 +43,7 @@ public class LogAop {
         //创建系统日志对象
         SystemLog systemLog = new SystemLog();
         systemLog.setUser("admin");
-        systemLog.setTime(new Date().getTime());
+        systemLog.setTime(new Date());
         systemLog.setType(sysLog.value().getType());
         systemLog.setInfo(sysLog.info());
 

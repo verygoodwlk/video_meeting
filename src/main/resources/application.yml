@@ -1,10 +1,10 @@
 
 spring:
   datasource:
-    url: jdbc:sqlite:${db.path}
-    username:
-    password:
-    driver-class-name: org.sqlite.JDBC
+    url: jdbc:mysql://${db.ip}:3306/meeting
+    username: root
+    password: root
+    driver-class-name: com.mysql.jdbc.Driver
   thymeleaf:
     cache: false
   #设置当前的参数版本
@@ -37,7 +37,7 @@ server:
 server:
   os: window
 db:
-  path: C:/worker/千锋/项目/admin_hy/Meeting.db
+  ip: 127.0.0.1
 spring:
   profiles: window
 upload:
@@ -48,7 +48,7 @@ upload:
 server:
   os: linux
 db:
-  path: /usr/local/software/Meeting.db
+  ip: 127.0.0.1
 spring:
   profiles: linux
 upload:

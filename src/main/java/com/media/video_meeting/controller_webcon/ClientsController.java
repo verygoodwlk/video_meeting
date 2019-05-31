@@ -6,6 +6,7 @@ import com.media.video_meeting.service.IClientService;
 import com.media.video_meeting.service.IWebconService;
 import com.media.video_meeting.util.ClientStatusUtil;
 import com.media.video_meeting.websocket_aop.SocketSend;
+import com.media.video_meeting.websocket_aop.send.ClientUpdateVolumeSocketSend;
 import com.media.video_meeting.websocket_aop.send.DeleteClientSocketSend;
 import com.media.video_meeting.websocket_aop.send.MonitorSocketSend;
 import com.media.video_meeting.websocket_aop.send.MonitoredSocketSend;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
@@ -78,6 +80,17 @@ public class ClientsController {
     @ResponseBody
     public String delete(Integer userid){
         clientService.deleteClientByUserId(userid);
+        return "succ";
+    }
+
+    /**
+     * 修改终端音量
+     * @return
+     */
+    @RequestMapping("/updateVolume")
+    @SocketSend(sendClass = ClientUpdateVolumeSocketSend.class, params = {"#uids", "#volume"})
+    @ResponseBody
+    public String updateVolume(@RequestParam("uids[]") String[] uids, int volume){
         return "succ";
     }
 }

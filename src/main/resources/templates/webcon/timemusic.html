@@ -26,6 +26,10 @@
         }*/
     </style>
 
+    <!-- 数字选择插件-->
+    <script type="text/javascript" src="widget/number/numberInput.js"></script>
+    <script type="text/javascript" src="myjs/number.js"></script>
+
 
     <!--引入webuploader-->
     <link rel="stylesheet" type="text/css" href="widget/webuploader/webuploader.css">
@@ -49,7 +53,7 @@
             initSolutionList();
 
             //初始化任务列表
-            initTaskList();
+            // initTaskList();
 
         });
 
@@ -129,7 +133,17 @@
                         for (var i = 0; i < data.length; i++) {
                             html += "<tr id='tr_task_" + data[i].id + "' taskid='" + data[i].id + "' taskidstr='" + data[i].taskid + "' onclick='trtask(" + data[i].id + ");'>";
                             html += "<td>" + data[i].taskname + "</td>";
-                            html += "<td>" + data[i].status + "</td>";
+                            html += "<td id='task_status_' + data[i].id>";
+                            if(data[i].status == 0){
+                                html += "任务空闲";
+                            } else if(data[i].status == 1){
+                                html += "执行中";
+                            } else if(data[i].status == 2){
+                                html += "停止";
+                            } else if(data[i].status == 3){
+                                html += "等待中";
+                            }
+                            html += "</td>";
                             html += "<td>" + data[i].startDate + "</td>";
                             html += "<td>" + data[i].duration + "</td>";
                             html += "<td>" + data[i].stopDate + "</td>";
@@ -157,13 +171,16 @@
                     var html = "";
                     for (var i = 0; i < data.length; i++) {
 
-                        if (i == 0) {
+                        if (data[i].isaction == 1) {
                             $("#solution_default").html(data[i].solutionname);
+                            html += "<option value='" + data[i].solutionname + "' selected>" + data[i].solutionname + "</option>";
+                        } else {
+                            html += "<option value='" + data[i].solutionname + "'>" + data[i].solutionname + "</option>";
                         }
-
-                        html += "<option value='" + data[i].solutionname + "'>" + data[i].solutionname + "</option>";
                     }
                     $("#solution_select").html(html);
+
+                    initTaskList();
                 },
                 dataType: "json"
             });
@@ -378,19 +395,19 @@
         }
     </script>
 
-    <!-- 音量选择控件 -->
+<!--    &lt;!&ndash; 音量选择控件 &ndash;&gt;
     <link href="css/plugins/ionRangeSlider/ion.rangeSlider.css" rel="stylesheet">
     <link href="css/plugins/ionRangeSlider/ion.rangeSlider.skinFlat.css" rel="stylesheet">
-    <script src="js/plugins/ionRangeSlider/ion.rangeSlider.min.js"></script>
+    <script src="js/plugins/ionRangeSlider/ion.rangeSlider.min.js"></script>-->
     <script>
-        $("#volume").ionRangeSlider({
+       /* $("#volume").ionRangeSlider({
             min: 0,
             max: 15,
             from: 0,
             postfix: "",
             prettify: false,
             hasGrid: false
-        });
+        });*/
 
 
         //开放或者禁用结束时间
@@ -518,7 +535,7 @@
                             <th>任务状态</th>
                             <th>开始时间</th>
                             <th>持续时间</th>
-                            <th>结束时间</th>
+                            <th>结束日期</th>
                             <th>播放类型</th>
                             <th>任务音量</th>
                             <th>任务进度</th>
@@ -603,7 +620,7 @@
                                         <label class="col-lg-3 control-label">结束时间</label>
                                         <div class="col-lg-6">
                                             <input id="endTime" type="text" placeholder="结束时间" class="form-control"
-                                                   onclick="WdatePicker({dateFmt:'HH:mm'})" disabled="disabled">
+                                                   onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm'})" disabled="disabled">
                                         </div>
                                         <div class="col-lg-3">
                                             <div class="checkbox checkbox-primary">
@@ -631,7 +648,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group" style="display: none;">
                                         <label class="col-lg-3 control-label">提前开启</label>
                                         <div class="col-lg-9">
                                             <input id="start" type="text" placeholder="提前开启" class="form-control"
@@ -714,7 +731,8 @@
                                         <div class="col-lg-9">
                                             <label class="checkbox-inline"
                                                    style="width: 60%; margin-left: 0px; padding-left: 10px">
-                                                <div id="volume"></div>
+                                               <!-- <div id="volume"></div>-->
+                                                <div id="volume" class="mynumber" style="margin-bottom: 10px;"></div>
                                             </label>
                                         </div>
                                     </div>
@@ -912,7 +930,9 @@
             if(data > 0){
                 //
                 location.reload();
-            } else {
+            } else if(data == -1){
+                alert("正在执行的方案不能删除！");
+            } else  {
                 alert("删除方案失败！");
             }
         });
@@ -988,7 +1008,7 @@
         var start = $("#start").val() ? $("#start").val() : 0;
 
         //获得音量
-        var volume = $("#volume").attr("value");
+        var volume = $("#volume input").val();
 
         //获得星期
         weekMask = 0;

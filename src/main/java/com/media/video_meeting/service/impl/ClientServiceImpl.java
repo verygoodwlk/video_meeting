@@ -220,8 +220,13 @@ public class ClientServiceImpl implements IClientService {
     }
 
     @Override
+    @Transactional
     public int deleteClientByUserId(Integer userid) {
-        return clientMsgMapper.deleteById(userid);
+        //删除终端信息
+        clientMsgMapper.deleteById(userid);
+        //删除终端和分组信息
+        clientMsgMapper.deleteClientAllGroupTable(userid);
+        return 1;
     }
 
 

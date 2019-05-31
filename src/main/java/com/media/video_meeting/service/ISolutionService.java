@@ -24,4 +24,6 @@ public interface ISolutionService {
     int updateSolution(Solution solution, String oldName);
 
     int deleteSolution(Solution solution);
+
+    int execSolution(Solution solution);
 }

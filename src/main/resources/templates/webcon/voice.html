@@ -62,7 +62,17 @@
                         for (var i = 0; i < data.length; i++) {
                             html += "<tr id='tr_task_" + data[i].id + "' taskid='" + data[i].id + "' taskidstr='" + data[i].taskid + "' onclick='trtask(" + data[i].id + ");'>";
                             html += "<td>" + data[i].taskname + "</td>";
-                            html += "<td>" + data[i].status + "</td>";
+                            html += "<td id='task_status_' + data[i].id>";
+                            if(data[i].status == 0){
+                                html += "任务空闲";
+                            } else if(data[i].status == 1){
+                                html += "执行中";
+                            } else if(data[i].status == 2){
+                                html += "停止";
+                            } else if(data[i].status == 3){
+                                html += "等待中";
+                            }
+                            html += "</td>";
                             html += "<td>" + data[i].startDate + "</td>";
                             html += "<td>" + data[i].stopDate + "</td>";
                             html += "<td>" + data[i].loopnum + "</td>";
@@ -392,7 +402,7 @@
                                         <label class="col-lg-3 control-label">结束时间</label>
                                         <div class="col-lg-6">
                                             <input id="endTime" type="text" placeholder="结束时间" class="form-control"
-                                                   onclick="WdatePicker({dateFmt:'HH:mm'})" disabled="disabled">
+                                                   onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm'})" disabled="disabled">
                                         </div>
                                         <div class="col-lg-3">
                                             <div class="checkbox checkbox-primary">

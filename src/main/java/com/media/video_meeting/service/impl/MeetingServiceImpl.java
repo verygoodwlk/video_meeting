@@ -1,6 +1,5 @@
 package com.media.video_meeting.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.media.video_meeting.dao.MeetingMapper;
 import com.media.video_meeting.dao.MeetingMoreInfoMapper;
 import com.media.video_meeting.entity.Meeting;
@@ -35,10 +34,11 @@ public class MeetingServiceImpl implements IMeetingService {
     @Transactional
     public int addMeeting(Meeting meeting, MeetingMoreInfo meetingMoreInfo) {
         //添加会议基本信息
-        meetingMapper.insertSelective(meeting);
+//        meetingMapper.insertSelective(meeting);
+        meetingMapper.insert(meeting);
         //添加会议详细信息
         meetingMoreInfo.setMid(meeting.getId());
-        meetingMoreInfoMapper.insertSelective(meetingMoreInfo);
+        meetingMoreInfoMapper.insert(meetingMoreInfo);
         //添加会议与终端的关系
         meetingMapper.insertMeetingClient(meeting.getId(), meeting.getClient_ids(), meeting.getClient_start());
 
@@ -51,7 +51,8 @@ public class MeetingServiceImpl implements IMeetingService {
     @Override
     public int setMeetingDefualt(MeetingMoreInfo meetingMoreInfo) {
         if(meetingMoreInfo.getId() == null){
-            meetingMoreInfoMapper.insertSelective(meetingMoreInfo);
+//            meetingMoreInfoMapper.insertSelective(meetingMoreInfo);
+            meetingMoreInfoMapper.insert(meetingMoreInfo);
         } else {
             meetingMoreInfoMapper.updateByPrimaryKey(meetingMoreInfo);
         }

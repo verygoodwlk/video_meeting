@@ -39,6 +39,10 @@
 
     <script type="text/javascript" src="myjs/task.js"></script>
 
+    <!-- 数字选择插件-->
+    <script type="text/javascript" src="widget/number/numberInput.js"></script>
+    <script type="text/javascript" src="myjs/number.js"></script>
+
 
     <script th:inline="javascript">
         $(function () {
@@ -64,9 +68,21 @@
                         for (var i = 0; i < data.length; i++) {
                             html += "<tr id='tr_task_" + data[i].id + "' taskid='" + data[i].id + "' taskidstr='" + data[i].taskid + "' onclick='trtask(" + data[i].id + ");'>";
                             html += "<td>" + data[i].taskname + "</td>";
-                            html += "<td>" + data[i].status + "</td>";
+
+                            html += "<td id='task_status_" + data[i].taskid + "'>";
+                            if(data[i].status == 0){
+                                html += "任务空闲";
+                            } else if(data[i].status == 1){
+                                html += "执行中";
+                            } else if(data[i].status == 2){
+                                html += "停止";
+                            } else if(data[i].status == 3){
+                                html += "等待中";
+                            }
+                            html += "</td>";
+
                             html += "<td>" + data[i].duration + "</td>";
-                            html += "<td></td>";
+                            html += "<td id='task_mp3_" + data[i].taskid + "'></td>";
                             html += "</tr>";
                         }
 
@@ -105,6 +121,15 @@
                     }
                     $("#clients_list").html(html);
                 }
+
+                //获得类型
+                var loopType = data.looptype;
+                $("input[type='radio'][name='looptype'][value='" + loopType + "']").attr("checked", true);
+
+
+                //处理音量
+                var volume = data.volume;
+                $("#volume input").val(volume);
             }, "json");
 
         }
@@ -273,22 +298,23 @@
                 }
             },"json");
         }
+
     </script>
 
     <!-- 音量选择控件 -->
-    <link href="css/plugins/ionRangeSlider/ion.rangeSlider.css" rel="stylesheet">
-    <link href="css/plugins/ionRangeSlider/ion.rangeSlider.skinFlat.css" rel="stylesheet">
-    <script src="js/plugins/ionRangeSlider/ion.rangeSlider.min.js"></script>
-    <script>
-        $("#volume").ionRangeSlider({
-            min: 0,
-            max: 15,
-            from: 0,
-            postfix: "",
-            prettify: false,
-            hasGrid: false
-        });
-    </script>
+    <!--<link href="css/plugins/ionRangeSlider/ion.rangeSlider.css" rel="stylesheet">-->
+    <!--<link href="css/plugins/ionRangeSlider/ion.rangeSlider.skinFlat.css" rel="stylesheet">-->
+    <!--<script src="js/plugins/ionRangeSlider/ion.rangeSlider.min.js"></script>-->
+    <!--<script>-->
+        <!--$("#volume").ionRangeSlider({-->
+            <!--min: 0,-->
+            <!--max: 15,-->
+            <!--from: 0,-->
+            <!--postfix: "",-->
+            <!--prettify: false,-->
+            <!--hasGrid: false-->
+        <!--});-->
+    <!--</script>-->
 
 
 </head>
@@ -410,10 +436,11 @@
                             音量
                         </label>
                         <label class="checkbox-inline" style="width: 30%; margin-left: 0px; padding-left: 10px">
-                            <div id="volume"></div>
+                            <!--<div id="volume"></div>-->
+                            <div id="volume" class="mynumber" style="margin-bottom: 10px;"></div>
                         </label>
                         <label class="checkbox-inline">
-                            <button type="button" class="btn btn-w-m btn-warning">修改</button>
+                            <button type="button" class="btn btn-w-m btn-warning" onclick="update_task_volume();">修改</button>
                         </label>
                     </div>
 
@@ -527,6 +554,7 @@
         </div>
     </div>
 </div>
+
 
 <script th:inline="javascript">
     /**
@@ -703,6 +731,45 @@
             },
             error: function (data) {
                 alert("任务添加失败！");
+            }
+        });
+    }
+
+
+    /**
+     * 修改当前任务的音量和模式
+     */
+    function update_task_volume(){
+        var task = $("[alt='del']")[0];
+        if(!task){
+            alert("请选中需要修改的任务！");
+            return;
+        }
+
+        var tid = task.getAttribute("taskidstr");
+
+        //获得循环类型
+        var loopType = $("input[name='looptype'][type='radio']:checked").val();
+        //获得音量
+        var volume = $("#volume input").val();
+
+        //ajax提交任务
+        $.ajax({
+            type: "POST",
+            url: [[${#request.getContextPath()}]] + '/web/task/update',
+            data: {
+                "looptype": loopType,
+                "volume": volume,
+                "taskt": 5,
+                "taskid": tid
+            },
+            success: function (data) {
+                //发送websocket
+                console.log(data);
+
+                alert("修改成功！");
+            },
+            error: function (data) {
             }
         });
     }

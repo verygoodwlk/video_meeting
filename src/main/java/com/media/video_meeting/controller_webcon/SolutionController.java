@@ -60,6 +60,7 @@ public class SolutionController {
     @SocketSend(params = {"#solution"}, sendClass = StartSolutionTaskSocketSend.class)
     public int execSolut(Solution solution, @SessionAttribute("account") Webcon webcon){
         solution.setAccount(webcon.getAccount());
+        solutionService.execSolution(solution);
         return 1;
     }
 }

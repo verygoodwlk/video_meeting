@@ -9,13 +9,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 import javax.annotation.Resource;
 
 /**
- *
+ * {"id":"refreshTerminalState","account":"admin",
+ *  * "taskid":"f7f51e05-9eea-4ed5-916a-857a318f7daa","status":1,"mp3":"赵雷-我们的时光.mp3","users":["18"]}]]
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class VideoMeetingApplicationTests {
 
-	@Resource(name = "online")
+	@Resource(name = "refreshTerminalState")
 	private SocketMsgHandler socketMsgHandler;
 
 	@Test
@@ -30,7 +31,9 @@ public class VideoMeetingApplicationTests {
 //		socketMsgHandler.handler("{\"id\":\"online\",\"userid\":\"13\",\"terminalname\":\"13\",\"mac\":\"28:ED:E0:73:C1:3A\",\"ip\":\"192.168.1.43\",\"serverip\":\"192.168.1.186\",\"volume\":\"\",\"intercomEnable\":\"\",\"cameraIntercomEnable\":\"\",\"updateStatus\":\"\",\"dhcpStatus\":\"\",\"productsModel\":\"\"}");
 //		socketMsgHandler.handler("{\"id\": \"renameid\", \"oldid\":\"5\", \"newid\":\"3\"}");
 
-		socketMsgHandler.handler("{\"id\":\"online\",\"userid\":\"58\",\"terminalname\":\"58\",\"mac\":\"28:ED:E0:73:C1:58\",\"ip\":\"192.168.1.16\",\"serverip\":\"192.168.1.186\",\"volume\":\"\",\"intercomEnable\":\"\",\"cameraIntercomEnable\":\"\",\"updateStatus\":\"\",\"dhcpStatus\":\"\",\"productsModel\":\"\"}");
+//		socketMsgHandler.handler("{\"id\":\"online\",\"userid\":\"61\",\"terminalname\":\"测试终端1\",\"mac\":\"28:ED:E0:73:C1:58\",\"ip\":\"192.168.1.16\",\"serverip\":\"192.168.1.186\",\"volume\":\"\",\"intercomEnable\":\"\",\"cameraIntercomEnable\":\"\",\"updateStatus\":\"\",\"dhcpStatus\":\"\",\"productsModel\":\"\"}");
+
+		socketMsgHandler.handler("{\"id\":\"refreshTerminalState\",\"account\":\"admin\",\"taskid\":\"e7434734-2e05-4d88-ac05-5e8e54a32fb0\",\"status\":1,\"mp3\":\"赵雷-我们的时光.mp3\",\"users\":[\"18\"]}");
 	}
 
 }

@@ -22,6 +22,11 @@
     <link href="css/plugins/dataTables/datatables.min.css" rel="stylesheet">
     <script src="js/plugins/dataTables/datatables.min.js"></script>
 
+    <!-- 数字选择插件-->
+    <script type="text/javascript" src="widget/number/numberInput.js"></script>
+    <script type="text/javascript" src="myjs/number.js"></script>
+
+
     <style>
         .btn-large-dim {
             width: 80px;
@@ -39,6 +44,7 @@
 
             $('.dataTables-example').DataTable({
                 dom: '<"html5buttons"B>lTfgitp',
+                "ordering": false,
                 buttons: [
                     {extend: 'copy'},
                     {extend: 'csv'},
@@ -97,10 +103,19 @@
         //设置被监听终端
         function byListener(){
 
-            if(!uid){
+            var checkeds = $("[name='checkboxs']:checked");
+
+            if(checkeds.length <= 0){
                 alert("请至少选择一个终端！");
                 return;
             }
+
+            if(checkeds.length > 1){
+                alert("请最多选择一个终端！");
+                return;
+            }
+
+            uid = $(checkeds[0]).val();
 
             $.post([[${#request.getContextPath()}]] + "/web/clients/byListener",{"userid":uid},function(data){
                 location.reload();
@@ -110,10 +125,18 @@
         //设置监听终端
         function listener(){
 
-            if(!uid){
+            var checkeds = $("[name='checkboxs']:checked");
+
+            if(checkeds.length <= 0){
                 alert("请至少选择一个终端！");
                 return;
             }
+
+            if(checkeds.length > 1){
+                alert("请最多选择一个终端！");
+                return;
+            }
+            uid = $(checkeds[0]).val();
 
             if(!monitored){
                 alert("请先选择一个被监听终端！");
@@ -132,16 +155,73 @@
 
         //删除终端
         function deleteClient(){
-            if(!uid){
+            var checkeds = $("[name='checkboxs']:checked");
+
+            if(checkeds.length <= 0){
                 alert("请至少选择一个终端！");
                 return;
             }
+
+            if(checkeds.length > 1){
+                alert("请最多选择一个终端！");
+                return;
+            }
+            uid = $(checkeds[0]).val();
 
             $.post([[${#request.getContextPath()}]] + "/web/clients/delete",{"userid":uid},function(data){
                 location.reload();
             });
         }
 
+        //全选
+        function checked_all(flag){
+            var checkboxs = document.getElementsByName("client_checkbox");
+            for(var i = 0; i < checkboxs.length; i++){
+                checkboxs[i].checked = flag;
+            }
+            // if(flag){
+            //     $("[name='client_checkbox']").attr("checked", "checked");
+            // } else {
+            //     $("[name='client_checkbox']").removeAttr("checked");
+            // }
+        }
+
+        //显示音量调节弹框
+        function show_volume_model(){
+
+            var checkeds = $("[name='client_checkbox']:checked");
+
+            if(checkeds.length <= 0){
+                alert("请至少选择一个终端！");
+                return;
+            }
+
+
+            $("#myModal3").modal({backdrop: 'static', keyboard: false});
+        }
+
+        //修改音量
+        function updateVolume(){
+            var checkeds = $("[name='client_checkbox']:checked");
+
+            //获得终端
+            var uids = [];
+
+            for(var i = 0; i < checkeds.length; i++){
+                uids.push(checkeds[i].value);
+            }
+
+            //获得音量
+            var volume = $("#volume input").val();
+
+            $.post([[${#request.getContextPath()}]] + "/web/clients/updateVolume",{"uids":uids, "volume":volume},function(data){
+                if(data == "succ"){
+                    $("#myModal3").modal("hide");
+                } else {
+                    alert("音量修改失败！");
+                }
+            }, "text");
+        }
     </script>
 
 </head>
@@ -155,7 +235,7 @@
     <button class="btn btn-primary dim btn-large-dim" type="button" onclick="byListener();">
         被监听终端
     </button>
-    <button class="btn btn-primary dim btn-large-dim" type="button">
+    <button class="btn btn-primary dim btn-large-dim" type="button" onclick="show_volume_model();">
         音量调节
     </button>
     <button class="btn btn-primary dim btn-large-dim" type="button" onclick="deleteClient();">
@@ -185,6 +265,7 @@
                                 <th>Engine version</th>
                                 <th>CSS grade</th>-->
 
+                                <th>全选 &nbsp;&nbsp; <input type="checkbox" onclick="checked_all(this.checked);"/></th>
                                 <th>状态</th>
                                 <th>终端ID</th>
                                 <th>产品型号</th>
@@ -199,7 +280,10 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:onclick="|click_tr(${client.userid}, this);|" th:switch="${4 - #strings.length(client.userid)}" th:each="client : ${clients}" class="gradeX">
+                            <!--<tr th:onclick="|click_tr(${client.userid}, this);|" th:switch="${4 - #strings.length(client.userid)}" th:each="client : ${clients}" class="gradeX">-->
+                            <tr th:switch="${4 - #strings.length(client.userid)}" th:each="client : ${clients}" class="gradeX">
+
+                                <th><input type="checkbox" name="client_checkbox" th:value="${client.userid}"/></th>
                                 <th>
                                     <img style="width: 20px; height: 20px" th:src="${client.status == 1 ? 'img/on.png' : 'img/off.png'}"/>
                                 </th>
@@ -242,4 +326,39 @@
         </div>
     </div>
 </body>
+
+
+<!-- 弹出框 -->
+<div class="modal inmodal" id="myModal3" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <!-- animated bounceInRight -->
+        <!-- animated flipInY -->
+        <div class="modal-content animated flipInY">
+            <!-- 头部信息 -->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title">音量调节</h4>
+            </div>
+            <!-- 内容部分 -->
+            <div class="modal-body" style="padding: 0px">
+                <div class="row" style="margin: 0px;">
+                    <div class="col-lg-12" style="padding: 4px;">
+                        <div class="ibox float-e-margins" style="margin-bottom: 0px">
+                            <div class="ibox-content" style="position: relative; height: 200px; text-align: center;">
+                                <div id="volume" class="mynumber" style="margin-bottom: 10px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 底部按钮 -->
+            <div class="modal-footer">
+                <button type="button" id="submitBtn2" class="btn btn-primary" onclick="updateVolume();">提交</button>
+                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
 </html>

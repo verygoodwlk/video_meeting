@@ -95,6 +95,13 @@ public class SolutionServiceImpl implements ISolutionService {
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.eq("solutionname", solution.getSolutionname());
         queryWrapper.eq("account", solution.getAccount());
+        Solution s = solutionMapper.selectOne(queryWrapper);
+        if(s.getIsaction() == 1){
+            //被删除的是当前执行的方案
+            return -1;
+        }
+
+
         int result = solutionMapper.delete(queryWrapper);
 
         if(result > 0){
@@ -106,5 +113,32 @@ public class SolutionServiceImpl implements ISolutionService {
         }
 
         return result;
+    }
+
+    /**
+     * 执行方案
+     * @param solution
+     * @return
+     */
+    @Override
+    @Transactional
+    public int execSolution(Solution solution) {
+        //原来执行的方案设置为非执行
+        QueryWrapper queryWrapper1 = new QueryWrapper();
+        queryWrapper1.eq("isaction", 1);
+        queryWrapper1.eq("account", solution.getAccount());
+        Solution s1 = solutionMapper.selectOne(queryWrapper1);
+        s1.setIsaction(0);
+        solutionMapper.updateById(s1);
+
+
+        //修改原来的方案
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.eq("solutionname", solution.getSolutionname());
+        queryWrapper.eq("account", solution.getAccount());
+        Solution s = solutionMapper.selectOne(queryWrapper);
+        s.setIsaction(1);
+
+        return solutionMapper.updateById(s);
     }
 }

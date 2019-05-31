@@ -55,8 +55,15 @@ function check_Form(taskt){
         return false;
     }
 
-    if(duration != null && $("#durtime").prop("disabled")==false && duration.trim() == ""){
+    if(duration != null && $("#durtime").prop("disabled")==false && duration == ""){
         alert("持续时间不能为空！");
+        return false;
+    }
+
+    var r = /^\+?[1-9][0-9]*$/;　　//正整数
+    var flag=r.test(duration);
+    if(duration != null && $("#durtime").prop("disabled")==false && !flag){
+        alert("持续时间必须为整数值！");
         return false;
     }
 
@@ -237,7 +244,7 @@ function showData(data, taskt){
     if(taskname){
         $("#taskname").val(taskname);
     }
-    if(looptype){
+    if(looptype >= 0){
         $("#loopType").val(looptype);
     }
     if(mp3){
@@ -265,8 +272,16 @@ function showData(data, taskt){
     if(start){
         $("#start").val(start);
     }
+
     if(weekMask){
 
+        //TODO 设置星期
+        var weeksArray = [2,4,8,16,32,64,128];
+        for(var i = 0; i < weeksArray.length; i++){
+            if ((weekMask & weeksArray[i]) > 0){
+                $("input[type='checkbox'][name='week'][value='" + weeksArray[i] + "']").attr("checked", true);
+            }
+        }
     }
     if(volume){
         //TODO 设置修改的音量
@@ -274,6 +289,7 @@ function showData(data, taskt){
         // slider.update({
         //     from: volume
         // });
+        $("#volume input").val(volume);
     }
     if(stopDate){
         $("#checkbox_end").attr("checked", true);

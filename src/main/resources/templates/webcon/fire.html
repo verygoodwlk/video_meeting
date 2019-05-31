@@ -92,7 +92,17 @@
                         for (var i = 0; i < data.length; i++) {
                             html += "<tr id='tr_task_" + data[i].id + "' taskid='" + data[i].id + "' taskidstr='" + data[i].taskid + "' onclick='trtask(" + data[i].id + ");'>";
                             html += "<td>" + data[i].taskname + "</td>";
-                            html += "<td>" + data[i].status + "</td>";
+                            html += "<td id='task_status_' + data[i].id>";
+                            if(data[i].status == 0){
+                                html += "任务空闲";
+                            } else if(data[i].status == 1){
+                                html += "执行中";
+                            } else if(data[i].status == 2){
+                                html += "停止";
+                            } else if(data[i].status == 3){
+                                html += "等待中";
+                            }
+                            html += "</td>";
                             html += "<td>" + data[i].port + "</td>";
                             html += "<td>" + data[i].area + "</td>";
                             html += "<td>" + (data[i].isLevel == 1 ? '开启' : '关闭') + "</td>";
