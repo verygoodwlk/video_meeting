@@ -131,26 +131,27 @@
                         tasks = data;
                         var html = "";
                         for (var i = 0; i < data.length; i++) {
-                            html += "<tr id='tr_task_" + data[i].id + "' taskid='" + data[i].id + "' taskidstr='" + data[i].taskid + "' onclick='trtask(" + data[i].id + ");'>";
-                            html += "<td>" + data[i].taskname + "</td>";
-                            html += "<td id='task_status_' + data[i].id>";
-                            if(data[i].status == 0){
-                                html += "任务空闲";
-                            } else if(data[i].status == 1){
-                                html += "执行中";
-                            } else if(data[i].status == 2){
-                                html += "停止";
-                            } else if(data[i].status == 3){
-                                html += "等待中";
-                            }
-                            html += "</td>";
-                            html += "<td>" + data[i].startDate + "</td>";
-                            html += "<td>" + data[i].duration + "</td>";
-                            html += "<td>" + data[i].stopDate + "</td>";
-                            html += "<td>" + data[i].playOrder + "</td>";
-                            html += "<td>" + data[i].volume + "</td>";
-                            html += "<td></td>";
-                            html += "</tr>";
+                            // html += "<tr id='tr_task_" + data[i].id + "' taskid='" + data[i].id + "' taskidstr='" + data[i].taskid + "' onclick='trtask(" + data[i].id + ");'>";
+                            // html += "<td>" + data[i].taskname + "</td>";
+                            // html += "<td id='task_status_' + data[i].id>";
+                            // if(data[i].status == 0){
+                            //     html += "任务空闲";
+                            // } else if(data[i].status == 1){
+                            //     html += "执行中";
+                            // } else if(data[i].status == 2){
+                            //     html += "停止";
+                            // } else if(data[i].status == 3){
+                            //     html += "等待中";
+                            // }
+                            // html += "</td>";
+                            // html += "<td>" + data[i].startDate + "</td>";
+                            // html += "<td>" + data[i].duration + "</td>";
+                            // html += "<td>" + data[i].stopDate + "</td>";
+                            // html += "<td>" + data[i].playOrder + "</td>";
+                            // html += "<td>" + data[i].volume + "</td>";
+                            // html += "<td></td>";
+                            // html += "</tr>";
+                            html += timeMusicHtml(data[i]);
                         }
 
                         $("#task_list").html(html);
@@ -268,16 +269,17 @@
                 $.get([[${#request.getContextPath()}]] + "/web/task/copy", {"taskid": tid}, function (data) {
                     if (data) {
                         var html = "";
-                        html += "<tr id='tr_task_" + data.id + "' taskid='" + data.id + "' taskidstr='" + data.taskid + "' onclick='trtask(" + data.id + ");'>";
-                        html += "<td>" + data.taskname + "</td>";
-                        html += "<td>" + data.status + "</td>";
-                        html += "<td>" + data.startDate + "</td>";
-                        html += "<td>" + data.duration + "</td>";
-                        html += "<td>" + data.stopDate + "</td>";
-                        html += "<td>" + data.loopType + "</td>";
-                        html += "<td>" + data.volume + "</td>";
-                        html += "<td></td>";
-                        html += "</tr>";
+                        html = timeMusicHtml(data);
+                        // html += "<tr id='tr_task_" + data.id + "' taskid='" + data.id + "' taskidstr='" + data.taskid + "' onclick='trtask(" + data.id + ");'>";
+                        // html += "<td>" + data.taskname + "</td>";
+                        // html += "<td>" + data.status + "</td>";
+                        // html += "<td>" + data.startDate + "</td>";
+                        // html += "<td>" + data.duration + "</td>";
+                        // html += "<td>" + data.stopDate + "</td>";
+                        // html += "<td>" + data.loopType + "</td>";
+                        // html += "<td>" + data.volume + "</td>";
+                        // html += "<td></td>";
+                        // html += "</tr>";
 
                         $("#task_list").append(html);
                     } else {
@@ -297,17 +299,27 @@
                 return;
             }
 
-            if (confirm("是否确认执行选中的任务？")) {
-                var tid = task.getAttribute("taskidstr");
+            var tid = task.getAttribute("taskidstr");
 
-                $.get([[${#request.getContextPath()}]] + "/web/task/action", {"taskid": tid}, function (data) {
-                    if (data) {
-                        alert("开始执行！");
-                    } else {
-                        alert("执行失败！");
-                    }
-                }, "json");
-            }
+            $.get([[${#request.getContextPath()}]] + "/web/task/action", {"taskid": tid}, function (data) {
+                if (data) {
+                    // alert("开始执行！");
+                } else {
+                    alert("执行失败！");
+                }
+            }, "json");
+
+            // if (confirm("是否确认执行选中的任务？")) {
+            //     var tid = task.getAttribute("taskidstr");
+            //
+            //     $.get([[${#request.getContextPath()}]] + "/web/task/action", {"taskid": tid}, function (data) {
+            //         if (data) {
+            //             // alert("开始执行！");
+            //         } else {
+            //             alert("执行失败！");
+            //         }
+            //     }, "json");
+            // }
         }
 
         /**
@@ -320,16 +332,25 @@
                 return;
             }
 
-            if (confirm("是否确认暂停选中的任务？")) {
-                var tid = task.getAttribute("taskidstr");
+            var tid = task.getAttribute("taskidstr");
 
-                $.get([[${#request.getContextPath()}]] + "/web/task/pause", {"taskid": tid}, function (data) {
-                    if (data) {
-                    } else {
-                        alert("暂停失败！");
-                    }
-                }, "json");
-            }
+            $.get([[${#request.getContextPath()}]] + "/web/task/pause", {"taskid": tid}, function (data) {
+                if (data) {
+                } else {
+                    alert("暂停失败！");
+                }
+            }, "json");
+
+            // if (confirm("是否确认暂停选中的任务？")) {
+            //     var tid = task.getAttribute("taskidstr");
+            //
+            //     $.get([[${#request.getContextPath()}]] + "/web/task/pause", {"taskid": tid}, function (data) {
+            //         if (data) {
+            //         } else {
+            //             alert("暂停失败！");
+            //         }
+            //     }, "json");
+            // }
         }
 
         /**
@@ -342,16 +363,25 @@
                 return;
             }
 
-            if (confirm("是否确认停止选中的任务？")) {
-                var tid = task.getAttribute("taskidstr");
+            var tid = task.getAttribute("taskidstr");
 
-                $.get([[${#request.getContextPath()}]] + "/web/task/stop", {"taskid": tid}, function (data) {
-                    if (data) {
-                    } else {
-                        alert("停止失败！");
-                    }
-                }, "json");
-            }
+            $.get([[${#request.getContextPath()}]] + "/web/task/stop", {"taskid": tid}, function (data) {
+                if (data) {
+                } else {
+                    alert("停止失败！");
+                }
+            }, "json");
+
+            // if (confirm("是否确认停止选中的任务？")) {
+            //     var tid = task.getAttribute("taskidstr");
+            //
+            //     $.get([[${#request.getContextPath()}]] + "/web/task/stop", {"taskid": tid}, function (data) {
+            //         if (data) {
+            //         } else {
+            //             alert("停止失败！");
+            //         }
+            //     }, "json");
+            // }
         }
 
         /**
@@ -538,6 +568,7 @@
                             <th>结束日期</th>
                             <th>播放类型</th>
                             <th>任务音量</th>
+                            <th>当前播放曲目</th>
                             <th>任务进度</th>
                         </tr>
                         </thead>
@@ -733,6 +764,7 @@
                                                    style="width: 60%; margin-left: 0px; padding-left: 10px">
                                                <!-- <div id="volume"></div>-->
                                                 <div id="volume" class="mynumber" style="margin-bottom: 10px;"></div>
+                                                <span style="color: #ff0000;">*音量范围在0~15之间</span>
                                             </label>
                                         </div>
                                     </div>
@@ -1008,7 +1040,7 @@
         var start = $("#start").val() ? $("#start").val() : 0;
 
         //获得音量
-        var volume = $("#volume input").val();
+        volume = $("#volume input").val();
 
         //获得星期
         weekMask = 0;
@@ -1065,16 +1097,7 @@
                 console.log(data);
 
                 var html = "";
-                html += "<tr id='tr_task_" + data.id + "' taskid='" + data.id + "' taskidstr='" + data.taskid + "' onclick='trtask(" + data.id + ");'>";
-                html += "<td>" + data.taskname + "</td>";
-                html += "<td>" + data.status + "</td>";
-                html += "<td>" + startDate + "</td>";
-                html += "<td>" + data.duration + "</td>";
-                html += "<td>" + stopDate + "</td>";
-                html += "<td>" + data.playOrder + "</td>";
-                html += "<td>" + data.volume + "</td>";
-                html += "<td></td>";
-                html += "</tr>";
+                html = timeMusicHtml(data);
                 $("#task_list").append(html);
 
                 //关闭弹窗
@@ -1192,16 +1215,17 @@
                 $("#tr_task_" + data.id).remove();
 
                 var html = "";
-                html += "<tr id='tr_task_" + data.id + "' taskid='" + data.id + "' taskidstr='" + data.taskid + "' onclick='trtask(" + data.id + ");'>";
-                html += "<td>" + data.taskname + "</td>";
-                html += "<td>" + data.status + "</td>";
-                html += "<td>" + startDate + "</td>";
-                html += "<td>" + data.duration + "</td>";
-                html += "<td>" + stopDate + "</td>";
-                html += "<td>" + data.playOrder + "</td>";
-                html += "<td>" + data.volume + "</td>";
-                html += "<td></td>";
-                html += "</tr>";
+                html = timeMusicHtml(data);
+                // html += "<tr id='tr_task_" + data.id + "' taskid='" + data.id + "' taskidstr='" + data.taskid + "' onclick='trtask(" + data.id + ");'>";
+                // html += "<td>" + data.taskname + "</td>";
+                // html += "<td>" + data.status + "</td>";
+                // html += "<td>" + startDate + "</td>";
+                // html += "<td>" + data.duration + "</td>";
+                // html += "<td>" + stopDate + "</td>";
+                // html += "<td>" + data.playOrder + "</td>";
+                // html += "<td>" + data.volume + "</td>";
+                // html += "<td></td>";
+                // html += "</tr>";
                 $("#task_list").append(html);
 
                 //关闭弹窗

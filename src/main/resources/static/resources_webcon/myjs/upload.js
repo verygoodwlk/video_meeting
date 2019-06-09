@@ -59,7 +59,7 @@ function uploadInit(){
             data: {"filename":file.name},
             success: function(data){
                 if(data){
-                    $("#progress_" + file.id).html("<font color='green'>已上传</font>");
+                    $("#progress_" + file.id).html("<font color='green'>已上传</font><button onclick=\"removeQueue('" + file.id + "', '" + file.name +  "')\" type='button' class='close'><span>&times;</span></button>");
                     //从队列中移除
                     uploader.cancelFile(file);
                     files.push(file.name);
@@ -79,13 +79,13 @@ function uploadInit(){
 
     //设置成功事件
     uploader.on("uploadSuccess", function (file) {
-        $("#progress_" + file.id).html("<font color='green'>上传成功</font>");
+        $("#progress_" + file.id).html("<font color='green'>上传成功</font><button onclick=\"removeQueue('" + file.id + "', '" + file.name +  "')\" type='button' class='close'><span>&times;</span></button>");
         files.push(file.name);
     });
 
     //设置失败事件
     uploader.on("uploadError", function (file) {
-        $("#progress_" + file.id).html("<font color='red'>上传失败</font>");
+        $("#progress_" + file.id).html("<font color='red'>上传失败</font><button onclick=\"removeQueue('" + file.id + "', '" + file.name +  "')\" type='button' class='close'><span>&times;</span></button>");
     });
 }
 
@@ -97,11 +97,20 @@ $(function () {
 /**
  * 移除队列
  */
-function removeQueue(fid) {
+function removeQueue(fid, fname) {
     //将文件从列表中移除
     $("#tr_" + fid).remove();
     //将文件从队列中移除
     uploader.removeFile(fid, true);
+
+    //从数组中移除队列
+    if(fname){
+        for(var i = 0; i < files.length; i++){
+            if(files[i] == fname){
+                files.splice(i, 1);
+            }
+        }
+    }
 }
 
 /**

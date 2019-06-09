@@ -91,6 +91,7 @@ public class ClientsController {
     @SocketSend(sendClass = ClientUpdateVolumeSocketSend.class, params = {"#uids", "#volume"})
     @ResponseBody
     public String updateVolume(@RequestParam("uids[]") String[] uids, int volume){
+        clientService.updateVolume(volume, uids);
         return "succ";
     }
 }

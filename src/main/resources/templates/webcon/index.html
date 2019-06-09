@@ -147,21 +147,23 @@
         <div class="sidebar-collapse">
             <ul class="nav metismenu" id="side-menu">
                 <li class="nav-header">
-                    <div class="dropdown profile-element"> <span>
-                            <img alt="image" class="img-circle" src="img/profile_small.jpg"/>
-                             </span>
+                    <div class="dropdown profile-element">
+                        <span>
+                        <!--  TODO Logo -->
+                            <img alt="image" src="icon/logo.png"/>
+                        </span>
                         <!-- 缩放按钮 -->
                         <a data-toggle="dropdown" class="dropdown-toggle" href="index.html#">
                             <span class="clear"> <span class="block m-t-xs">
                                 <strong class="font-bold" th:text="${account.getNickname()}">David Williams</strong>
                             </span>
-                                <span class="text-muted text-xs block">
+                                <!--<span class="text-muted text-xs block">
                                     个人中心
                                     <b class="caret"></b>
-                                </span>
+                                </span>-->
                             </span>
                         </a>
-                        <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                        <!--<ul class="dropdown-menu animated fadeInRight m-t-xs">
                             <li>
                                 <a href="profile.html">修改密码</a>
                             </li>
@@ -169,7 +171,7 @@
                             <li>
                                 <a th:href="${#request.getContextPath() + '/web/account/logout'}">注销</a>
                             </li>
-                        </ul>
+                        </ul>-->
                     </div>
                     <div class="logo-element">
                         音浪

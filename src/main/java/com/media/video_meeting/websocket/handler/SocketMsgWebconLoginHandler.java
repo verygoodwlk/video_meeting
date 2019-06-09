@@ -90,7 +90,7 @@ public class SocketMsgWebconLoginHandler extends SocketMsgHandler {
                     map.put("solution", solution.getSolutionname());
 
                     //获取方案对应的任务信息
-                    List<Task> soluTask = taskService.queryBySolution(solution.getSolutionname());
+                    List<Task> soluTask = taskService.queryBySolution(solution.getSolutionname(), solution.getAccount());
                     map.put("task", soluTask);
                 }
 

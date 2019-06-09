@@ -66,24 +66,7 @@
                         tasks = data;
                         var html = "";
                         for (var i = 0; i < data.length; i++) {
-                            html += "<tr id='tr_task_" + data[i].id + "' taskid='" + data[i].id + "' taskidstr='" + data[i].taskid + "' onclick='trtask(" + data[i].id + ");'>";
-                            html += "<td>" + data[i].taskname + "</td>";
-
-                            html += "<td id='task_status_" + data[i].taskid + "'>";
-                            if(data[i].status == 0){
-                                html += "任务空闲";
-                            } else if(data[i].status == 1){
-                                html += "执行中";
-                            } else if(data[i].status == 2){
-                                html += "停止";
-                            } else if(data[i].status == 3){
-                                html += "等待中";
-                            }
-                            html += "</td>";
-
-                            html += "<td>" + data[i].duration + "</td>";
-                            html += "<td id='task_mp3_" + data[i].taskid + "'></td>";
-                            html += "</tr>";
+                            html = realMusicHtml(data[i]);
                         }
 
                         $("#task_list").html(html);
@@ -108,7 +91,7 @@
                 if(mp3s){
                     var html = "";
                     for(var i = 0; i < mp3s.length; i++){
-                        html += "<tr><td>" + mp3s[i] + "</td></tr>";
+                        html += "<tr><td><img src='icon/music.png'/> " + mp3s[i] + "</td></tr>";
                     }
                     $("#mp3_list").html(html);
                 }
@@ -117,19 +100,36 @@
                 if(clients){
                     var html = "";
                     for(var i = 0; i < clients.length; i++){
-                        html += "<tr><td>" + clients[i].terminalname + "</td></tr>";
+                        if(clients[i] != null){
+                            if(clients[i].status == 1){
+                                //在线
+                                html += "<tr><td><img src='resources/images/online2.png'/> " + clients[i].terminalname + "</td></tr>";
+                            } else {
+                                //不在线
+                                html += "<tr><td><img src='resources/images/offline2.png'/> " + clients[i].terminalname + "</td></tr>";
+                            }
+                        }
                     }
                     $("#clients_list").html(html);
                 }
 
+
+
                 //获得类型
                 var loopType = data.looptype;
-                $("input[type='radio'][name='looptype'][value='" + loopType + "']").attr("checked", true);
-
+                // $("input[type='radio'][name='looptype'][value='" + loopType + "']").attr("checked", true);
+                var radio = document.getElementsByName("looptype");
+                for(var i = 0; i < radio.length; i++){
+                    if(radio[i].value == loopType){
+                        radio[i].checked = true;
+                        break;
+                    }
+                }
 
                 //处理音量
                 var volume = data.volume;
                 $("#volume input").val(volume);
+
             }, "json");
 
         }
@@ -178,12 +178,13 @@
                 $.get([[${#request.getContextPath()}]] + "/web/task/copy", {"taskid":tid}, function(data){
                     if(data){
                         var html ="";
-                        html += "<tr id='tr_task_" + data.id + "' taskid='" + data.id + "' taskidstr='" + data.taskid + "' onclick='trtask(" + data.id + ");'>";
-                        html += "<td>" + data.taskname + "</td>";
-                        html += "<td>" + data.status + "</td>";
-                        html += "<td>" + data.duration + "</td>";
-                        html += "<td></td>";
-                        html += "</tr>";
+                        // html += "<tr id='tr_task_" + data.id + "' taskid='" + data.id + "' taskidstr='" + data.taskid + "' onclick='trtask(" + data.id + ");'>";
+                        // html += "<td>" + data.taskname + "</td>";
+                        // html += "<td>" + data.status + "</td>";
+                        // html += "<td>" + data.duration + "</td>";
+                        // html += "<td></td>";
+                        // html += "</tr>";
+                        html = realMusicHtml(data);
 
                         $("#task_list").append(html);
                     } else {
@@ -379,7 +380,7 @@
                         <div class="ibox-title" style="border-width: 0px 0px 0px;">
                             <h5>曲目列表</h5>
                         </div>
-                        <div class="ibox-content">
+                        <div class="ibox-content" style="height: 300px; overflow:scroll; overflow-y: auto; overflow-x: auto;">
 
                             <table class="table">
                                 <tbody id="mp3_list">
@@ -397,7 +398,7 @@
                         <div class="ibox-title" style="border-width: 0px 0px 0px;">
                             <h5>终端列表</h5>
                         </div>
-                        <div class="ibox-content">
+                        <div class="ibox-content" style="height: 300px; overflow:scroll; overflow-y: auto; overflow-x: auto;">
 
                             <table class="table">
                                 <!--<thead>
@@ -629,12 +630,13 @@
                 console.log(data);
 
                 var html = "";
-                html += "<tr id='tr_task_" + data.id + "' taskid='" + data.id + "' taskidstr='" + data.taskid + "' onclick='trtask(" + data.id + ");'>";
-                html += "<td>" + data.taskname + "</td>";
-                html += "<td>" + data.status + "</td>";
-                html += "<td>" + data.duration + "</td>";
-                html += "<td></td>";
-                html += "</tr>";
+                html = realMusicHtml(data);
+                // html += "<tr id='tr_task_" + data.id + "' taskid='" + data.id + "' taskidstr='" + data.taskid + "' onclick='trtask(" + data.id + ");'>";
+                // html += "<td>" + data.taskname + "</td>";
+                // html += "<td>空闲任务</td>";
+                // html += "<td>" + data.duration + "</td>";
+                // html += "<td></td>";
+                // html += "</tr>";
                 $("#task_list").append(html);
 
                 //关闭弹窗
@@ -718,12 +720,13 @@
                 $("#tr_task_" + data.id).remove();
 
                 var html = "";
-                html += "<tr id='tr_task_" + data.id + "' taskid='" + data.id + "' taskidstr='" + data.taskid + "' onclick='trtask(" + data.id + ");'>";
+                html = realMusicHtml(data);
+               /* html += "<tr id='tr_task_" + data.id + "' taskid='" + data.id + "' taskidstr='" + data.taskid + "' onclick='trtask(" + data.id + ");'>";
                 html += "<td>" + data.taskname + "</td>";
                 html += "<td>" + data.status + "</td>";
                 html += "<td>" + data.duration + "</td>";
                 html += "<td></td>";
-                html += "</tr>";
+                html += "</tr>";*/
                 $("#task_list").append(html);
 
                 //关闭弹窗
@@ -756,7 +759,7 @@
         //ajax提交任务
         $.ajax({
             type: "POST",
-            url: [[${#request.getContextPath()}]] + '/web/task/update',
+            url: [[${#request.getContextPath()}]] + '/web/task/updateVolume',
             data: {
                 "looptype": loopType,
                 "volume": volume,

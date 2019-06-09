@@ -23,9 +23,9 @@
       <result column="volume" jdbcType="VARCHAR" property="volume" />
       <result column="intercomenable" jdbcType="VARCHAR" property="intercomenable" />
       <result column="cameraintercomenable" jdbcType="VARCHAR" property="cameraintercomenable" />
-      <result column="updatestatus" jdbcType="VARCHAR" property="updatestatus" />
+      <result column="updateStatus" jdbcType="VARCHAR" property="updateStatus" />
       <result column="dhcpstatus" jdbcType="VARCHAR" property="dhcpstatus" />
-      <result column="productsmodel" jdbcType="VARCHAR" property="productsmodel" />
+      <result column="productsModel" jdbcType="VARCHAR" property="productsModel" />
       <result column="status" jdbcType="INTEGER" property="status" />
     </collection>
   </resultMap>

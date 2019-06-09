@@ -9,6 +9,7 @@ import com.media.video_meeting.page.Page;
 import com.media.video_meeting.page.PageHelper;
 import com.media.video_meeting.service.IClientService;
 import com.media.video_meeting.websocket_aop.SocketSend;
+import com.media.video_meeting.websocket_aop.send.ClientIpSocketSend;
 import com.media.video_meeting.websocket_aop.send.ClientPowerSocketSend;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -134,6 +135,18 @@ public class ClientController {
     @SocketSend(params = {"#userid", "#limits"}, sendClass = ClientPowerSocketSend.class)
     public String updatePower(Integer userid, Integer[] limits){
         clientService.updatePowers(userid, limits);
+        return "succ";
+    }
+
+    /**
+     * 修改终端ip
+     * @return
+     */
+    @RequestMapping("/updateip")
+    @ResponseBody
+    @SocketSend(sendClass = ClientIpSocketSend.class, params = {"#ip", "#userids"})
+    public String updateIp(String ip, String[] userids){
+//        System.out.println("ip:" + ip + " userids:" + Arrays.toString(userids));
         return "succ";
     }
 }

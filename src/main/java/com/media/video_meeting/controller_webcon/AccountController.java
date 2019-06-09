@@ -9,6 +9,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+import javax.servlet.http.HttpSession;
+
 @Controller
 @RequestMapping("/web/account")
 @SessionAttributes("account")
@@ -45,6 +47,16 @@ public class AccountController {
             //账号不存在
             model.addAttribute("error", "分控账号不存在！");
         }
+        return "webcon/login";
+    }
+
+    /**
+     * 注销
+     * @return
+     */
+    @RequestMapping("/logout")
+    public String logout(HttpSession session){
+        session.invalidate();
         return "webcon/login";
     }
 }

@@ -22,12 +22,12 @@ public class ClientMsg implements Serializable {
     private String mac;
     private String ip;
     private String serverip;
-    private String volume;
+    private String volume = "10";
     private String intercomenable;
     private String cameraintercomenable;
-    private String updatestatus;
+    private String updateStatus;
     private String dhcpstatus;
-    private String productsmodel;
+    private String productsModel;
     private Integer status;
     private String limits;
 

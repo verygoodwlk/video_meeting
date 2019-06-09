@@ -1,12 +1,16 @@
 package com.media.video_meeting.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.media.video_meeting.dao.ClientMsgMapper;
 import com.media.video_meeting.dao.TaskMapper;
+import com.media.video_meeting.entity.ClientMsg;
 import com.media.video_meeting.entity.Task;
 import com.media.video_meeting.service.ITaskService;
 import com.media.video_meeting.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
@@ -21,6 +25,9 @@ public class TaskServiceImpl implements ITaskService {
 
     @Autowired
     private TaskMapper taskMapper;
+
+    @Autowired
+    private ClientMsgMapper clientMsgMapper;
 
     @Override
     public int insert(Task task) {
@@ -70,9 +77,12 @@ public class TaskServiceImpl implements ITaskService {
      * @return
      */
     @Override
-    public List<Task> queryBySolution(String solution) {
+    public List<Task> queryBySolution(String solution, String account) {
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.eq("solution", solution);
+        if(account != null){
+            queryWrapper.eq("account", account);
+        }
         return taskMapper.selectList(queryWrapper);
     }
 
@@ -121,5 +131,77 @@ public class TaskServiceImpl implements ITaskService {
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.eq("taskid", taskid);
         return taskMapper.selectOne(queryWrapper);
+    }
+
+    /**
+     * 修改任务音量
+     * @param taskid
+     * @param volume
+     * @return
+     */
+    @Override
+    @Transactional
+    public Task updateTaskVolume(String taskid, int volume) {
+        Task task = this.queryByTaskId(taskid);
+        task.setVolume(volume);
+        taskMapper.updateById(task);
+
+        String users = task.getUsers();
+        List<Integer> integers = JSON.parseArray(users, Integer.class);
+
+        for (Integer integer : integers) {
+            ClientMsg clientMsg = clientMsgMapper.selectById(integer);
+            clientMsg.setVolume(volume + "");
+            clientMsgMapper.updateById(clientMsg);
+        }
+
+        return task;
+    }
+
+    /**
+     * 更新任务的最新状态
+     * @param taskid
+     * @param status
+     * @param startDate
+     * @return
+     */
+    @Override
+    public int updateTaskStatus(String taskid, int status, String startDate) {
+
+        Task task = this.queryByTaskId(taskid);
+        if(task == null){
+            return 0;
+        }
+
+        if(task.getPlayOrder() == 3 && status == 2){
+            //如果是一次性任务 并且 是停止命令
+            taskMapper.deleteByTaskId(task.getTaskid());
+
+            return 1;
+        } else if((task.getPlayOrder() == 1 || task.getPlayOrder() == 2) && status == 2 && startDate != null){
+            //如果是每天任务 或者是 每周任务
+            task.setStartDate(startDate);
+            taskMapper.updateById(task);
+            return 2;
+        }
+        return 0;
+    }
+
+    /**
+     * 修改任务的持续时间
+     * @param taskid
+     * @param duration
+     * @return
+     */
+    @Override
+    public int updateTaskDuration(String taskid, int duration) {
+
+        Task task = this.queryByTaskId(taskid);
+        if (task.getDuration() == 0){
+            task.setDuration(duration);
+            return taskMapper.updateById(task);
+        }
+
+        return 0;
     }
 }

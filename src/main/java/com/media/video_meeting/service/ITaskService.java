@@ -23,7 +23,7 @@ public interface ITaskService {
 
     Task copyTask(String taskid);
 
-    List<Task> queryBySolution(String solution);
+    List<Task> queryBySolution(String solution, String account);
 
     List<Task> queryByAccountAndTaskType(String account, int taskt);
 
@@ -32,4 +32,10 @@ public interface ITaskService {
     Task queryById(int tid);
 
     Task queryByTaskId(String taskid);
+
+    Task updateTaskVolume(String taskid, int volume);
+
+    int updateTaskStatus(String taskid, int status, String startDate);
+
+    int updateTaskDuration(String taskid, int duration);
 }

@@ -16,7 +16,7 @@ import javax.annotation.Resource;
 @SpringBootTest
 public class VideoMeetingApplicationTests {
 
-	@Resource(name = "refreshTerminalState")
+	@Resource(name = "getSolutionTask")
 	private SocketMsgHandler socketMsgHandler;
 
 	@Test
@@ -31,9 +31,10 @@ public class VideoMeetingApplicationTests {
 //		socketMsgHandler.handler("{\"id\":\"online\",\"userid\":\"13\",\"terminalname\":\"13\",\"mac\":\"28:ED:E0:73:C1:3A\",\"ip\":\"192.168.1.43\",\"serverip\":\"192.168.1.186\",\"volume\":\"\",\"intercomEnable\":\"\",\"cameraIntercomEnable\":\"\",\"updateStatus\":\"\",\"dhcpStatus\":\"\",\"productsModel\":\"\"}");
 //		socketMsgHandler.handler("{\"id\": \"renameid\", \"oldid\":\"5\", \"newid\":\"3\"}");
 
-//		socketMsgHandler.handler("{\"id\":\"online\",\"userid\":\"61\",\"terminalname\":\"测试终端1\",\"mac\":\"28:ED:E0:73:C1:58\",\"ip\":\"192.168.1.16\",\"serverip\":\"192.168.1.186\",\"volume\":\"\",\"intercomEnable\":\"\",\"cameraIntercomEnable\":\"\",\"updateStatus\":\"\",\"dhcpStatus\":\"\",\"productsModel\":\"\"}");
+//		socketMsgHandler.handler("{\"id\":\"online\",\"userid\":\"2\",\"terminalname\":\"测试终端\",\"mac\":\"00:90:4C:11:22:33\",\"serverip\":\"192.168.1.49\",\"ip\":\"192.168.1.29\",\"volume\":\"5\",\"intercomEnable\":\"1\",\"cameraIntercomEnable\":\"1\",\"updateStatus\":\"1\",\"dhcpStatus\":\"1\",\"productsModel\":\"803\"}");
 
-		socketMsgHandler.handler("{\"id\":\"refreshTerminalState\",\"account\":\"admin\",\"taskid\":\"e7434734-2e05-4d88-ac05-5e8e54a32fb0\",\"status\":1,\"mp3\":\"赵雷-我们的时光.mp3\",\"users\":[\"18\"]}");
+//		socketMsgHandler.handler("{\"id\":\"refreshTerminalState\",\"account\":\"admin\",\"taskid\":\"e7434734-2e05-4d88-ac05-5e8e54a32fb0\",\"status\":1,\"mp3\":\"赵雷-我们的时光.mp3\",\"users\":[\"18\"]}");
+		socketMsgHandler.handler("{\"id\":\"getSolutionTask\",\"account\":\"admin\", \"solutionname\":\"Default Solution\"}");
 	}
 
 }

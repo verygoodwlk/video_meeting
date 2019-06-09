@@ -41,4 +41,6 @@ public interface IClientService {
 
     int deleteClientByUserId(Integer userid);
 
+    int updateVolume(Integer volume, String[] userid);
+
 }

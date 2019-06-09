@@ -33,7 +33,7 @@ public class Task implements Serializable {
     private int looptype;
     private int muiscduration;
     private int samll;
-    private int volume;
+    private int volume = 10;
     private int keybind;
     private int weekMask;
     private String users;

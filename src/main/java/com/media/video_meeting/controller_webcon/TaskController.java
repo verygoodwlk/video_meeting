@@ -130,6 +130,10 @@ public class TaskController {
     public Task action(String taskid){
         Task task = taskService.queryByTaskId(taskid);
         TaskStatusUtil.actionTask(taskid);
+
+        //设置任务的进度
+        TaskStatusUtil.durationTask(taskid, task.getDuration());
+
         return task;
     }
 
@@ -157,6 +161,8 @@ public class TaskController {
     public Task stop(String taskid){
         Task task = taskService.queryByTaskId(taskid);
         TaskStatusUtil.stopTask(taskid);
+
+        TaskStatusUtil.clearNowDurationTask(taskid);
         return task;
     }
 
@@ -251,5 +257,30 @@ public class TaskController {
         //获得这些任务的状态信息
         List taskStatusMap = TaskStatusUtil.getTaskStatusMap(taskids);
         return taskStatusMap;
+    }
+
+    /**
+     *
+     * 实时更新任务状态
+     * @return
+     */
+    @RequestMapping("/updateClientStatus")
+    @ResponseBody
+    public List updateClientStatus(@RequestParam("uids[]") String[] uids){
+        //获得这些任务的状态信息
+        List taskStatusMap = TaskStatusUtil.getTaskStatusClientMap(uids);
+        return taskStatusMap;
+    }
+
+    /**
+     * 修改任务音量
+     * @return
+     */
+    @RequestMapping("/updateVolume")
+    @ResponseBody
+    @SocketSend(sendClass = UpdateVolumeSocketSend.class, params = {"#result", "#volume"})
+    public Task updateVolume(String taskid, int volume){
+        Task task = taskService.updateTaskVolume(taskid, volume);
+        return task;
     }
 }

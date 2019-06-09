@@ -17,6 +17,7 @@ var isExternalMusic=null;
 var speed=null;
 var loopnum=null;
 var info=null;
+var volume=null;
 /**
  * 校验表单
  */
@@ -24,6 +25,11 @@ function check_Form(taskt){
 
     if(taskname != null && taskname.trim() == ""){
         alert("任务名称不能为空！");
+        return false;
+    }
+
+    if(taskname.length < 0 || taskname.length > 16){
+        alert("任务名称长度不能超过在0~16的范围！");
         return false;
     }
 
@@ -102,6 +108,20 @@ function check_Form(taskt){
         return false;
     }
 
+    if(volume != null) {
+        var r = /^\+?[1-9][0-9]*$/;　　//正整数
+        var flag = r.test(volume);
+        if (!flag) {
+            alert("音量必须为正整数！");
+            return;
+        }
+
+        if (volume < 0 || volume > 15) {
+            alert("音量范围必须在是0~15之内");
+            return;
+        }
+    }
+
 
     return true;
 }
@@ -111,11 +131,31 @@ function check_Form(taskt){
  * 重置弹出框
  */
 function reset_Model(taskt) {
-    $("#taskname").val("Region");
+    $("#taskname").val("Task");
     $("#loopType").val(1);
     $("#playOrder").val(1);
-    $("#startDate").val("");
-    $("#startTime").val("");
+
+    var date = new Date();
+    var y = date.getFullYear();    //获取完整的年份(4位,1970-????)
+    var m = date.getMonth() + 1;       //获取当前月份(0-11,0代表1月)
+    if(m < 10){
+        m = "0" + m;
+    }
+    var d = date.getDate();        //获取当前日(1-31)
+    if(d < 10){
+        d = "0" + d;
+    }
+
+    var h = date.getHours();       //获取当前小时数(0-23)
+    if(h < 10){
+        h = "0" + h;
+    }
+    var min = date.getMinutes();     //获取当前分钟数(0-59)
+    if(min < 10){
+        min = "0" + min;
+    }
+    $("#startDate").val(y + "-" + m + "-" + d);
+    $("#startTime").val(h + ":" + min);
     $("#endTime").val("");
     $("#endTime").attr("disabled", "disabled");
     $("#checkbox_end").attr("checked",false);
@@ -279,7 +319,7 @@ function showData(data, taskt){
         var weeksArray = [2,4,8,16,32,64,128];
         for(var i = 0; i < weeksArray.length; i++){
             if ((weekMask & weeksArray[i]) > 0){
-                $("input[type='checkbox'][name='week'][value='" + weeksArray[i] + "']").attr("checked", true);
+                $("input[type='checkbox'][name='week'][value='" + weeksArray[i] + "']").prop("checked", true);
             }
         }
     }
@@ -292,18 +332,18 @@ function showData(data, taskt){
         $("#volume input").val(volume);
     }
     if(stopDate){
-        $("#checkbox_end").attr("checked", true);
+        $("#checkbox_end").prop("checked", true);
         $("#endTime").removeAttr("disabled");
     } else {
-        $("#checkbox_end").attr("checked", false);
+        $("#checkbox_end").prop("checked", false);
         $("#endTime").attr("disabled", "disabled");
     }
 
     if(duration){
-        $("#checkbox_dur").attr("checked", true);
+        $("#checkbox_dur").prop("checked", true);
         $("#durtime").removeAttr("disabled");
     } else {
-        $("#checkbox_dur").attr("checked", false);
+        $("#checkbox_dur").prop("checked", false);
         $("#durtime").attr("disabled", "disabled");
     }
 
@@ -390,4 +430,105 @@ function isAction(type){
             }
         }
     });
+}
+
+/**
+ * 显示实时音乐的列表
+ */
+function realMusicHtml(data){
+    var html = "";
+    html += "<tr id='tr_task_" + data.id + "' taskid='" + data.id + "' taskidstr='" + data.taskid + "' onclick='trtask(" + data.id + ");'>";
+    html += "<td>" + data.taskname + "</td>";
+
+    html += "<td id='task_status_" + data.taskid + "'>";
+    if(data.status == 0){
+        html += "任务空闲";
+    } else if(data.status == 1){
+        html += "执行中";
+    } else if(data.status == 2){
+        html += "任务空闲";
+    } else if(data.status == 3){
+        html += "暂停";
+    }
+    html += "</td>";
+
+    html += "<td id='task_duration_" + data.taskid + "'>" + data.duration + "</td>";
+    html += "<td id='task_mp3_" + data.taskid + "'></td>";
+    html += "</tr>";
+    return html;
+}
+
+/**
+ * 显示定时音乐的列表
+ */
+function timeMusicHtml(data){
+    var html = "";
+    html += "<tr id='tr_task_" + data.id + "' taskid='" + data.id + "' taskidstr='" + data.taskid + "' onclick='trtask(" + data.id + ");'>";
+    html += "<td>" + data.taskname + "</td>";
+    html += "<td id='task_status_" + data.taskid + "'>";
+    if(data.status == 0){
+        html += "任务空闲";
+    } else if(data.status == 1){
+        html += "执行中";
+    } else if(data.status == 2){
+        html += "任务空闲";
+    } else if(data.status == 3){
+        html += "暂停";
+    }
+    html += "</td>";
+    html += "<td>";
+    html += "<span id='task_startdate_" + data.taskid + "'>" + data.startDate + "</span> " + data.startTime;
+    html += "(";
+    if(data.playOrder == 1){
+        html += "每天任务";
+    } else  if(data.playOrder == 2){
+        html += "每周任务";
+    } else  if(data.playOrder == 3){
+        html += "一次任务";
+    }
+    html += ")";
+
+    html += "</td>";
+    html += "<td id='task_duration_" + data.taskid + "'>0</td>";//单个曲目的持续时间
+    html += "<td>" + data.stopDate + "</td>";
+
+    if(data.looptype == 0){
+        html += "<td>随机播放</td>";
+    } else if(data.looptype == 1){
+        html += "<td>循环播放</td>";
+    } else if(data.looptype == 2){
+        html += "<td>顺序播放</td>";
+    }
+
+    html += "<td>" + data.volume + "</td>";
+    html += "<td id='task_mp3_" + data.taskid + "'></td>";
+    html += "<td><span id='task_nowduration_" + data.taskid + "'>00:00</span>/<span id='task_allduration_" + data.taskid + "'>" + s2str(data.duration) + "</span></td>";//总进度
+    html += "</tr>";
+    return html;
+}
+
+/**
+ * 秒转字符串
+ * @param secoendTime
+ */
+function s2str(secoendTime){
+    var str = "";
+    var m = parseInt(secoendTime/60);//获得多少分钟
+
+    if(m < 10){
+        str += "0" + m;
+    } else {
+        str += m;
+    }
+
+    str += ":";
+
+    var s = parseInt(secoendTime%60);//获得多少秒
+    if(s < 10){
+        str += "0" + s;
+    } else {
+        str += s;
+    }
+
+    return str;
 }

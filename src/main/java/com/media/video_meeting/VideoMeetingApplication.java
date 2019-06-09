@@ -12,6 +12,7 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import java.net.URISyntaxException;
@@ -19,6 +20,7 @@ import java.net.URISyntaxException;
 @SpringBootApplication
 @EnableTransactionManagement
 @EnableAspectJAutoProxy
+@EnableScheduling
 @EnableAsync
 @MapperScan("com.media.video_meeting.dao")
 public class VideoMeetingApplication extends SpringBootServletInitializer {

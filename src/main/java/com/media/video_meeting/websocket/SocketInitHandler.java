@@ -81,20 +81,29 @@ public class SocketInitHandler {
         List<Solution> solutions = solutionService.querySolutionsList();
         sb.append("\"timeTask\":[");
         if(solutions != null && solutions.size() > 0){
+
+            int count = 0;
             for (int i = 0; i < solutions.size(); i++) {
 
                 Solution solution = solutions.get(i);
                 if(solution.getIsaction() == 0){
                     continue;
                 }
+
+                count++;
+
+                if(count > 1){
+                    sb.append(",");
+                }
+
 //                if(i != 0){
 //                    sb.append(",");
 //                }
 
                 //查询该方案的任务列表
-                List<Task> tasks = taskService.queryBySolution(solution.getSolutionname());
+                List<Task> tasks = taskService.queryBySolution(solution.getSolutionname(), solution.getAccount());
 
-                sb.append("{\"solution\":\"").append(solution.getSolutionname()).append("\", \"task\":[");
+                sb.append("{\"solution\":\"").append(solution.getSolutionname()).append("\", \"account\":\"" + solution.getAccount()+ "\", \"task\":[");
 
                 for (int j = 0; j < tasks.size(); j++) {
                     Task task = tasks.get(j);

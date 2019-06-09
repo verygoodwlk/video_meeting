@@ -74,12 +74,12 @@
                                  th:src="${clientmsg.status == 1 ? 'resources/images/online.png' : 'resources/images/offline.png'}"/>
                         </td>
                         <td th:text="${clientmsg.userid}">Lorem ipsum dolor</td>
-                        <td th:text="${clientmsg.productsmodel}">Lorem ipsum dolor</td>
+                        <td th:text="${clientmsg.productsModel}">Lorem ipsum dolor</td>
                         <td th:text="${clientmsg.terminalname}" th:id="${'td_' + clientmsg.userid}">Lorem ipsum dolor
                         </td>
                         <td th:text="${clientmsg.mac}">Lorem ipsum dolor</td>
                         <td th:text="${clientmsg.ip}">Lorem ipsum dolor</td>
-                        <td th:text="${clientmsg.productsmodel}"></td>
+                        <td th:text="${clientmsg.productsModel}"></td>
                         <td>
                             <a th:href="${'javascript:updateInfo(' + clientmsg.userid + ');'}" title="Edit"><img
                                     src="resources/images/icons/pencil.png" alt="Edit"/></a>

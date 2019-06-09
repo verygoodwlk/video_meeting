@@ -155,7 +155,7 @@
 
         //删除终端
         function deleteClient(){
-            var checkeds = $("[name='checkboxs']:checked");
+            var checkeds = $("[name='client_checkbox']:checked");
 
             if(checkeds.length <= 0){
                 alert("请至少选择一个终端！");
@@ -214,9 +214,22 @@
             //获得音量
             var volume = $("#volume input").val();
 
+            var r = /^\+?[1-9][0-9]*$/;　　//正整数
+            var flag=r.test(volume);
+            if(!flag){
+                alert("音量必须为正整数！");
+                return;
+            }
+
+            if(volume < 0 || volume > 15){
+                alert("音量范围必须在是0~15之内");
+                return;
+            }
+
             $.post([[${#request.getContextPath()}]] + "/web/clients/updateVolume",{"uids":uids, "volume":volume},function(data){
                 if(data == "succ"){
                     $("#myModal3").modal("hide");
+                    location.reload();
                 } else {
                     alert("音量修改失败！");
                 }
@@ -228,17 +241,19 @@
 <body>
 <div class="row border-bottom white-bg dashboard-header myheader" style="padding: 10px 10px 10px 10px">
 
-    <button class="btn btn-primary dim btn-large-dim" type="button" onclick="listener();">
+   <!-- <button class="btn btn-primary dim btn-large-dim" type="button" onclick="listener();">
         <img style="width: 50px; height: 50px; margin-bottom: 5px" src="img/1.png"/><br/>
         监听终端
     </button>
     <button class="btn btn-primary dim btn-large-dim" type="button" onclick="byListener();">
         被监听终端
-    </button>
+    </button>-->
     <button class="btn btn-primary dim btn-large-dim" type="button" onclick="show_volume_model();">
+        <img style="width: 50px; height: 50px; margin-bottom: 5px" src="icon/client_volume.png"/><br/>
         音量调节
     </button>
     <button class="btn btn-primary dim btn-large-dim" type="button" onclick="deleteClient();">
+        <img style="width: 50px; height: 50px; margin-bottom: 5px" src="icon/client_delete.png"/><br/>
         删除终端
     </button>
     <!--<button class="btn btn-primary dim btn-large-dim" type="button">
@@ -281,7 +296,7 @@
                             </thead>
                             <tbody>
                             <!--<tr th:onclick="|click_tr(${client.userid}, this);|" th:switch="${4 - #strings.length(client.userid)}" th:each="client : ${clients}" class="gradeX">-->
-                            <tr th:switch="${4 - #strings.length(client.userid)}" th:each="client : ${clients}" class="gradeX">
+                            <tr th:id="|tr_client_${client.userid}|" th:uid="${client.userid}" th:switch="${4 - #strings.length(client.userid)}" th:each="client : ${clients}" class="gradeX">
 
                                 <th><input type="checkbox" name="client_checkbox" th:value="${client.userid}"/></th>
                                 <th>
@@ -291,19 +306,24 @@
                                 <th th:case="${1}" th:text="${'0' + client.userid}">终端ID</th>
                                 <th th:case="${2}" th:text="${'00' + client.userid}">终端ID</th>
                                 <th th:case="${3}" th:text="${'000' + client.userid}">终端ID</th>
-                                <th th:text="${client.productsmodel}">产品型号</th>
+                                <th th:text="${client.productsModel}">产品型号</th>
                                 <th th:text="${client.terminalname}">终端名称</th>
                                 <th th:text="${client.mac}">MAC地址</th>
                                 <th th:text="${client.ip}">IP地址</th>
                                 <th th:text="${client.volume}">音量</th>
-                                <th th:text="${client.updatestatus}">任务状态</th>
+                                <th th:id="|client_status_${client.userid}|" th:switch="${client.status}">
+                                   <span th:case="0" th:text="任务空闲"></span>
+                                   <span th:case="1" th:text="执行中"></span>
+                                   <span th:case="2" th:text="任务停止"></span>
+                                   <span th:case="3" th:text="等待中"></span>
+                                </th>
                                 <th th:if="${listenStatus.containsKey('monitored') && client.userid == listenStatus.monitored}">被监听终端</th>
                                <!-- <th th:unless="${listenStatus.containsKey('monitored') && client.userid == listenStatus.monitored}"></th>-->
                                 <th th:if="${listenStatus.containsKey('monitor') && client.userid == listenStatus.monitor}">监听终端</th>
                                 <!--<th th:unless="${listenStatus.containsKey('monitor') && client.userid == listenStatus.monitor}"></th>-->
                                 <th th:unless="${(listenStatus.containsKey('monitored') && client.userid == listenStatus.monitored) || (listenStatus.containsKey('monitor') && client.userid == listenStatus.monitor)}"></th>
-                                <th></th>
-                                <th></th>
+                                <th th:text="${client.productsModel}"></th>
+                                <th th:id="|client_mp3_${client.userid}|"></th>
                             </tr>
 
 
@@ -348,6 +368,7 @@
                         <div class="ibox float-e-margins" style="margin-bottom: 0px">
                             <div class="ibox-content" style="position: relative; height: 200px; text-align: center;">
                                 <div id="volume" class="mynumber" style="margin-bottom: 10px;"></div>
+                                <span style="color: #ff0000;">*音量范围在0~15之间</span>
                             </div>
                         </div>
                     </div>

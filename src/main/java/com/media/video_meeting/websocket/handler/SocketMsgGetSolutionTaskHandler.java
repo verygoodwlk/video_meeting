@@ -53,7 +53,7 @@ public class SocketMsgGetSolutionTaskHandler extends SocketMsgHandler {
     public void handlerMsg(String msg, JSONObject jsonObject) throws Exception {
         //获得方案对象
         Solution solution = JSON.parseObject(msg, Solution.class);
-        List<Task> tasks = taskService.queryBySolution(solution.getSolutionname());
+        List<Task> tasks = taskService.queryBySolution(solution.getSolutionname(), solution.getAccount());
 
         StringBuilder sb = new StringBuilder();
         sb.append("{\"id\":\"getSolutionTaskResponse\", \"response\":\"success\",\"account\":\"" + solution.getAccount() + "\",\"tasklist\":");
@@ -73,7 +73,7 @@ public class SocketMsgGetSolutionTaskHandler extends SocketMsgHandler {
                 map.put("startTime", task.getStartTime());
                 map.put("duration", task.getDuration());
                 map.put("playOrder", task.getPlayOrder());
-                map.put("users", JSON.parseArray(task.getUsers()));
+                map.put("users", JSON.parseArray(task.getUsers(), String.class));
                 map.put("taskid", task.getTaskid());
                 map.put("status", task.getStatus());
                 map.put("samll", task.getSamll());

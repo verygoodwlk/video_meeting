@@ -1,7 +1,6 @@
-
 spring:
   datasource:
-    url: jdbc:mysql://${db.ip}:3306/meeting
+    url: jdbc:mysql://${db.ip}:3306/meeting?useUnicode=true&characterEncoding=UTF-8
     username: root
     password: root
     driver-class-name: com.mysql.jdbc.Driver
@@ -21,6 +20,7 @@ mybatis-plus:
   config-location: classpath:mybatis-config.xml
   type-aliases-package: com.media.video_meeting.entity
 
+
 #日志设置
 logging:
   config: classpath:log4j2.xml
@@ -33,6 +33,10 @@ golang:
 #  serverpath: ws://192.168.1.186:8000/
 server:
   port: 8080
+  servlet:
+    #session过期时间 10小时
+    session:
+      timeout: 600m
 ---
 server:
   os: window

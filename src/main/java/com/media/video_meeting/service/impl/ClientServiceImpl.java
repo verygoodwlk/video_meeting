@@ -229,5 +229,23 @@ public class ClientServiceImpl implements IClientService {
         return 1;
     }
 
+    /**
+     * 修改终端
+     * @param volume
+     * @param userid
+     * @return
+     */
+    @Override
+    public int updateVolume(Integer volume, String[] userid) {
+
+        for (String uid : userid) {
+            ClientMsg clientMsg = clientMsgMapper.selectById(uid);
+            clientMsg.setVolume(volume + "");
+            clientMsgMapper.updateById(clientMsg);
+        }
+        
+        return 1;
+    }
+
 
 }
