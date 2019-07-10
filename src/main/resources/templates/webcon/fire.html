@@ -730,16 +730,7 @@
                 //发送websocket
                 console.log(data);
 
-                var html = "";
-                html += "<tr id='tr_task_" + data.id + "' taskid='" + data.id + "' taskidstr='" + data.taskid + "' onclick='trtask(" + data.id + ");'>";
-                html += "<td>" + data.taskname + "</td>";
-                html += "<td>" + data.status + "</td>";
-                html += "<td>" + data.port + "</td>";
-                html += "<td>" + data.area + "</td>";
-                html += "<td>" +(data.isLevel == 2 ? '开启' : '关闭') + "</td>";
-                html += "<td>" + data.mp3 + "</td>";
-                html += "<td>" + data.users + "</td>";
-                html += "</tr>";
+                var html = fireHtml(data);
                 $("#task_list").append(html);
 
                 //关闭弹窗
@@ -842,16 +833,7 @@
                 //移除原来的节点
                 $("#tr_task_" + data.id).remove();
 
-                var html = "";
-                html += "<tr id='tr_task_" + data.id + "' taskid='" + data.id + "' taskidstr='" + data.taskid + "' onclick='trtask(" + data.id + ");'>";
-                html += "<td>" + data.taskname + "</td>";
-                html += "<td>" + data.status + "</td>";
-                html += "<td>" + data.port + "</td>";
-                html += "<td>" + data.area + "</td>";
-                html += "<td>" +(data.isLevel == 2 ? '开启' : '关闭') + "</td>";
-                html += "<td>" + data.mp3 + "</td>";
-                html += "<td>" + data.users + "</td>";
-                html += "</tr>";
+                var html = fireHtml(data);
                 $("#task_list").append(html);
 
                 //关闭弹窗

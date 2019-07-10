@@ -33,12 +33,17 @@ public class SocketMsgOnLineHandler extends SocketMsgHandler {
     @Override
     public void handlerMsg(String msg, JSONObject jsonObject) {
         //设备上线
-        ClientMsg clientMsgOnline = JSON.parseObject(msg, ClientMsg.class);
-        clientMsgOnline.setId("online");
-        clientMsgOnline.setStatus(1);
+        try {
+            ClientMsg clientMsgOnline = JSON.parseObject(msg, ClientMsg.class);
+            clientMsgOnline.setId("online");
+            clientMsgOnline.setStatus(1);
 
-        System.out.println("上线新的终端：" + clientMsgOnline);
-        clientService.insertOrUpdate(clientMsgOnline);
+            int result = clientService.insertOrUpdate(clientMsgOnline);
+            System.out.println("上线新的终端：" + clientMsgOnline);
+            System.out.println("操作结果终端：" + result);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**

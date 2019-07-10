@@ -25,12 +25,15 @@ public class SocketMsgOffLineHandler extends SocketMsgHandler {
     @Override
     public void handlerMsg(String msg, JSONObject jsonObject) {
         //设备离线
-        int userid = jsonObject.getIntValue("response");
-        ClientMsg clientMsgOff = new ClientMsg();
-        clientMsgOff.setUserid(userid);
-        clientMsgOff.setId("offline");
-        clientMsgOff.setStatus(0);
-        clientService.insertOrUpdate(clientMsgOff);
+        try {
+            int userid = jsonObject.getIntValue("response");
+            ClientMsg clientMsgOff = new ClientMsg();
+            clientMsgOff.setUserid(userid);
+            clientMsgOff.setId("offline");
+            clientMsgOff.setStatus(0);
+            clientService.insertOrUpdate(clientMsgOff);
+        } catch (Exception e) {
+        }
     }
 
     @Override

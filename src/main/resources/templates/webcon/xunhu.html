@@ -42,10 +42,10 @@
     <script src="webrtc/index.js"></script>-->
 
 
-    <!--引入webuploader-->
+    <!--引入webuploader
     <link rel="stylesheet" type="text/css" href="widget/webuploader/webuploader.css">
     <script type="text/javascript" src="widget/webuploader/webuploader.min.js"></script>
-    <script type="text/javascript" src="myjs/upload.js"></script>
+    <script type="text/javascript" src="myjs/upload.js"></script>-->
 
     <!-- 引入ztree -->
     <link rel="stylesheet" href="widget/zTree/zTreeStyle/zTreeStyle.css"/>
@@ -59,7 +59,7 @@
     <link rel="stylesheet" href="webrtc/ekko-lightbox.min.css">
     <link rel="stylesheet" href="webrtc/index.css">
     <link rel="stylesheet" href="webrtc/kurento.css">-->
-    <script src="webrtc/jquery.min.js"></script>
+    <!--<script src="webrtc/jquery.min.js"></script>-->
     <script src="webrtc/bootstrap.min.js"></script>
     <script src="webrtc/ekko-lightbox.min.js"></script>
     <script src="webrtc/draggabilly.pkgd.min.js"></script>
@@ -71,71 +71,63 @@
 
     <script th:inline="javascript">
         $(function () {
-
             //动态计算高度
             autoHeight();
 
             //初始化树形结构
             initClients();
 
-        });
-
-
-        /**
-         * 初始化树形结构
-         */
-        var ztreeObj;
-
-        function initClients() {
-            $.ajax({
-                url: [[${#request.getContextPath()}]] + "/client/group",
-                success: function (data) {
-                    var zTreeNodes = data;
-
-                    var setting = {
-                        data: {
-                            simpleData: {
-                                enable: true,
-                                pIdKey: "pid"
-                            },
-                            key: {
-                                name: "gname"
-                            }
-                        },
-                        check: {
-                            enable: true
-                        }
-                    };
-
-                    // ztreeObj = $.fn.zTree.init($("#ztree_div"), setting, zTreeNodes);
-                    // ztreeObj.expandAll(true);
-                },
-                dataType: "json"
+            //初始化webrtc
+            initWsRtc({
+                url: [[${wsUrl}]],
+                name: [[${account.account}]]
             });
-        }
+
+        });
 
 
         /**
          * 手动执行
          */
+        var statusRtc = false;
         function action_task() {
-            var task = $("[alt='del']")[0];
-            if (!task) {
-                alert("请选中需要执行的任务！");
+
+            var znodes = ztreeObj.getCheckedNodes(true);
+            var terminal = [];
+            for (var i = 0; i < znodes.length; i++) {
+                if (znodes[i].isClient == 1 && znodes[i].isOnLine == 1) {
+                    //如果是终端
+                    terminal.push(znodes[i].userid + "");
+                }
+            }
+
+            if(terminal.length <= 0){
+                alert("请至少选择一台上线终端！");
                 return;
             }
 
-            if (confirm("是否确认执行选中的任务？")) {
-                var tid = task.getAttribute("taskidstr");
-
-                $.get([[${#request.getContextPath()}]] + "/web/task/action", {"taskid": tid}, function (data) {
-                    if (data) {
-                        alert("开始执行！");
-                    } else {
-                        alert("执行失败！");
-                    }
-                }, "json");
+            if(!statusRtc){
+                statusRtc = true;
+                call(terminal);
             }
+
+            // var task = $("[alt='del']")[0];
+            // if (!task) {
+            //     alert("请选中需要执行的任务！");
+            //     return;
+            // }
+            //
+            // if (confirm("是否确认执行选中的任务？")) {
+            //     var tid = task.getAttribute("taskidstr");
+            //
+            //     $.get([[${#request.getContextPath()}]] + "/web/task/action", {"taskid": tid}, function (data) {
+            //         if (data) {
+            //             alert("开始执行！");
+            //         } else {
+            //             alert("执行失败！");
+            //         }
+            //     }, "json");
+            // }
         }
 
 
@@ -143,40 +135,28 @@
          * 手动停止
          */
         function stop_task() {
-            var task = $("[alt='del']")[0];
-            if (!task) {
-                alert("请选中需要停止的任务！");
-                return;
+            if(statusRtc){
+                statusRtc = false;
+                stop();
             }
 
-            if (confirm("是否确认停止选中的任务？")) {
-                var tid = task.getAttribute("taskidstr");
-
-                $.get([[${#request.getContextPath()}]] + "/web/task/stop", {"taskid": tid}, function (data) {
-                    if (data) {
-                    } else {
-                        alert("停止失败！");
-                    }
-                }, "json");
-            }
+            // var task = $("[alt='del']")[0];
+            // if (!task) {
+            //     alert("请选中需要停止的任务！");
+            //     return;
+            // }
+            //
+            // if (confirm("是否确认停止选中的任务？")) {
+            //     var tid = task.getAttribute("taskidstr");
+            //
+            //     $.get([[${#request.getContextPath()}]] + "/web/task/stop", {"taskid": tid}, function (data) {
+            //         if (data) {
+            //         } else {
+            //             alert("停止失败！");
+            //         }
+            //     }, "json");
+            // }
         }
-
-    </script>
-
-    <!-- 音量选择控件 -->
-    <link href="css/plugins/ionRangeSlider/ion.rangeSlider.css" rel="stylesheet">
-    <link href="css/plugins/ionRangeSlider/ion.rangeSlider.skinFlat.css" rel="stylesheet">
-    <script src="js/plugins/ionRangeSlider/ion.rangeSlider.min.js"></script>
-    <script>
-        $("#volume").ionRangeSlider({
-            min: 0,
-            max: 15,
-            from: 0,
-            postfix: "",
-            prettify: false,
-            hasGrid: false
-        });
-
 
     </script>
 
@@ -199,19 +179,19 @@
     <button class="btn btn-primary dim btn-large-dim" type="button" onclick="stop_task();">
         手动停止
     </button>
-    <button class="btn btn-primary dim btn-large-dim" type="button">
+    <!--<button class="btn btn-primary dim btn-large-dim" type="button">
         录音设置
     </button>
     <button class="btn btn-primary dim btn-large-dim" type="button">
         声卡设置
-    </button>
+    </button>-->
 </div>
 <!-- 工作区 -->
 <div class="animated fadeInRight">
-    <div class="row">
+   <!-- <div class="row">
         <div class="col-lg-12" style="padding: 0px;">
             <div class="ibox float-e-margins">
-                <div class="ibox-title">
+                &lt;!&ndash;<div class="ibox-title">
                     <h5>
                         采样频率：
                         <select id="cypl">
@@ -228,8 +208,8 @@
                             <option value="2">立体混音采集</option>
                         </select>
                     </h5>
-                </div>
-               <!-- <div class="ibox-content  h_1" style="padding: 0px;">
+                </div>&ndash;&gt;
+               &lt;!&ndash; <div class="ibox-content  h_1" style="padding: 0px;">
 
                     <div class="col-lg-3" style="padding: 4px">
                         <div class="ibox float-e-margins" style="margin-bottom: 0px">
@@ -241,11 +221,8 @@
                             </div>
                         </div>
                     </div>
-                </div>-->
-
-                <!-- 内容 -->
-                <div class="container">
-                    <div class="row">
+                </div>&ndash;&gt;
+                    &lt;!&ndash;<div class="row">
                         <div class="col-md-5">
                             <label class="control-label" for="name">Name</label>
                             <div class="row">
@@ -281,32 +258,43 @@
                                 <video id="videoInput" autoplay="" width="240px" height="180px" poster="img/webrtc.png"></video>
                             </div>
                         </div>
+                    </div>&ndash;&gt;
+            </div>
+        </div>
+    </div>-->
+    <div class="row">
+        <div class="col-lg-5" style="padding: 2px 2px 2px 2px; margin-bottom: 2px;">
+            <div class="ibox float-e-margins" style="margin-bottom: 2px">
+                <div class="ibox-content left_content1 h_1">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title" style="border-width: 0px 0px 0px;">
+                            <h5>终端列表</h5>
+                        </div>
+                        <div class="ibox-content">
+                            <!-- TODO 终端列表 -->
+                            <!-- 树形选择器 -->
+                            <div id="ztree_div" class="ztree"></div>
+                        </div>
                     </div>
                 </div>
-
+            </div>
+        </div>
+        <div class="col-lg-7" style="padding: 2px 2px 2px 2px; margin-bottom: 2px;">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content right_content h_1">
+                    <!-- TODO 视频输出 -->
+                    <div id="videoSmall" style="touch-action: none;">
+                        <video id="videoInput" autoplay="" width="240px" height="180px" ></video>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+
+    <div id="console" class="democonsole" style="display: none;">
+        <ul></ul>
+    </div>
 </div>
-    <style>
-        .checkbox-primary {
-            float: left;
-            margin-left: 10px;
-        }
-
-        .my-sroll {
-            overflow: scroll;
-            overflow-y: auto;
-            overflow-x: auto;
-        }
-
-    </style>
-
-
-    <script th:inline="javascript">
-
-
-    </script>
 
 </body>
 </html>

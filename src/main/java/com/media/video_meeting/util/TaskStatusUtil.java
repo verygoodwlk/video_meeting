@@ -56,6 +56,7 @@ public class TaskStatusUtil {
         if(taskAllDurationMap.containsKey(taskid)){
             Map<String, Object> stringObjectMap = taskAllDurationMap.get(taskid);
             stringObjectMap.put("allduration", duration);
+            stringObjectMap.put("nowduration", 0);
         } else {
             Map<String, Object> dataMap = new HashMap<>();
             dataMap.put("allduration", duration);
@@ -95,12 +96,14 @@ public class TaskStatusUtil {
         if(taskAllDurationMap.containsKey(taskid)){
             Map<String, Object> stringObjectMap = taskAllDurationMap.get(taskid);
             stringObjectMap.put("nowduration", 0);
+            stringObjectMap.put("allduration", 0);
         }
     }
 
     /**
      * 设置任务状态
      *
+     * status 0-任务空闲  	1-执行中 	  2-停止， 3-暂停
      * type  0:普通状态  1:一次性任务结束 - 删除   2:每天任务结束 - 更新开始时间   3:设置任务的总进度
      */
     public static void statusTask(String taskid, int status, String mp3, int duration, String startDate, String[] uids, int type){
@@ -111,10 +114,32 @@ public class TaskStatusUtil {
         dataMap.put("startDate", startDate);
         dataMap.put("type", type);
 
+        //判断当前任务是否存在
+        if(taskStatusMap.containsKey(taskid)){
+            Map<String, Object> oldMap = taskStatusMap.get(taskid);
+            if(!oldMap.get("mp3").equals(dataMap.get("mp3")) && status == 1){
+                //如果歌曲发生了更新，修改任务持续时间
+                durationTask(taskid, duration);
+            }
+        } else {
+            //如果歌曲不存在，直接更新任务持续时间
+            durationTask(taskid, duration);
+        }
+
         taskStatusMap.put(taskid, dataMap);
 
         for (String uid : uids) {
             taskClientStatusMap.put(uid, dataMap);
+        }
+
+        if(status == 0 || status == 2){
+            //普通状态 或者 任务停止
+            TaskStatusUtil.stopTask(taskid);
+            //清空状态
+            clearNowDurationTask(taskid);
+        } else if(status == 1){
+            //任务开始
+            TaskStatusUtil.actionTask(taskid);
         }
     }
 

@@ -95,21 +95,32 @@ function updateTaskStatus(){
                 //设置状态
                 if(status){
                     var html = "";
-                    if(status == 0){
+                    if(status == 0 || status == 2){
                         html += "任务空闲";
+
+                        $("#task_mp3_" + taskid).html("");
+                        $("#task_allduration_" + taskid).html(s2str(0));
+                        $("#task_nowduration_" + taskid).html(s2str(0));
                     } else if(status == 1){
                         html += "执行中";
-                    } else if(status == 2){
-                        html += "任务空闲";
+
+                        //设置歌曲
+                        if(mp3){
+                            $("#task_mp3_" + taskid).html(mp3);
+                        }
+
+                        //设置任务总进度
+                        if(allduration) {
+                            $("#task_allduration_" + taskid).html(s2str(allduration));
+                        }
+
+                        if(nowduration){
+                            $("#task_nowduration_" + taskid).html(s2str(nowduration));
+                        }
                     } else if(status == 3){
                         html += "暂停";
                     }
                     $("#task_status_" + taskid).html(html);
-                }
-
-                //设置歌曲
-                if(mp3){
-                    $("#task_mp3_" + taskid).html(mp3);
                 }
 
 
@@ -126,17 +137,6 @@ function updateTaskStatus(){
                     //更新开始时间
                     $("#task_startdate_" + taskid).html(startDate);
                 }
-
-                //设置任务总进度
-                if(allduration) {
-                    $("#task_allduration_" + taskid).html(s2str(allduration));
-                }
-
-                if(nowduration){
-                    $("#task_nowduration_" + taskid).html(s2str(nowduration));
-                }
-
-
             }
 
         },"json");

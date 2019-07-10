@@ -16,7 +16,7 @@
  */
 
 //var ws = new WebSocket('ws://172.10.4.182:9999');
-var ws = new WebSocket('ws://192.168.1.186:8000');
+var ws;
 var videoInput;
 var videoOutput;
 var webRtcPeer;
@@ -29,6 +29,85 @@ var registerState = null;
 var NOT_REGISTERED = 0;
 var REGISTERING = 1;
 var REGISTERED = 2;
+
+var data;
+
+var ws_state = false;
+var users;
+
+function initWsRtc(dataInfo){
+
+    if(gloabStatus){
+        //则断开连接
+        ws.close();
+        ws_state = false;
+    }
+
+    gloabStatus = true;
+
+    data = dataInfo;
+    ws = new WebSocket(data.url);
+
+    ws.onopen = function()
+    {
+        console.log('open websocket OK');
+        ws_state = true;
+
+        //TODO 注册websocket
+        ws.send("{\"id\":\"register\",\"name\":\"" + data.name + "\"}");
+    };
+
+    ws.onclose = function(){
+        ws_state = false;
+    };
+
+    ws.onmessage = function(message) {
+        var parsedMessage = JSON.parse(message.data);
+        console.info('Received message: ' + message.data);
+
+        switch (parsedMessage.id) {
+            case 'resgisterResponse':
+                resgisterResponse(parsedMessage);
+                break;
+            case 'viewerResponse':
+                callResponse(parsedMessage);
+                break;
+            case 'incomingCall':
+                incomingCall(parsedMessage);
+                break;
+            case 'startCommunication':
+                startCommunication(parsedMessage);
+                break;
+            case 'stopCommunication':
+                console.info('Communication ended by remote peer');
+                stop(true);
+                break;
+            case 'iceCandidate':
+                webRtcPeer.addIceCandidate(parsedMessage.candidate, function(error) {
+                    if (error)
+                        return console.error('Error adding candidate: ' + error);
+                });
+                break;
+            case 'creato2mroom_rpy':
+                if(parsedMessage.response == "success"){
+                    //发送消息
+                    //TODO 发送其他终端接入消息
+                    // alert("发送给其他终端：{\"meetname\":\"meeting\",\"users\":" + JSON.stringify(users) + ",\"num\":4,\"isVideo\":true,\"room\":\"" + data.name + "\",\"id\":\"noticeJoinO2MRoom\"}");
+                    ws.send("{\"meetname\":\"meeting\",\"users\":" + JSON.stringify(users) + ",\"num\":4,\"isVideo\":true,\"room\":\"" + data.name + "\",\"id\":\"noticeJoinO2MRoom\"}");
+                }
+                break;
+            case 'startResponse':
+                // TODO 处理管道联通响应的
+                webRtcPeer.processAnswer(parsedMessage.sdpAnswer, function(error) {
+                    if (error)
+                        return console.error(error);
+                });
+                break;
+            default:
+                console.error('Unrecognized message', parsedMessage);
+        }
+    }
+}
 
 
 function setRegisterState(nextState) {
@@ -101,65 +180,14 @@ window.onbeforeunload = function() {
 }
 
 function reConnectWs(){
+    console.log("开始重连......" + data.url)
     ws.close();
-    ws = new WebSocket('ws://' + location.host + '/call');
+    // ws = new WebSocket('ws://' + location.host + '/call');
+    ws = new WebSocket(data.url);
     setRegisterState(NOT_REGISTERED);
 }
 
-ws.onopen = function()
-{
-    console.log('open websocket OK');
-    ws_state = true;
 
-    //TODO 注册websocket
-    ws.send("{\"id\":\"register\",\"name\":\"123\"}");
-};
-
-ws.onmessage = function(message) {
-    var parsedMessage = JSON.parse(message.data);
-    console.info('Received message: ' + message.data);
-
-    switch (parsedMessage.id) {
-        case 'resgisterResponse':
-            resgisterResponse(parsedMessage);
-            break;
-        case 'viewerResponse':
-            callResponse(parsedMessage);
-            break;
-        case 'incomingCall':
-            incomingCall(parsedMessage);
-            break;
-        case 'startCommunication':
-            startCommunication(parsedMessage);
-            break;
-        case 'stopCommunication':
-            console.info('Communication ended by remote peer');
-            stop(true);
-            break;
-        case 'iceCandidate':
-            webRtcPeer.addIceCandidate(parsedMessage.candidate, function(error) {
-                if (error)
-                    return console.error('Error adding candidate: ' + error);
-            });
-            break;
-        case 'creato2mroom_rpy':
-            if(parsedMessage.response == "success"){
-                //发送消息
-                //TODO 发送其他终端接入消息
-                ws.send("{\"meetname\":\"meeting\",\"users\":[\"6\"],\"num\":4,\"isVideo\":true,\"room\":\"123\",\"id\":\"noticeJoinO2MRoom\"}");
-            }
-            break;
-        case 'startResponse':
-            // TODO 处理管道联通响应的
-            webRtcPeer.processAnswer(parsedMessage.sdpAnswer, function(error) {
-                if (error)
-                    return console.error(error);
-            });
-            break;
-        default:
-            console.error('Unrecognized message', parsedMessage);
-    }
-}
 
 function resgisterResponse(message) {
     if (message.response == 'accepted') {
@@ -253,27 +281,36 @@ function onOfferIncomingCall(error, offerSdp) {
     sendMessage(response);
 }
 
-function register() {
-    var name = document.getElementById('name').value;
-    if (name == '') {
-        window.alert('You must insert your user name');
+// function register() {
+//     var name = document.getElementById('name').value;
+//     if (name == '') {
+//         window.alert('You must insert your user name');
+//         return;
+//     }
+//     setRegisterState(REGISTERING);
+//
+//     var message = {
+//         id : 'register',
+//         name : name
+//     };
+//     sendMessage(message);
+//     document.getElementById('peer').focus();
+// }
+
+function call(us) {
+    // if (document.getElementById('peer').value == '') {
+    //     window.alert('You must specify the peer name');
+    //     return;
+    // }
+
+    //设置当前终端列表
+    users = us;
+
+    if(!ws_state){
+        alert("服务器连接异常，无法进行寻呼！");
         return;
     }
-    setRegisterState(REGISTERING);
 
-    var message = {
-        id : 'register',
-        name : name
-    };
-    sendMessage(message);
-    document.getElementById('peer').focus();
-}
-
-function call() {
-    if (document.getElementById('peer').value == '') {
-        window.alert('You must specify the peer name');
-        return;
-    }
     setCallState(PROCESSING_CALL);
     showSpinner(videoInput, videoOutput);
 
@@ -289,7 +326,8 @@ function call() {
                 return console.error(error);
             }
             webRtcPeer.generateOffer(onOfferCall);
-        });
+        }
+    );
 }
 
 //-------------备份-----------------------
@@ -359,17 +397,17 @@ function sendMessage(message) {
 }
 
 function showSpinner() {
-    for (var i = 0; i < arguments.length; i++) {
-        arguments[i].poster = './img/transparent-1px.png';
-        arguments[i].style.background = 'center transparent url("./img/spinner.gif") no-repeat';
-    }
+    // for (var i = 0; i < arguments.length; i++) {
+    //     arguments[i].poster = './img/transparent-1px.png';
+    //     arguments[i].style.background = 'center transparent url("./img/spinner.gif") no-repeat';
+    // }
 }
 
 function hideSpinner() {
     for (var i = 0; i < arguments.length; i++) {
-        arguments[i].src = '';
-        arguments[i].poster = './img/webrtc.png';
-        arguments[i].style.background = '';
+        // arguments[i].src = '';
+        // arguments[i].poster = './img/webrtc.png';
+        // arguments[i].style.background = '';
     }
 }
 

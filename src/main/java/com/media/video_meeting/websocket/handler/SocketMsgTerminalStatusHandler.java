@@ -30,15 +30,20 @@ public class SocketMsgTerminalStatusHandler extends SocketMsgHandler {
             for (int i = 0; i < users.size(); i++){
                 JSONObject jsonObject1 = users.getJSONObject(i);
 
-                if(jsonObject1.getString("id").equals("webserver")){
+                try{
+                    Integer id = jsonObject1.getInteger("id");
+                } catch (Exception e){
                     continue;
                 }
+
 
                 ClientMsg cmsg = new ClientMsg();
                 cmsg.setUserid(jsonObject1.getInteger("id"));
                 cmsg.setId(jsonObject1.getInteger("online") == 1 ? "online" : "offline");
                 cmsg.setStatus(jsonObject1.getInteger("online"));
-                clientService.insertOrUpdate(cmsg);
+                int result = clientService.insertOrUpdate(cmsg);
+
+                System.out.println("---->处理终端：" + users.getJSONObject(i).toJSONString() + "  结果：" + result);
             }
         }
     }

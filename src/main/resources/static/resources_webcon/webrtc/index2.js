@@ -2,7 +2,7 @@
     /* jshint node: true */
     'use strict';
 
-    const reSpace = /\s/;
+    var reSpace = /\s/;
 
     /**
      # demo-console

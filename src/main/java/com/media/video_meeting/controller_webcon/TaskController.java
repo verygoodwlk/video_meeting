@@ -132,7 +132,7 @@ public class TaskController {
         TaskStatusUtil.actionTask(taskid);
 
         //设置任务的进度
-        TaskStatusUtil.durationTask(taskid, task.getDuration());
+//        TaskStatusUtil.durationTask(taskid, task.getDuration());
 
         return task;
     }
@@ -162,7 +162,7 @@ public class TaskController {
         Task task = taskService.queryByTaskId(taskid);
         TaskStatusUtil.stopTask(taskid);
 
-        TaskStatusUtil.clearNowDurationTask(taskid);
+//        TaskStatusUtil.clearNowDurationTask(taskid);
         return task;
     }
 

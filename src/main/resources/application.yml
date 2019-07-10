@@ -37,6 +37,11 @@ server:
     #session过期时间 10小时
     session:
       timeout: 600m
+#  ssl:
+#    key-store: classpath:server.keystore
+#    enabled: true
+#    key-store-password: 123456
+#    key-store-type: JKS
 ---
 server:
   os: window

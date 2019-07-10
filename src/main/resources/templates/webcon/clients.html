@@ -283,13 +283,13 @@
                                 <th>全选 &nbsp;&nbsp; <input type="checkbox" onclick="checked_all(this.checked);"/></th>
                                 <th>状态</th>
                                 <th>终端ID</th>
-                                <th>产品型号</th>
                                 <th>终端名称</th>
                                 <th>MAC地址</th>
                                 <th>IP地址</th>
                                 <th>音量</th>
                                 <th>任务状态</th>
                                 <th>监听状态</th>
+                                <th>软件版本</th>
                                 <th>固件版本</th>
                                 <th>音源</th>
                             </tr>
@@ -306,7 +306,6 @@
                                 <th th:case="${1}" th:text="${'0' + client.userid}">终端ID</th>
                                 <th th:case="${2}" th:text="${'00' + client.userid}">终端ID</th>
                                 <th th:case="${3}" th:text="${'000' + client.userid}">终端ID</th>
-                                <th th:text="${client.productsModel}">产品型号</th>
                                 <th th:text="${client.terminalname}">终端名称</th>
                                 <th th:text="${client.mac}">MAC地址</th>
                                 <th th:text="${client.ip}">IP地址</th>
@@ -322,6 +321,7 @@
                                 <th th:if="${listenStatus.containsKey('monitor') && client.userid == listenStatus.monitor}">监听终端</th>
                                 <!--<th th:unless="${listenStatus.containsKey('monitor') && client.userid == listenStatus.monitor}"></th>-->
                                 <th th:unless="${(listenStatus.containsKey('monitored') && client.userid == listenStatus.monitored) || (listenStatus.containsKey('monitor') && client.userid == listenStatus.monitor)}"></th>
+                                <th th:text="${client.updateStatus}"></th>
                                 <th th:text="${client.productsModel}"></th>
                                 <th th:id="|client_mp3_${client.userid}|"></th>
                             </tr>

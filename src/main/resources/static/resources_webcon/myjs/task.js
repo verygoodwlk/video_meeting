@@ -131,7 +131,7 @@ function check_Form(taskt){
  * 重置弹出框
  */
 function reset_Model(taskt) {
-    $("#taskname").val("Task");
+    $("#taskname").val("Region");
     $("#loopType").val(1);
     $("#playOrder").val(1);
 
@@ -503,6 +503,70 @@ function timeMusicHtml(data){
     html += "<td>" + data.volume + "</td>";
     html += "<td id='task_mp3_" + data.taskid + "'></td>";
     html += "<td><span id='task_nowduration_" + data.taskid + "'>00:00</span>/<span id='task_allduration_" + data.taskid + "'>" + s2str(data.duration) + "</span></td>";//总进度
+    html += "</tr>";
+    return html;
+}
+
+/**
+ * 显示语音合成
+ * @param data
+ */
+function voiceHtml(data){
+    var html = "";
+    html += "<tr id='tr_task_" + data.id + "' taskid='" + data.id + "' taskidstr='" + data.taskid + "' onclick='trtask(" + data.id + ");'>";
+    html += "<td>" + data.taskname + "</td>";
+    html += "<td id='task_status_" + data.taskid + "'>";
+    if(data.status == 0){
+        html += "任务空闲";
+    } else if(data.status == 1){
+        html += "执行中";
+    } else if(data.status == 2){
+        html += "任务空闲";
+    } else if(data.status == 3){
+        html += "暂停";
+    }
+    html += "<td>" + data.startDate + "</td>";
+    html += "<td>" + data.stopDate + "</td>";
+    html += "<td>" + data.loopnum + "</td>";
+    if(data.reporter == 0){
+        html += "<td>普通女声（默认）</td>";
+    } else if(data.reporter == 1){
+        html += "<td>普通男声</td>";
+    } else if(data.reporter == 2){
+        html += "<td>特别男声</td>";
+    } else if(data.reporter == 3){
+        html += "<td>情感男声(度逍遥)</td>";
+    } else if(data.reporter == 4){
+        html += "<td>情感儿童声(度丫丫)</td>";
+    }
+
+    html += "</tr>";
+    return html;
+}
+
+/**
+ * 显示报警
+ * @param data
+ */
+function fireHtml(data){
+    var html = "";
+    html += "<tr id='tr_task_" + data.id + "' taskid='" + data.id + "' taskidstr='" + data.taskid + "' onclick='trtask(" + data.id + ");'>";
+    html += "<td>" + data.taskname + "</td>";
+    html += "<td id='task_status_" + data.taskid + "'>";
+    if(data.status == 0){
+        html += "任务空闲";
+    } else if(data.status == 1){
+        html += "执行中";
+    } else if(data.status == 2){
+        html += "任务空闲";
+    } else if(data.status == 3){
+        html += "暂停";
+    }
+    html += "<td>" + data.port + "</td>";
+    html += "<td>" + data.area + "</td>";
+    html += "<td>" +(data.isLevel == 2 ? '开启' : '关闭') + "</td>";
+    html += "<td>" + data.mp3 + "</td>";
+    html += "<td>" + data.users + "</td>";
     html += "</tr>";
     return html;
 }

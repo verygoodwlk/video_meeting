@@ -54,7 +54,7 @@ public class MyWebSocket extends WebSocketClient {
 
     @Override
     public void onMessage(String s) {
-        LogUtil.info(logger, "接收到消息：" + s);
+
         //交给线程池处理相关的业务
         executorService2.execute(new Runnable() {
             @Override
@@ -62,6 +62,11 @@ public class MyWebSocket extends WebSocketClient {
                 //解析JSON
                 JSONObject jsonObject = JSONObject.parseObject(s);
                 String id = jsonObject.getString("id");
+
+                //不记录心跳消息
+                if(!id.equals("ack")){
+                    LogUtil.info(logger, "接收到消息：" + s);
+                }
 
                 //获得对应的处理器对象
                 //根据id获得相应的处理器对象

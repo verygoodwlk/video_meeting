@@ -55,10 +55,10 @@
                     <tr>
                         <th>状态</th>
                         <th>终端id</th>
-                        <th>产品型号</th>
                         <th>终端名称</th>
                         <th>MAC地址</th>
                         <th>IP地址</th>
+                        <th>软件版本</th>
                         <th>固件版本</th>
                         <th>操作</th>
                     </tr>
@@ -74,11 +74,11 @@
                                  th:src="${clientmsg.status == 1 ? 'resources/images/online.png' : 'resources/images/offline.png'}"/>
                         </td>
                         <td th:text="${clientmsg.userid}">Lorem ipsum dolor</td>
-                        <td th:text="${clientmsg.productsModel}">Lorem ipsum dolor</td>
                         <td th:text="${clientmsg.terminalname}" th:id="${'td_' + clientmsg.userid}">Lorem ipsum dolor
                         </td>
                         <td th:text="${clientmsg.mac}">Lorem ipsum dolor</td>
                         <td th:text="${clientmsg.ip}">Lorem ipsum dolor</td>
+                        <td th:text="${clientmsg.updateStatus}"></td>
                         <td th:text="${clientmsg.productsModel}"></td>
                         <td>
                             <a th:href="${'javascript:updateInfo(' + clientmsg.userid + ');'}" title="Edit"><img

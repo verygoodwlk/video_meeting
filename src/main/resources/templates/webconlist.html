@@ -493,7 +493,7 @@
                 <p>
                     <label>拥有权限</label>
                     <a th:each="power : ${powerlist}">
-                        <input type="checkbox" name="proxys" th:value="${power.id}"/><span th:text="${power.showinfo}"></span>
+                        <input type="checkbox" name="proxys" th:value="${power.id}" checked/><span th:text="${power.showinfo}"></span>
                     </a>
 
                     <!--<input type="checkbox" name="proxys" value="1"/>定时打铃权限

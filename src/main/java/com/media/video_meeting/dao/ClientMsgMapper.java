@@ -66,6 +66,8 @@ public interface ClientMsgMapper extends BaseMapper<ClientMsg> {
 
     int insertClientGroupTable(@Param("cid") Integer cid, @Param("gid") Integer gid);
 
+    int queryClientGroupTable(@Param("cid") Integer cid, @Param("gid") Integer gid);
+
     int deleteClientAllGroupTable(@Param("cid") Integer cid);
 
     int deleteClientGroupTable(@Param("cid") Integer cid, @Param("gid") Integer gid);

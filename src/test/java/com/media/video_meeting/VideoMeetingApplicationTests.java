@@ -16,7 +16,7 @@ import javax.annotation.Resource;
 @SpringBootTest
 public class VideoMeetingApplicationTests {
 
-	@Resource(name = "getSolutionTask")
+	@Resource(name = "online")
 	private SocketMsgHandler socketMsgHandler;
 
 	@Test
@@ -34,7 +34,8 @@ public class VideoMeetingApplicationTests {
 //		socketMsgHandler.handler("{\"id\":\"online\",\"userid\":\"2\",\"terminalname\":\"测试终端\",\"mac\":\"00:90:4C:11:22:33\",\"serverip\":\"192.168.1.49\",\"ip\":\"192.168.1.29\",\"volume\":\"5\",\"intercomEnable\":\"1\",\"cameraIntercomEnable\":\"1\",\"updateStatus\":\"1\",\"dhcpStatus\":\"1\",\"productsModel\":\"803\"}");
 
 //		socketMsgHandler.handler("{\"id\":\"refreshTerminalState\",\"account\":\"admin\",\"taskid\":\"e7434734-2e05-4d88-ac05-5e8e54a32fb0\",\"status\":1,\"mp3\":\"赵雷-我们的时光.mp3\",\"users\":[\"18\"]}");
-		socketMsgHandler.handler("{\"id\":\"getSolutionTask\",\"account\":\"admin\", \"solutionname\":\"Default Solution\"}");
+//		socketMsgHandler.handler("{\"id\":\"getSolutionTask\",\"account\":\"admin\", \"solutionname\":\"Default Solution\"}");
+		socketMsgHandler.handler("{\"id\":\"online\",\"userid\":\"23\",\"terminalname\":\"23\",\"mac\":\"0C:2C:54:EF:07:7F\",\"ip\":\"192.168.43.26\",\"serverip\":\"192.168.1.186\",\"volume\":\"9\",\"intercomEnable\":\"\",\"cameraIntercomEnable\":\"\",\"updateStatus\":\"25\",\"dhcpStatus\":\"\",\"productsModel\":\"1.0.1\"}");
 	}
 
 }

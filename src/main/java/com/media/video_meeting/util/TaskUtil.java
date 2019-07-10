@@ -60,6 +60,7 @@ public class TaskUtil {
             map.put("samll", task.getSamll());
             map.put("startDate", task.getStartDate());
             map.put("weekMask", task.getWeekMask());
+            map.put("terminal", task.getCollectionclient());
         } else if(task.getTaskt() == 3){
             //消防报警
             map.put("account", task.getAccount());

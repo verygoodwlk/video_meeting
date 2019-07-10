@@ -42,14 +42,21 @@ public class ClientServiceImpl implements IClientService {
         if(clientMsg.getUserid() != null){
             ClientMsg msg = clientMsgMapper.selectByPrimaryKey(clientMsg.getUserid());
             if (msg == null){
-                if(clientMsg.getId().equals("online")){
-                    clientMsgMapper.insert(clientMsg);
+                int result = clientMsgMapper.insert(clientMsg);
+                if(result > 0 && clientMsgMapper.queryClientGroupTable(clientMsg.getUserid(), 1) == 0) {
                     //将群组和终端插入中间表
                     clientMsgMapper.insertClientGroupTable(clientMsg.getUserid(), 1);
-                    return 1;
                 }
+                return result;
             } else {
-                return clientMsgMapper.updateByPrimaryKeySelective(clientMsg);
+//                msg.setId(clientMsg.getId());
+//                msg.setStatus(clientMsg.getStatus());
+                int result = clientMsgMapper.updateByPrimaryKeySelective(clientMsg);
+                if(result > 0 && clientMsgMapper.queryClientGroupTable(clientMsg.getUserid(), 1) == 0) {
+                    //将群组和终端插入中间表
+                    clientMsgMapper.insertClientGroupTable(clientMsg.getUserid(), 1);
+                }
+                return result;
             }
         }
         return 0;
@@ -77,6 +84,7 @@ public class ClientServiceImpl implements IClientService {
                     clientGroup.getGname(),
                     "true",
                     "",
+                    0,
                     0);
             treeNodes.add(treeNode);
             //处理分组下的终端
@@ -87,7 +95,8 @@ public class ClientServiceImpl implements IClientService {
                             clientMsg.getTerminalname(),
                             "false",
                             clientMsg.getStatus() == 1 ? "resources/images/online2.png" : "resources/images/offline2.png",
-                            1);
+                            1,
+                            clientMsg.getStatus());
                     treeNodes.add(treeNode1);
                 }
             }

@@ -60,37 +60,7 @@
                         tasks = data;
                         var html = "";
                         for (var i = 0; i < data.length; i++) {
-                            html += "<tr id='tr_task_" + data[i].id + "' taskid='" + data[i].id + "' taskidstr='" + data[i].taskid + "' onclick='trtask(" + data[i].id + ");'>";
-                            html += "<td>" + data[i].taskname + "</td>";
-                            html += "<td id='task_status_' + data[i].id>";
-                            if(data[i].status == 0){
-                                html += "任务空闲";
-                            } else if(data[i].status == 1){
-                                html += "执行中";
-                            } else if(data[i].status == 2){
-                                html += "停止";
-                            } else if(data[i].status == 3){
-                                html += "等待中";
-                            }
-                            html += "</td>";
-                            html += "<td>" + data[i].startDate + "</td>";
-                            html += "<td>" + data[i].stopDate + "</td>";
-                            html += "<td>" + data[i].loopnum + "</td>";
-                            if(data[i].reporter == 1){
-                                html += "<td>小燕 - 中文（女声）</td>";
-                            } else if(data[i].reporter == 2){
-                                html += "<td>小琪 - 中文（女声）</td>";
-                            } else if(data[i].reporter == 3){
-                                html += "<td>小美 - 粤语（女声）</td>";
-                            } else if(data[i].reporter == 4){
-                                html += "<td>小文 - 中文（男声）</td>";
-                            } else if(data[i].reporter == 5){
-                                html += "<td>henry - 英文（男声）</td>";
-                            } else if(data[i].reporter == 6){
-                                html += "<td>mary - 英文（女声）</td>";
-                            }
-
-                            html += "</tr>";
+                            html += voiceHtml(data[i]);
                         }
 
                         $("#task_list").html(html);
@@ -171,17 +141,17 @@
                 return;
             }
 
-            if (confirm("是否确认执行选中的任务？")) {
+            // if (confirm("是否确认执行选中的任务？")) {
                 var tid = task.getAttribute("taskidstr");
 
                 $.get([[${#request.getContextPath()}]] + "/web/task/action", {"taskid": tid}, function (data) {
                     if (data) {
-                        alert("开始执行！");
+                        // alert("开始执行！");
                     } else {
                         alert("执行失败！");
                     }
                 }, "json");
-            }
+            // }
         }
 
 
@@ -195,7 +165,7 @@
                 return;
             }
 
-            if (confirm("是否确认停止选中的任务？")) {
+            // if (confirm("是否确认停止选中的任务？")) {
                 var tid = task.getAttribute("taskidstr");
 
                 $.get([[${#request.getContextPath()}]] + "/web/task/stop", {"taskid": tid}, function (data) {
@@ -204,7 +174,7 @@
                         alert("停止失败！");
                     }
                 }, "json");
-            }
+            // }
         }
 
     </script>
@@ -419,12 +389,18 @@
                                         <label class="col-lg-3 control-label">播报员</label>
                                         <div class="col-lg-9">
                                             <select id="reporter" class="select2_demo_1 form-control">
-                                                <option value="1">小燕（中文-女声）</option>
+                                                <!--<option value="1">小燕（中文-女声）</option>
                                                 <option value="2">小琪（中文-女声）</option>
                                                 <option value="3">小美（粤语-女声）</option>
                                                 <option value="4">小文（中文-男声）</option>
                                                 <option value="5">henry（英文-男声）</option>
-                                                <option value="6">mary（英文-女声）</option>
+                                                <option value="6">mary（英文-女声）</option>-->
+
+                                                <option value="0">普通女声（默认）</option>
+                                                <option value="1">普通男声</option>
+                                                <option value="2">特别男声</option>
+                                                <option value="3">情感男声(度逍遥)</option>
+                                                <option value="4">情感儿童声(度丫丫)</option>
                                             </select>
                                         </div>
                                     </div>
@@ -652,28 +628,8 @@
                 //发送websocket
                 console.log(data);
 
-                var html = "";
-                html += "<tr id='tr_task_" + data.id + "' taskid='" + data.id + "' taskidstr='" + data.taskid + "' onclick='trtask(" + data.id + ");'>";
-                html += "<td>" + data.taskname + "</td>";
-                html += "<td>" + data.status + "</td>";
-                html += "<td>" + startDate + "</td>";
-                html += "<td>" + stopDate + "</td>";
-                html += "<td>" + data.loopnum + "</td>";
-                if(data.reporter == 1){
-                    html += "<td>小燕 - 中文（女声）</td>";
-                } else if(data.reporter == 2){
-                    html += "<td>小琪 - 中文（女声）</td>";
-                } else if(data.reporter == 3){
-                    html += "<td>小美 - 粤语（女声）</td>";
-                } else if(data.reporter == 4){
-                    html += "<td>小文 - 中文（男声）</td>";
-                } else if(data.reporter == 5){
-                    html += "<td>henry - 英文（男声）</td>";
-                } else if(data.reporter == 6){
-                    html += "<td>mary - 英文（女声）</td>";
-                }
+                var html = voiceHtml(data);
 
-                html += "</tr>";
                 $("#task_list").append(html);
 
                 //关闭弹窗
@@ -790,28 +746,8 @@
                 //移除原来的节点
                 $("#tr_task_" + data.id).remove();
 
-                var html = "";
-                html += "<tr id='tr_task_" + data.id + "' taskid='" + data.id + "' taskidstr='" + data.taskid + "' onclick='trtask(" + data.id + ");'>";
-                html += "<td>" + data.taskname + "</td>";
-                html += "<td>" + data.status + "</td>";
-                html += "<td>" + startDate + "</td>";
-                html += "<td>" + stopDate + "</td>";
-                html += "<td>" + data.loopnum + "</td>";
-                if(data.reporter == 1){
-                    html += "<td>小燕 - 中文（女声）</td>";
-                } else if(data.reporter == 2){
-                    html += "<td>小琪 - 中文（女声）</td>";
-                } else if(data.reporter == 3){
-                    html += "<td>小美 - 粤语（女声）</td>";
-                } else if(data.reporter == 4){
-                    html += "<td>小文 - 中文（男声）</td>";
-                } else if(data.reporter == 5){
-                    html += "<td>henry - 英文（男声）</td>";
-                } else if(data.reporter == 6){
-                    html += "<td>mary - 英文（女声）</td>";
-                }
+                var html = voiceHtml(data);
 
-                html += "</tr>";
                 $("#task_list").append(html);
 
                 //关闭弹窗
@@ -822,6 +758,8 @@
             }
         });
     }
+
+
 
 </script>
 

@@ -257,7 +257,11 @@
     select cid from client_group_table where gid = #{gid}
   </select>
 
-  <update id="update2DefaultGroupId">
+  <select id="queryClientGroupTable" resultType="java.lang.Integer">
+    select count(*) from client_group_table where cid = #{cid} and gid = #{gid}
+  </select>
+
+    <update id="update2DefaultGroupId">
     update client_group_table set gid = 1 where cid = #{cid} and gid = #{oldgid} and
                         (select count(*) from client_group_table where cid = #{cid} and gid = 1) = 0
   </update>
