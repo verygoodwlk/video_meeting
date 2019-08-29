@@ -33,15 +33,25 @@ golang:
 #  serverpath: ws://192.168.1.186:8000/
 server:
   port: 8080
+  httpport: 8080
   servlet:
     #session过期时间 10小时
     session:
       timeout: 600m
-#  ssl:
-#    key-store: classpath:server.keystore
-#    enabled: true
-#    key-store-password: 123456
-#    key-store-type: JKS
+  ssl:
+    key-store: classpath:server.keystore
+    enabled: false
+    key-store-password: 123456
+    key-store-type: JKS
+    key-alias: mytomcat
+
+#第三方接口调用
+push:
+  appId:
+  secretKey:
+  url:
+    broadcast: http://112.13.194.126:8000/push/broadcast
+    deviceStatus: http://112.13.194.126:8000/push/broadcast/deviceStatus
 ---
 server:
   os: window

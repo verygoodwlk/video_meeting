@@ -3376,7 +3376,7 @@ a:focus {
 }
 video {
   width: 100% !important;
-  height: auto !important;
+  /*height: auto !important;*/
 }
 /* GALLERY */
 .gallery > .row > div {

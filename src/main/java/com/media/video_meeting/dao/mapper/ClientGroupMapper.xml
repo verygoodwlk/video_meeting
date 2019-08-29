@@ -27,6 +27,7 @@
       <result column="dhcpstatus" jdbcType="VARCHAR" property="dhcpstatus" />
       <result column="productsModel" jdbcType="VARCHAR" property="productsModel" />
       <result column="status" jdbcType="INTEGER" property="status" />
+      <result column="hosts" jdbcType="INTEGER" property="hosts" />
     </collection>
   </resultMap>
 

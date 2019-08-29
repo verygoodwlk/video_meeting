@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <base th:href="${#request.getContextPath() + '/'}"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Insert title here</title>
+    <!-- Invalid Stylesheet. This makes stuff look pretty. Remove it if you want the CSS completely valid -->
+    <!-- Reset Stylesheet -->
+    <link rel="stylesheet" href="resources/css/reset.css" type="text/css"
+          media="screen"/>
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="resources/css/style.css" type="text/css"
+          media="screen"/>
+    <link rel="stylesheet" href="resources/css/invalid.css" type="text/css"
+          media="screen"/>
+
+    <!--                       Javascripts                       -->
+    <!-- jQuery -->
+    <script type="text/javascript"
+            src="resources/scripts/jquery-2.1.0.min.js"></script>
+    <!-- jQuery Configuration -->
+    <script type="text/javascript"
+            src="resources/scripts/simpla.jquery.configuration.js"></script>
+
+    <!-- dialog弹出框的导入-->
+    <link rel="stylesheet" href="//apps.bdimg.com/libs/jqueryui/1.10.4/css/jquery-ui.min.css"/>
+    <script type="text/javascript" src="resources/widget/dialog/jquery-ui-1.9.2.custom.min.js"></script>
+    <script type="text/javascript" src="resources/js/plugin.js"></script>
+
+    <!-- ztree树形结构 -->
+    <link rel="stylesheet" href="resources/widget/zTree/zTreeStyle/zTreeStyle.css"/>
+    <script type="text/javascript" src="resources/widget/zTree/jquery.ztree.all.min.js"></script>
+
+
+    <script th:inline="javascript">
+
+        $(function(){
+            //初始化树形结构
+            initClients();
+        });
+
+        /**
+         * 初始化终端树形结构
+         */
+        function initClients(){
+            $.ajax({
+                url:[[${#request.getContextPath()}]] + "/client/getHost",
+                success:function(data){
+                    if(data != null){
+                        $("#updateBtn").html("一键对讲主机为：" + data.userid);
+                    }
+                }
+            });
+
+
+            $.ajax({
+                url:[[${#request.getContextPath()}]] + "/client/group",
+                success: function(data){
+                    var zTreeNodes = data;
+
+                    var setting = {
+                        data:{
+                            simpleData:{
+                                enable: true,
+                                pIdKey: "pid"
+                            },
+                            key: {
+                                name: "gname"
+                            }
+                        },
+                        check:{
+                            enable: true,
+                            chkStyle: "radio",
+                            radioType: "all"
+                        }
+                    };
+
+                    var ztreeObj = $.fn.zTree.init($("#ztree_div"), setting, zTreeNodes);
+                    ztreeObj.expandAll(true);
+
+                },
+                dataType:"json"
+            });
+        }
+
+        /**
+         * 选择对讲主机
+         */
+        function select_host(){
+            //弹出dialog
+            openDialog("dialog_div", "选择对讲主机");
+        }
+
+        /**
+         * 修改对讲主机
+         */
+        function updateHost(){
+            var treeObj = $.fn.zTree.getZTreeObj("ztree_div");
+            //获得所有被选择的节点
+            var checkedNodes = treeObj.getCheckedNodes(true);
+
+            if(checkedNodes.length == 1){
+
+                var node = checkedNodes[0];
+                if(node.isOnLine == 1){
+
+                    $.post("/client/sethost", {"cid": node.userid}, function(data){
+                        if(data > 0){
+                            $("#updateBtn").html("一键对讲主机为：" + node.userid);
+                            closeDialog("dialog_div");
+                        } else {
+                            alert("修改失败！");
+                        }
+                    });
+
+                } else {
+                    alert("必须选择一个上线的终端作为对讲主机！");
+                    return;
+                }
+
+            } else {
+                alert("请选择一个终端作为对讲主机！");
+                return;
+            }
+
+        }
+    </script>
+
+</head>
+<body>
+<div id="main-content">
+    <div class="content-box">
+        <!-- End .content-box-header -->
+        <div class="content-box-content">
+            <h2>设置一键对讲主机</h2>
+
+            <form>
+                <p>
+                    选择终端：
+                </p>
+                <p>
+                    <button id="updateBtn" type="button" class="mybutton" onclick="select_host();">当前没有设置对讲主机</button>
+                </p>
+            </form>
+
+            <br/>
+            <hr/>
+            <br/>
+        </div>
+        <!-- End .content-box-content -->
+    </div>
+</div>
+<!-- End #main-content -->
+
+<!-- 弹出终端选择框 -->
+<div id="dialog_div" style="display: none;">
+    <!-- 树形结构 -->
+    <div id="ztree_div" class="ztree"></div>
+    <button id="btnid" class="mybutton" type="button" onclick="updateHost();">修改</button>
+</div>
+
+
+</body>
+</html>

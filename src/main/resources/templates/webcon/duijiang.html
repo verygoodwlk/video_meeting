@@ -66,7 +66,7 @@
     <script src="webrtc/adapter.js"></script>
     <script src="webrtc/index2.js"></script>
     <script src="webrtc/kurento-utils.js"></script>
-    <script src="webrtc/index.js"></script>
+    <script src="webrtc/index_duijiang.js"></script>
 
 
     <script th:inline="javascript">
@@ -102,7 +102,12 @@
             }
 
             if(terminal.length <= 0){
-                alert("请至少选择一台上线终端！");
+                alert("请选择一台上线终端！");
+                return;
+            }
+
+            if(terminal.length > 1){
+                alert("最多只能选择一台对讲终端！");
                 return;
             }
 
@@ -284,9 +289,16 @@
         <div class="col-lg-7" style="padding: 2px 2px 2px 2px; margin-bottom: 2px;">
             <div class="ibox float-e-margins">
                 <div class="ibox-content right_content h_1">
-                    <!-- TODO 视频输出 -->
-                    <div id="videoSmall" style="touch-action: none;">
-                        <video id="videoInput" autoplay="" width="240px" height="180px" style="border: 1px solid #ccc; height: 450px"></video>
+
+                    <!-- TODO 对方机器视频输出流 -->
+                    <div id="videoBig">
+                        <video id="videoOutput" autoplay="" style="border: 1px solid #ccc; height: 350px;"></video>
+                    </div>
+
+
+                    <!-- TODO 本机视频输出流 -->
+                    <div id="videoSmall" style="touch-action: none; margin-top: 20px;">
+                        <video id="videoInput" autoplay="" style="border: 1px solid #ccc; height: 350px;"></video>
                     </div>
                 </div>
             </div>

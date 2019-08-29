@@ -1,6 +1,7 @@
 package com.media.video_meeting.time;
 
 import com.media.video_meeting.util.TaskStatusUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -15,11 +16,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class TimeTask {
 
+    @Autowired
+    private TaskStatusUtil taskStatusUtil;
+
     /**
      * 每秒 修改任务的当前进度
      */
     @Scheduled(fixedDelay = 1000)
     public void timeTask(){
-        TaskStatusUtil.addNowDurationTask();
+        taskStatusUtil.addNowDurationTask();
     }
 }

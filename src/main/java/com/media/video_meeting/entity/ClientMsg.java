@@ -30,6 +30,7 @@ public class ClientMsg implements Serializable {
     private String productsModel;
     private Integer status;
     private String limits;
+    private Integer hosts;
 
     @TableField(exist = false)
     private List<ClientMsg> clientMsgs;

@@ -22,6 +22,9 @@ public class SocketMsgAddTaskResponseHandler extends SocketMsgHandler {
     @Autowired
     private ITaskService taskService;
 
+    @Autowired
+    private TaskStatusUtil taskStatusUtil;
+
     @Override
     public void handlerMsg(String msg, JSONObject jsonObject) throws Exception {
         String response = jsonObject.getString("response");
@@ -34,7 +37,7 @@ public class SocketMsgAddTaskResponseHandler extends SocketMsgHandler {
             int result = taskService.updateTaskDuration(taskid, duration);
             if(result > 0){
                 //任务总持续时间更新完毕
-                TaskStatusUtil.durationTask(taskid, duration);
+                taskStatusUtil.durationTask(taskid, duration);
             }
         }
     }

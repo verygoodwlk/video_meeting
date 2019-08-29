@@ -24,6 +24,9 @@ public class SocketMsgTaskResponseHandler extends SocketMsgHandler {
     @Autowired
     private ITaskService taskService;
 
+    @Autowired
+    private TaskStatusUtil taskStatusUtil;
+
     @Override
     public void handlerMsg(String msg, JSONObject jsonObject) throws Exception {
 
@@ -40,7 +43,7 @@ public class SocketMsgTaskResponseHandler extends SocketMsgHandler {
 //        taskService.updateTaskDuration(taskid, duration);
 
         //result - 0:普通状态  1:一次性任务结束 - 删除   2:每天任务结束 - 更新开始时间
-        TaskStatusUtil.statusTask(taskid, status, mp3, duration, startDate, strings, result);
+        taskStatusUtil.statusTask(taskid, status, mp3, duration, startDate, strings, result);
     }
 
     @Override

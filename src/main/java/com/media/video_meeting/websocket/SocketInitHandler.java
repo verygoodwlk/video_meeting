@@ -172,7 +172,12 @@ public class SocketInitHandler {
             sb.append(JSON.toJSONString(map));
         }
 
-        sb.append("]");
+        sb.append("],");
+
+        //处理一键
+        ClientMsg host = clientService.getHost();
+        sb.append("\"talkhost\":\"").append(host.getUserid()).append("\"");
+
         sb.append("}");
         LogUtil.info(logger, "首次发送终端列表...." + sb.toString());
         webSocketClient.send(sb.toString());

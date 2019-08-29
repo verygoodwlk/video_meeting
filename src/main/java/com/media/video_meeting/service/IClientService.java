@@ -2,6 +2,7 @@ package com.media.video_meeting.service;
 
 import com.media.video_meeting.entity.ClientGroup;
 import com.media.video_meeting.entity.ClientMsg;
+import com.media.video_meeting.entity.DeviceStatus;
 import com.media.video_meeting.entity.TreeNode;
 
 import java.util.List;
@@ -42,5 +43,11 @@ public interface IClientService {
     int deleteClientByUserId(Integer userid);
 
     int updateVolume(Integer volume, String[] userid);
+
+    int updateHost(Integer uid);
+
+    ClientMsg getHost();
+
+    DeviceStatus queryDeviceStatus();
 
 }

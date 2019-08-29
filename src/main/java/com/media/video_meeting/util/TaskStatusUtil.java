@@ -1,5 +1,10 @@
 package com.media.video_meeting.util;
 
+import com.media.video_meeting.entity.BroadCast;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -11,22 +16,26 @@ import java.util.concurrent.ConcurrentHashMap;
  * @user ken
  * @date 2019/5/26 21:52
  */
+@Component
 public class TaskStatusUtil {
 
-    private static Map<String, Boolean> taskMap = new ConcurrentHashMap<>();
+    @Autowired
+    private PushUtil pushUtil;
+
+    private Map<String, Boolean> taskMap = new ConcurrentHashMap<>();
 
     /**
      * 执行任务
      * @param taskId
      */
-    public static void actionTask(String taskId){
+    public void actionTask(String taskId){
         taskMap.put(taskId, true);
     }
 
     /**
      * 停止任务
      */
-    public static void stopTask(String taskId){
+    public void stopTask(String taskId){
         if(taskMap.containsKey(taskId)){
             taskMap.remove(taskId);
         }
@@ -37,21 +46,21 @@ public class TaskStatusUtil {
      * @param taskId
      * @return
      */
-    public static boolean isAction(String taskId){
+    public boolean isAction(String taskId){
         if(taskMap.containsKey(taskId)){
             return true;
         }
         return false;
     }
 
-    private static Map<String, Map<String, Object>> taskStatusMap = new ConcurrentHashMap<>();
-    private static Map<String, Map<String, Object>> taskAllDurationMap = new ConcurrentHashMap<>();
-    private static Map<String, Map<String, Object>> taskClientStatusMap = new ConcurrentHashMap<>();
+    private Map<String, Map<String, Object>> taskStatusMap = new ConcurrentHashMap<>();
+    private Map<String, Map<String, Object>> taskAllDurationMap = new ConcurrentHashMap<>();
+    private Map<String, Map<String, Object>> taskClientStatusMap = new ConcurrentHashMap<>();
 
     /**
      * 设置任务总进度时间
      */
-    public static void durationTask(String taskid, int duration){
+    public void durationTask(String taskid, int duration){
 
         if(taskAllDurationMap.containsKey(taskid)){
             Map<String, Object> stringObjectMap = taskAllDurationMap.get(taskid);
@@ -68,7 +77,7 @@ public class TaskStatusUtil {
     /**
      * 所有任务的当前进度加1
      */
-    public static void addNowDurationTask(){
+    public void addNowDurationTask(){
         for (Map.Entry<String, Map<String, Object>> stringMapEntry : taskAllDurationMap.entrySet()) {
             //获得所有taskid
             String taskid = stringMapEntry.getKey();
@@ -92,7 +101,7 @@ public class TaskStatusUtil {
      * 清空当前进度
      * @param taskid
      */
-    public static void clearNowDurationTask(String taskid){
+    public void clearNowDurationTask(String taskid){
         if(taskAllDurationMap.containsKey(taskid)){
             Map<String, Object> stringObjectMap = taskAllDurationMap.get(taskid);
             stringObjectMap.put("nowduration", 0);
@@ -106,7 +115,7 @@ public class TaskStatusUtil {
      * status 0-任务空闲  	1-执行中 	  2-停止， 3-暂停
      * type  0:普通状态  1:一次性任务结束 - 删除   2:每天任务结束 - 更新开始时间   3:设置任务的总进度
      */
-    public static void statusTask(String taskid, int status, String mp3, int duration, String startDate, String[] uids, int type){
+    public void statusTask(String taskid, int status, String mp3, int duration, String startDate, String[] uids, int type){
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put("status", status);
         dataMap.put("mp3", mp3);
@@ -134,12 +143,18 @@ public class TaskStatusUtil {
 
         if(status == 0 || status == 2){
             //普通状态 或者 任务停止
-            TaskStatusUtil.stopTask(taskid);
+            stopTask(taskid);
             //清空状态
             clearNowDurationTask(taskid);
         } else if(status == 1){
             //任务开始
-            TaskStatusUtil.actionTask(taskid);
+            actionTask(taskid);
+
+            //TODO 调用第三方结构-任务开始发送请求
+            Date date = new Date(duration);
+            String dateFormat = new SimpleDateFormat("mm:ss").format(date);
+            BroadCast broadCast = new BroadCast(mp3, dateFormat, "00:00");
+            pushUtil.pushBroadcast(broadCast);
         }
     }
 
@@ -148,7 +163,7 @@ public class TaskStatusUtil {
      * @param taskids
      * @return
      */
-    public static List getTaskStatusMap(String[] taskids){
+    public List getTaskStatusMap(String[] taskids){
         List rlist = new ArrayList();
         for (String taskid : taskids) {
             Map<String, Object> newMap = new HashMap<>();
@@ -174,7 +189,7 @@ public class TaskStatusUtil {
      * 根据终端列表查询当前任务最新状态
      * @return
      */
-    public static List getTaskStatusClientMap(String[] uids){
+    public List getTaskStatusClientMap(String[] uids){
         List rlist = new ArrayList();
         for (String uid : uids) {
             if(taskClientStatusMap.containsKey(uid)){

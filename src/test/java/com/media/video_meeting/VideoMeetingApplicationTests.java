@@ -1,8 +1,10 @@
 package com.media.video_meeting;
 
+import com.media.video_meeting.util.PushUtil;
 import com.media.video_meeting.websocket.SocketMsgHandler;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -35,7 +37,17 @@ public class VideoMeetingApplicationTests {
 
 //		socketMsgHandler.handler("{\"id\":\"refreshTerminalState\",\"account\":\"admin\",\"taskid\":\"e7434734-2e05-4d88-ac05-5e8e54a32fb0\",\"status\":1,\"mp3\":\"赵雷-我们的时光.mp3\",\"users\":[\"18\"]}");
 //		socketMsgHandler.handler("{\"id\":\"getSolutionTask\",\"account\":\"admin\", \"solutionname\":\"Default Solution\"}");
-		socketMsgHandler.handler("{\"id\":\"online\",\"userid\":\"23\",\"terminalname\":\"23\",\"mac\":\"0C:2C:54:EF:07:7F\",\"ip\":\"192.168.43.26\",\"serverip\":\"192.168.1.186\",\"volume\":\"9\",\"intercomEnable\":\"\",\"cameraIntercomEnable\":\"\",\"updateStatus\":\"25\",\"dhcpStatus\":\"\",\"productsModel\":\"1.0.1\"}");
+//		socketMsgHandler.handler("{\"id\":\"online\",\"userid\":\"23\",\"terminalname\":\"23\",\"mac\":\"0C:2C:54:EF:07:7F\",\"ip\":\"192.168.43.26\",\"serverip\":\"192.168.1.186\",\"volume\":\"9\",\"intercomEnable\":\"\",\"cameraIntercomEnable\":\"\",\"updateStatus\":\"25\",\"dhcpStatus\":\"\",\"productsModel\":\"1.0.1\"}");
+	}
+
+	@Autowired
+	public PushUtil pushUtil;
+
+	@Test
+	public void sendPush(){
+//		BroadCast broadCast = new BroadCast("一首歌的时间", "4:03", "2:35");
+//		String result = pushUtil.pushBroadcast(broadCast);
+//		System.out.println(result);
 	}
 
 }

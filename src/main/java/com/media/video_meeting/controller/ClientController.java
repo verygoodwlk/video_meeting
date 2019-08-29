@@ -11,6 +11,7 @@ import com.media.video_meeting.service.IClientService;
 import com.media.video_meeting.websocket_aop.SocketSend;
 import com.media.video_meeting.websocket_aop.send.ClientIpSocketSend;
 import com.media.video_meeting.websocket_aop.send.ClientPowerSocketSend;
+import com.media.video_meeting.websocket_aop.send.UpdateHostsSocketSend;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -148,5 +149,27 @@ public class ClientController {
     public String updateIp(String ip, String[] userids){
 //        System.out.println("ip:" + ip + " userids:" + Arrays.toString(userids));
         return "succ";
+    }
+
+    /**
+     * 修改终端host
+     * @return
+     */
+    @RequestMapping("/sethost")
+    @ResponseBody
+    @SocketSend(params = "#cid", sendClass = UpdateHostsSocketSend.class)
+    public Integer updateHost(Integer cid){
+        int result = clientService.updateHost(cid);
+        return result;
+    }
+
+    /**
+     * 获得终端的host
+     * @return
+     */
+    @RequestMapping("/getHost")
+    @ResponseBody
+    public ClientMsg queryHostClient(){
+        return clientService.getHost();
     }
 }

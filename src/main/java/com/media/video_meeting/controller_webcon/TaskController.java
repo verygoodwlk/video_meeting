@@ -32,6 +32,9 @@ public class TaskController {
     @Autowired
     private MyWebSocket myWebSocket;
 
+    @Autowired
+    private TaskStatusUtil taskStatusUtil;
+
     /**
      * 添加任务 - 任务类型 1 - 定时音乐 2 - 定时采集 3 - 消防报警 4 - 语音合成 5 - 实时音乐
      * @param task
@@ -129,7 +132,7 @@ public class TaskController {
     @SocketSend(params = "#result", sendClass = MusicActionSocketSend.class)
     public Task action(String taskid){
         Task task = taskService.queryByTaskId(taskid);
-        TaskStatusUtil.actionTask(taskid);
+        taskStatusUtil.actionTask(taskid);
 
         //设置任务的进度
 //        TaskStatusUtil.durationTask(taskid, task.getDuration());
@@ -160,7 +163,7 @@ public class TaskController {
     @SocketSend(params = "#result", sendClass = MusicStopSocketSend.class)
     public Task stop(String taskid){
         Task task = taskService.queryByTaskId(taskid);
-        TaskStatusUtil.stopTask(taskid);
+        taskStatusUtil.stopTask(taskid);
 
 //        TaskStatusUtil.clearNowDurationTask(taskid);
         return task;
@@ -174,7 +177,7 @@ public class TaskController {
     @ResponseBody
     @RequestMapping("/isaction")
     public boolean isAction(String taskid){
-        return TaskStatusUtil.isAction(taskid);
+        return taskStatusUtil.isAction(taskid);
     }
 
     /**
@@ -255,7 +258,7 @@ public class TaskController {
     @ResponseBody
     public List updateTaskStatus(@RequestParam("taskids[]") String[] taskids){
         //获得这些任务的状态信息
-        List taskStatusMap = TaskStatusUtil.getTaskStatusMap(taskids);
+        List taskStatusMap = taskStatusUtil.getTaskStatusMap(taskids);
         return taskStatusMap;
     }
 
@@ -268,7 +271,7 @@ public class TaskController {
     @ResponseBody
     public List updateClientStatus(@RequestParam("uids[]") String[] uids){
         //获得这些任务的状态信息
-        List taskStatusMap = TaskStatusUtil.getTaskStatusClientMap(uids);
+        List taskStatusMap = taskStatusUtil.getTaskStatusClientMap(uids);
         return taskStatusMap;
     }
 

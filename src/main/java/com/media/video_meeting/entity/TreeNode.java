@@ -26,5 +26,7 @@ public class TreeNode implements Serializable {
     private String icon;
     private Integer isClient; // 0 - 不是终端   1 - 是终端
     private Integer isOnLine; // 0 - 未上线 1 - 上线
+    private Integer hosts;// 0 - 非主机  1 - 是主机
+    private boolean checked;
 
 }

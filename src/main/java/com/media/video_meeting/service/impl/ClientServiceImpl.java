@@ -1,10 +1,12 @@
 package com.media.video_meeting.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.media.video_meeting.dao.ClientGroupMapper;
 import com.media.video_meeting.dao.ClientMsgMapper;
 import com.media.video_meeting.entity.ClientGroup;
 import com.media.video_meeting.entity.ClientMsg;
+import com.media.video_meeting.entity.DeviceStatus;
 import com.media.video_meeting.entity.TreeNode;
 import com.media.video_meeting.service.IClientService;
 import com.media.video_meeting.util.ClientUtil;
@@ -85,7 +87,9 @@ public class ClientServiceImpl implements IClientService {
                     "true",
                     "",
                     0,
-                    0);
+                    0,
+                    0,
+                    false);
             treeNodes.add(treeNode);
             //处理分组下的终端
             if(clientGroup.getClientMsgs() != null){
@@ -96,7 +100,9 @@ public class ClientServiceImpl implements IClientService {
                             "false",
                             clientMsg.getStatus() == 1 ? "resources/images/online2.png" : "resources/images/offline2.png",
                             1,
-                            clientMsg.getStatus());
+                            clientMsg.getStatus(),
+                            clientMsg.getHosts(),
+                            clientMsg.getHosts() == 1);
                     treeNodes.add(treeNode1);
                 }
             }
@@ -254,6 +260,52 @@ public class ClientServiceImpl implements IClientService {
         }
         
         return 1;
+    }
+
+    @Override
+    public int updateHost(Integer uid) {
+
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.eq("hosts", 1);
+        List<ClientMsg> list = clientMsgMapper.selectList(queryWrapper);
+        if(list != null){
+            for (ClientMsg clientMsg : list) {
+                clientMsg.setHosts(0);
+                clientMsgMapper.updateById(clientMsg);
+            }
+        }
+
+        ClientMsg clientMsg = clientMsgMapper.selectById(uid);
+        clientMsg.setHosts(1);
+        return clientMsgMapper.updateById(clientMsg);
+    }
+
+    @Override
+    public ClientMsg getHost() {
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.eq("hosts", 1);
+        return clientMsgMapper.selectOne(queryWrapper);
+    }
+
+
+    /**
+     * 查询终端设备状态
+     * @return
+     */
+    @Override
+    public DeviceStatus queryDeviceStatus() {
+        List<ClientMsg> clientMsgs = this.queryPage();
+
+        int offline = 0;
+        for (ClientMsg clientMsg : clientMsgs) {
+            if(clientMsg.getStatus() == 0){
+                offline++;
+            }
+        }
+
+        //状态对象
+        DeviceStatus deviceStatus = new DeviceStatus(clientMsgs.size(), clientMsgs.size(), 0, offline, 0);
+        return deviceStatus;
     }
 
 
